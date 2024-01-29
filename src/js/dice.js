@@ -111,16 +111,26 @@ function playDiceSound() {
 
 function fillDisplayRoll(diceRolled, successesTargetNum) {
   const displayArea = document.getElementById("rollDisplayArea");
-  const delay = displayArea.childElementCount * 30;
+  const delay = ((displayArea.childElementCount+1) * 100)+50;
   const newDiceDiv = document.createElement("div");
   const newDiceImg = document.createElement("img");
   const newDiceText = document.createElement("span");
 
-
   newDiceText.innerText = diceRolled;
+  newDiceImg.style = `animation-delay: ${delay}ms`;
+  const keyframe = [ 
+    {transform: "rotate(-360deg)"},
+    {transform: "rotate(0deg)"}
+  ]
+  const timer = {
+    duration: delay,
+    fill: 'forwards'
+  }
+  newDiceImg.animate(keyframe, timer)
   displayArea.appendChild(newDiceDiv);
   newDiceDiv.appendChild(newDiceText);
   newDiceDiv.appendChild(newDiceImg);
+  console.log(delay+'ms')
   
 
 
@@ -128,7 +138,6 @@ function fillDisplayRoll(diceRolled, successesTargetNum) {
   if (diceRolled >= 8 && diceRolled >= successesTargetNum && !newDiceText.classList.contains('gd'))  { newDiceImg.src = '/assets/bd.png'; newDiceText.classList.add('bd')}
   if (diceRolled > 1 && diceRolled < successesTargetNum)  { newDiceImg.src = '/assets/yd.png'; newDiceText.classList.add('yd')}
   if (diceRolled === 1){ newDiceImg.src = '/assets/rd.png'; newDiceText.classList.add('rd')}
-  newDiceImg.style = `animation-delay: ${delay}ms`;
 }
 
 function clearDisplayArea() {

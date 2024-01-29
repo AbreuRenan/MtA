@@ -26,13 +26,12 @@
 }
 .grid {
     display: grid;
-    position: -webkit-sticky; /* Safari */
     position: sticky;
+    padding-top: 10px;
     top: 0;
     background: url('/assets/bg.jpg') no-repeat center;
     background-size: cover;
     z-index: 1;
-    border-bottom:  1px solid white;
     box-shadow: 0 10px 15px -2px rgb(0, 0, 0);
 
 }
@@ -133,7 +132,6 @@
   overflow-x: hidden;
   overflow-y: scroll;
   scrollbar-width: none;
-  border-bottom:  1px solid white; 
   padding: .5rem;
 }
 .rollDisplayArea>div{
@@ -141,7 +139,7 @@
   position: relative;
   justify-content: center;
   align-items: center;
-  animation: diceRoll .3s forwards;
+  animation: diceRoll forwards 0.5s;
   transition: all 0.3s;
 
 }
@@ -149,6 +147,7 @@
   padding: 4px;
   border-radius: 50%;
   color: black;
+  font-size: 1.5rem;
   font-weight: 600;
   
 }
@@ -179,11 +178,13 @@
 }
 :global(.gd){
   background-color: var(--verde);
+  padding: 2px!important;
 }
 :global(.yd){
   background-color: var(--amarelo);
 }
 :global(.rd){
+  text-indent: -2px;
   background-color: var(--vermelho);
 }
 
