@@ -1,6 +1,6 @@
 @font-face {
   font-family: PentaGramsSalemica ;
-  src: url(./assets/fonts/PentaGramsSalemica.ttf);
+  src: url(../public/assets/fonts/PentaGramsSalemica.ttf);
 }
 :root {
   --verde: #389b3c;
