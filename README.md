@@ -1,8 +1,13 @@
-# React + Vite
+# WebApp para jogadores de Mago o Despertar
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A ideia é facilitar a vida da minha mesa de mago o despertar e para jogadores online.
 
-Currently, two official plugins are available:
+#### RoadMap
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Adicionar Rolador de dados
+2. Adicionar Ficha (somente leitura)
+3. Adicionar Lista de Magias (somente leitura)
+4. Adicionar Detalhe de magia
+5. Adicionar Crud de Magias
+6. Adicionar Crud da Ficha
+7. Adicionar websocket para historico de rolagens.
