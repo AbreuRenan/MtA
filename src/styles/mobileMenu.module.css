@@ -1,0 +1,15 @@
+
+.mobileNavigation {
+    display: grid;
+    justify-content: space-around;
+    grid-template-columns: repeat(3,1fr);
+    justify-items: center;
+    align-items: stretch;
+    grid-template-rows: 40px;
+}
+.mobileNavigation>a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
