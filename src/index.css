@@ -1,6 +1,6 @@
 @font-face {
   font-family: PentaGramsSalemica ;
-  src: url(../public/assets/fonts/PentaGramsSalemica.ttf);
+  src: url('/assets/fonts/PentaGramsSalemica.ttf');
 }
 :root {
   --verde: #389b3c;
@@ -8,6 +8,7 @@
   --vermelho: #9e4141;
   --amarelo: #d2c85a;
   --bg1: #0c0e00;
+  --magoFont: 'PentaGramsSalemica';
   --grad-dourado-chic:  linear-gradient(135deg, rgba(210,200,90,1) 25%, rgba(200,157,0,1) 75%);
 }
 

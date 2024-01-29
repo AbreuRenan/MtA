@@ -1,16 +1,16 @@
 
-
-
 export default function roll() {
   const inputNumberOfDices = document.getElementById("numberDados");
   const resultadoRolagem = makeRoll(inputNumberOfDices.value);
   const dataRolagem = new Date();
+
   const resultado = {
     hash: "#" + Math.random().toString(16).slice(2),
     data: `${dataRolagem.getHours()}:${dataRolagem.getMinutes()}:${dataRolagem.getSeconds()}`,
     rolagem: [...resultadoRolagem],
   };
   clearDisplayArea();
+
   updateHistory(resultado, inputNumberOfDices.value);
   playDiceSound();
 
@@ -56,21 +56,25 @@ function updateHistory(resultData, numberOfDices) {
   const newRollElement = document.createElement("p");
   const newSuccessElement = document.createElement("p");
 
+  const rolledDices = resultData.rolagem;
+  const successesTargetNum = numberOfDices > 0 ? 8 : 10;
+
+
   newDivContainer.appendChild(newHashElement);
   newDivContainer.appendChild(newDataElement);
   newDivContainer.appendChild(newRollElement);
   newDivContainer.appendChild(newSuccessElement);
 
+
+  
   newHashElement.innerText = resultData.hash;
   newDataElement.innerText = " hora: " + resultData.data;
   newRollElement.classList.add("rollLine");
 
-  const rolledDices = resultData.rolagem;
-  const successesTargetNum = numberOfDices > 0 ? 8 : 10;
-  const successes = resultData.rolagem.filter(
-    (dice) => dice >= successesTargetNum
-  ).length;
+  const successes = resultData.rolagem.filter(dice => dice >= successesTargetNum).length;
+  const fails = resultData.rolagem.filter(dice => dice < 8).length;
   const critFailDices = resultData.rolagem.filter((dice) => dice === 1).length;
+
 
   if (successes === 0 && critFailDices > 0) {
     newSuccessElement.innerText = `Falha Crítica!`;
@@ -88,8 +92,11 @@ function updateHistory(resultData, numberOfDices) {
     if (index !== rolledDices.length - 1) newDice.innerText += `, `;
     newRollElement.appendChild(newDice);
 
-    fillDisplayRoll(dice, successesTargetNum);
+
+    fillDisplayRoll(dice,successesTargetNum)
   });
+  rollDisplayArea.appendChild(createDisplayQtd(successes, true));
+  rollDisplayArea.appendChild(createDisplayQtd(fails, false));
 
   divHistory.insertBefore(newDivContainer, divHistory.children[0]);
 }
@@ -117,7 +124,7 @@ function fillDisplayRoll(diceRolled, successesTargetNum) {
   const newDiceText = document.createElement("span");
 
   newDiceText.innerText = diceRolled;
-  newDiceImg.style = `animation-delay: ${delay}ms`;
+
   const keyframe = [ 
     {transform: "rotate(-360deg)"},
     {transform: "rotate(0deg)"}
@@ -126,13 +133,11 @@ function fillDisplayRoll(diceRolled, successesTargetNum) {
     duration: delay,
     fill: 'forwards'
   }
+
   newDiceImg.animate(keyframe, timer)
   displayArea.appendChild(newDiceDiv);
   newDiceDiv.appendChild(newDiceText);
   newDiceDiv.appendChild(newDiceImg);
-  console.log(delay+'ms')
-  
-
 
   if (diceRolled >= getExplosionTargetNum()){ newDiceImg.src = '/assets/gd.png'; newDiceText.classList.add('gd'); newDiceDiv.classList.add('aura');}
   if (diceRolled >= 8 && diceRolled >= successesTargetNum && !newDiceText.classList.contains('gd'))  { newDiceImg.src = '/assets/bd.png'; newDiceText.classList.add('bd')}
@@ -143,4 +148,22 @@ function fillDisplayRoll(diceRolled, successesTargetNum) {
 function clearDisplayArea() {
   const displayArea = document.getElementById("rollDisplayArea");
   if(displayArea.childElementCount > 0 ) displayArea.innerHTML = '';
+}
+
+function createDisplayQtd(qtd, type) {
+  const newDivElement = document.createElement('div');
+  const newSpanNumElement = document.createElement('span');
+  const newSpanTextElement = document.createElement('span');
+  const classToAdd = type ? 'qtdSucesso' : 'qtdFalha'
+  
+  newDivElement.classList.add(classToAdd)
+  newDivElement.appendChild(newSpanNumElement);
+  newDivElement.appendChild(newSpanTextElement);
+
+  newSpanNumElement.innerText = qtd;
+  newSpanTextElement.innerText = `Quantidade de ${type ? 'Sucessos' : 'Falhas'}`
+
+
+
+  return newDivElement;
 }

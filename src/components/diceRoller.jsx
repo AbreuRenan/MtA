@@ -80,7 +80,8 @@ function DiceRollerComponent() {
                     <button onClick={doRoll} className={`${styles.rollBtn}`} disabled={DisableRoll} >Rolar!</button>
             </div>
             <audio id="diceSound" src={audioURL}></audio>
-                <div id="rollDisplayArea" className={`${styles.rollDisplayArea}`}></div>
+                <div id="rollDisplayArea" className={`${styles.rollDisplayArea}`}>                    
+                </div>
                 <div id="history"></div>
 
         </div>

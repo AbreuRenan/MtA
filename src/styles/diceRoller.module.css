@@ -1,3 +1,4 @@
+
 :global(.DSuccess) {
     color: var(--azul);
     font-weight: 600;
@@ -36,12 +37,22 @@
 
 }
 
+center {
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+}
+center>label {
+  font-family: var(--magoFont);
+}
 .btnControlsRow {
     display: grid;
     grid-template-columns: repeat(5,1fr);
     grid-template-rows: 80px;
-    gap: 10px;
-    justify-items: stretch;
+    gap: 5px;
+    padding: 20px 0;
+    justify-items: center;
     align-items: center;
 }
 
@@ -50,18 +61,19 @@
     background: var(--amarelo);
     box-shadow: 0 4px 0 0 #837e2e;
     font-weight: 600;
-    height: 50px;
-    width: 50px;
+    height: 42px;
+    width: 42px;
 }
 
 .inputVal{
     background-color: transparent;
     border: initial;
     color: var(--amarelo);
-    width: 87px;
-    height: 100px;
+    width: 120px;
+    height: 137px;
     text-align: center;
     font-size: 1.75rem;
+    margin: 0 5px;
     background-image: url('/assets/hexagon.svg');
     background-position: 50% 50%;
     background-repeat: no-repeat;
@@ -122,7 +134,6 @@
     grid-area: success;
 }
 
-
 .rollDisplayArea {
   height: 150px;
   display: grid;
@@ -134,14 +145,33 @@
   scrollbar-width: none;
   padding: .5rem;
 }
+
+.rollDisplayArea {
+  position: relative;
+  display: flex;
+  height: 250px;
+  gap: 10px 8px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: .5rem;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  /* border: 1px solid red; */
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%);;
+}
+
 .rollDisplayArea>div{
   display: flex;
   position: relative;
   justify-content: center;
   align-items: center;
-  animation: diceRoll forwards 0.5s;
-  transition: all 0.3s;
-
+  width: 55px;
+  height: 55px;
+  transition: ease-out 0.3s;
+  z-index: 0;
 }
 .rollDisplayArea>div>span {
   padding: 4px;
@@ -187,13 +217,30 @@
   text-indent: -2px;
   background-color: var(--vermelho);
 }
+div:global(.qtdSucesso), div:global(.qtdFalha) {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 50%;
+  width: 140px;
+  text-wrap: wrap;
+  bottom: 10px;
+  right: 10px;
 
-
-@keyframes diceRoll {
-  from {
-    transform: rotate(-360deg);
-  }
-  to {
-    transform: rotate(0);
-  }
+}
+:global(.qtdFalha) {
+  bottom: 10px;
+  left: 10px;
+  color: white;
+}
+div:global(.qtdFalha)>span, div:global(.qtdSucesso)>span{
+  color: white;
+  font-size: 1rem;
+  font-weight: 400;
+}
+div:global(.qtdFalha)>span:nth-child(1), div:global(.qtdSucesso)>span:nth-child(1){
+  color: white;
+  font-size: 2rem;
 }
