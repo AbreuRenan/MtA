@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import roll from  '../js/dice'
 
 import styles from '../styles/diceRoller.module.css'
-import audioURL from '../../public/assets/audio/diceRollRedux.mp3'
+import audioURL from '../assets/audio/diceRollRedux.mp3'
 
 function DiceRollerComponent() {
     const [totalOfDices, setTotalOfDices] = React.useState(0);
