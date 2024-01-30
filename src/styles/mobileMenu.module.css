@@ -1,15 +1,41 @@
 
 .mobileNavigation {
-    display: grid;
-    justify-content: space-around;
-    grid-template-columns: repeat(3,1fr);
-    justify-items: center;
-    align-items: stretch;
-    grid-template-rows: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
 }
 .mobileNavigation>a{
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 2rem
+}
+
+.mobileMenu{
+    display: none;
+    animation: enterLeft .4s forwards;
+    background-color: var(--bg1);
+}
+
+.isOpen {
+    display: flex!important;
+    height: 100vh;
+    width: 100vw;
+    flex-direction: column;
+    padding-top: 50px;
+    animation: enterLeft .2s forwards;
+    background-image: url('assets/bg.jpg');
+    
+}
+
+@keyframes enterLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 

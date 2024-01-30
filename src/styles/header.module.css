@@ -1,0 +1,45 @@
+
+.headerNav {
+    height: 50px;
+  }
+
+
+.mobileMenuButton {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 40px;
+    height: 40px;
+    z-index: 10;
+    background-color: transparent;
+    transition: ease .2s;
+    border-radius: 8px;
+    border: 2px solid transparent;
+  }
+
+  .mobileMenuButton::after{
+    content: '';
+    position: absolute;
+    display: flex;
+    width: 25px;
+    height: 3px;
+    top: 50%;
+    left: 50%;
+    border-radius: 9px;
+    transform: translateX(-50%) rotate(0);
+    transition: ease .2s;
+    box-shadow: 0 8px 0 0px white, 0 -8px 0 0px white;
+    background-color: white;
+  }
+  .mobileMenuButton.isOpen{
+    transition: ease .2s;
+
+  }
+  .mobileMenuButton.isOpen::after {
+    transform: translateX(-50%) rotate(-90deg);
+    transition: ease .2s;
+    top: 45%;
+    width: 5px;
+    height: 5px;
+    box-shadow: 0 10px 0 0px white,  0 -10px 0 0px white;
+  }

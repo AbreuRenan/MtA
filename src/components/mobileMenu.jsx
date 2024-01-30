@@ -1,19 +1,30 @@
-import React from 'react';
-import DiceRollerComponent from './diceRoller';
+import React from "react";
+import DiceRollerComponent from "./diceRoller";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
-import styles from '../styles/mobileMenu.module.css'
+import styles from "../styles/mobileMenu.module.css";
 
-function MobileMenu() {
+function MobileMenu({isOpen, setMenuMobileIsOpen}) {
     return (
-        <div className={``}>
-            <nav className={`${styles.mobileNavigation}`} aria-label='mobile menu '>
-            <NavLink to="/" end>Home</NavLink>
-            <NavLink to="/spellbook" end>Grimório</NavLink>
-            <NavLink to="/dice" end>Dado</NavLink>
-            </nav>
+      <>
+        <div className={`${isOpen ? styles.isOpen : ''} ${styles.mobileMenu}`} >
+          <nav
+            className={`${styles.mobileNavigation}`}
+            aria-label="mobile menu "
+          >
+            <NavLink to="/" end onClick={() => setMenuMobileIsOpen(false)}>
+              Home
+            </NavLink>
+            <NavLink to="/spellbook" end onClick={() => setMenuMobileIsOpen(false)}>
+              Grimório
+            </NavLink>
+            <NavLink to="/dice" end onClick={() => setMenuMobileIsOpen(false)}>
+              Dado
+            </NavLink>
+          </nav>
         </div>
-    )
+      </>
+    );
 }
 
 export default MobileMenu;
