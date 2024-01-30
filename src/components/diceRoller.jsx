@@ -7,14 +7,11 @@ import audioURL from '/assets/audio/diceRollRedux.mp3'
 function DiceRollerComponent() {
     const [totalOfDices, setTotalOfDices] = React.useState(0);
     const [DisableRoll, setDisableRoll] = React.useState(false);
-    
-
    
     React.useEffect( ()=>{
         const audioElement = document.getElementById('diceSound');
         audioElement.addEventListener('ended', stopedDiceSound);
         
-
         const checkBoxes = Array.from(document.querySelectorAll('.targetNumExplosion'));
         checkBoxes.forEach(checkbox => checkbox.addEventListener('change', toggleCheckBox))
 
@@ -58,9 +55,6 @@ function DiceRollerComponent() {
     function doRoll(){
         roll();
         setDisableRoll(true);
-
-
-
     }
     return (
         <div className={`${styles.bg} container`}>
