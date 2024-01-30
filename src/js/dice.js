@@ -19,7 +19,7 @@ function rollDice(qtdOfSides = 10) {
   const min = 1;
   const max = qtdOfSides + 1;
   const roll = Math.floor(Math.random() * (max - min) + min);
-  return roll;
+  return roll > 10 ? 10 : roll;
 }
 function makeRoll(numberOfDices) {
   const rolls = [];

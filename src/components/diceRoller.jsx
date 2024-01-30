@@ -82,7 +82,7 @@ function DiceRollerComponent() {
             <audio id="diceSound" src={audioURL}></audio>
                 <div id="rollDisplayArea" className={`${styles.rollDisplayArea}`}>                    
                 </div>
-                <div id="history"></div>
+                <div id="history" className={`${styles.history}`}></div>
 
         </div>
     )
