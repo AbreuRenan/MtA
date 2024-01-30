@@ -1,4 +1,3 @@
-
 export default function roll() {
   const inputNumberOfDices = document.getElementById("numberDados");
   const resultadoRolagem = makeRoll(inputNumberOfDices.value);
@@ -13,7 +12,6 @@ export default function roll() {
 
   updateHistory(resultado, inputNumberOfDices.value);
   playDiceSound();
-
 }
 function rollDice(qtdOfSides = 10) {
   const min = 1;
@@ -58,17 +56,18 @@ function updateHistory(resultData, numberOfDices) {
   const rolledDices = resultData.rolagem;
   const successesTargetNum = numberOfDices > 0 ? 8 : 10;
 
-
   newDivContainer.appendChild(newHashElement);
   newDivContainer.appendChild(newDataElement);
   newDivContainer.appendChild(newRollElement);
-  
+
   newHashElement.innerText = resultData.hash;
   newDataElement.innerText = resultData.data;
   newRollElement.classList.add("rollLine");
 
-  const successes = resultData.rolagem.filter(dice => dice >= successesTargetNum).length;
-  const fails = resultData.rolagem.filter(dice => dice < 8).length;
+  const successes = resultData.rolagem.filter(
+    (dice) => dice >= successesTargetNum
+  ).length;
+  const fails = resultData.rolagem.filter((dice) => dice < 8).length;
   const critFailDices = resultData.rolagem.filter((dice) => dice === 1).length;
 
   rolledDices.forEach((dice, index) => {
@@ -81,11 +80,10 @@ function updateHistory(resultData, numberOfDices) {
     if (index !== rolledDices.length - 1) newDice.innerText += `,`;
     newRollElement.appendChild(newDice);
 
-
-    fillDisplayRoll(dice,successesTargetNum)
+    fillDisplayRoll(dice, successesTargetNum);
   });
-  rollDisplayArea.appendChild(createDisplayQtd(successes, true));
   rollDisplayArea.appendChild(createDisplayQtd(fails, false));
+  rollDisplayArea.appendChild(createDisplayQtd(successes, true));
 
   divHistory.insertBefore(newDivContainer, divHistory.children[0]);
 }
@@ -107,52 +105,75 @@ function playDiceSound() {
 
 function fillDisplayRoll(diceRolled, successesTargetNum) {
   const displayArea = document.getElementById("rollDisplayArea");
-  const delay = ((displayArea.childElementCount+1) * 100)+50;
+  const delay = (displayArea.childElementCount + 1) * 100 + 50;
   const newDiceDiv = document.createElement("div");
   const newDiceImg = document.createElement("img");
   const newDiceText = document.createElement("span");
 
   newDiceText.innerText = diceRolled;
 
-  const keyframe = [ 
-    {transform: "rotate(-360deg)"},
-    {transform: "rotate(0deg)"}
-  ]
+  const keyframe = [
+    { transform: "rotate(-360deg)" },
+    { transform: "rotate(0deg)" },
+  ];
   const timer = {
     duration: delay,
-    fill: 'forwards'
-  }
+    fill: "forwards",
+  };
 
-  newDiceImg.animate(keyframe, timer)
+  newDiceImg.animate(keyframe, timer);
   displayArea.appendChild(newDiceDiv);
   newDiceDiv.appendChild(newDiceText);
   newDiceDiv.appendChild(newDiceImg);
 
-  if (diceRolled >= getExplosionTargetNum()){ newDiceImg.src = '/assets/gd.png'; newDiceText.classList.add('gd'); newDiceDiv.classList.add('aura');}
-  if (diceRolled >= 8 && diceRolled >= successesTargetNum && !newDiceText.classList.contains('gd'))  { newDiceImg.src = '/assets/bd.png'; newDiceText.classList.add('bd')}
-  if (diceRolled > 1 && diceRolled < successesTargetNum)  { newDiceImg.src = '/assets/yd.png'; newDiceText.classList.add('yd')}
-  if (diceRolled === 1){ newDiceImg.src = '/assets/rd.png'; newDiceText.classList.add('rd')}
+  if (diceRolled >= getExplosionTargetNum()) {
+    newDiceImg.src = "/assets/gd.png";
+    newDiceText.classList.add("gd");
+    newDiceDiv.classList.add("aura");
+  }
+  if (
+    diceRolled >= 8 &&
+    diceRolled >= successesTargetNum &&
+    !newDiceText.classList.contains("gd")
+  ) {
+    newDiceImg.src = "/assets/bd.png";
+    newDiceText.classList.add("bd");
+  }
+  if (diceRolled > 1 && diceRolled < successesTargetNum) {
+    newDiceImg.src = "/assets/yd.png";
+    newDiceText.classList.add("yd");
+  }
+  if (diceRolled === 1) {
+    newDiceImg.src = "/assets/rd.png";
+    newDiceText.classList.add("rd");
+  }
 }
 
 function clearDisplayArea() {
   const displayArea = document.getElementById("rollDisplayArea");
-  if(displayArea.childElementCount > 0 ) displayArea.innerHTML = '';
+  if (displayArea.childElementCount > 0) displayArea.innerHTML = "";
 }
 
 function createDisplayQtd(qtd, type) {
-  const newDivElement = document.createElement('div');
-  const newSpanNumElement = document.createElement('span');
-  const newSpanTextElement = document.createElement('span');
-  const classToAdd = type ? 'qtdSucesso' : 'qtdFalha'
-  
-  newDivElement.classList.add(classToAdd)
-  newDivElement.appendChild(newSpanNumElement);
-  newDivElement.appendChild(newSpanTextElement);
+  const newDivElement = document.createElement("div");
+  const newSpanNumElement = document.createElement("span");
+  const newSpanTextElement = document.createElement("span");
+  const classToAdd = type ? "qtdSucesso" : "qtdFalha";
+
+  newDivElement.classList.add(classToAdd);
+  if (type) {
+    newDivElement.appendChild(newSpanNumElement);
+    newDivElement.appendChild(newSpanTextElement);
+  }
+  if (!type) {
+    newDivElement.appendChild(newSpanNumElement);
+    newDivElement.appendChild(newSpanTextElement);
+  }
 
   newSpanNumElement.innerText = qtd;
-  newSpanTextElement.innerText = `Quantidade de ${type ? 'Sucessos' : 'Falhas'}`
-
-
+  newSpanTextElement.innerText = `Quantidade de ${
+    type ? "Sucessos" : "Falhas"
+  }`;
 
   return newDivElement;
 }
