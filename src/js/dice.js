@@ -5,7 +5,7 @@ export default function roll() {
 
   const resultado = {
     hash: "#" + Math.random().toString(16).slice(8),
-    data: `${dataRolagem.getHours()}:${dataRolagem.getMinutes()}:${dataRolagem.getSeconds()}`,
+    data: `${dataRolagem.getHours()}:${dataRolagem.getMinutes()}:${dataRolagem.getSeconds() < 10 ? '0'+dataRolagem.getSeconds() : dataRolagem.getSeconds() }`,
     rolagem: [...resultadoRolagem],
   };
   clearDisplayArea();
@@ -61,7 +61,7 @@ function updateHistory(resultData, numberOfDices) {
   newDivContainer.appendChild(newRollElement);
 
   newHashElement.innerText = resultData.hash;
-  newDataElement.innerText = resultData.data;
+  newDataElement.innerText = 'Hora: '+resultData.data;
   newRollElement.classList.add("rollLine");
 
   const successes = resultData.rolagem.filter(

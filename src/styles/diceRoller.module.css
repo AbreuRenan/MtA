@@ -135,7 +135,7 @@ div.history>div>*:nth-child(1) {
 
 div.history>div>*:nth-child(2) {
     grid-area: data;
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
     text-wrap: nowrap;
 }
 
