@@ -5,7 +5,7 @@ export default function roll() {
   const dataRolagem = new Date();
 
   const resultado = {
-    hash: "#" + Math.random().toString(16).slice(2),
+    hash: "#" + Math.random().toString(16).slice(8),
     data: `${dataRolagem.getHours()}:${dataRolagem.getMinutes()}:${dataRolagem.getSeconds()}`,
     rolagem: [...resultadoRolagem],
   };
@@ -54,7 +54,6 @@ function updateHistory(resultData, numberOfDices) {
   const newHashElement = document.createElement("span");
   const newDataElement = document.createElement("span");
   const newRollElement = document.createElement("p");
-  const newSuccessElement = document.createElement("p");
 
   const rolledDices = resultData.rolagem;
   const successesTargetNum = numberOfDices > 0 ? 8 : 10;
@@ -63,33 +62,23 @@ function updateHistory(resultData, numberOfDices) {
   newDivContainer.appendChild(newHashElement);
   newDivContainer.appendChild(newDataElement);
   newDivContainer.appendChild(newRollElement);
-  newDivContainer.appendChild(newSuccessElement);
-
-
   
   newHashElement.innerText = resultData.hash;
-  newDataElement.innerText = " hora: " + resultData.data;
+  newDataElement.innerText = resultData.data;
   newRollElement.classList.add("rollLine");
 
   const successes = resultData.rolagem.filter(dice => dice >= successesTargetNum).length;
   const fails = resultData.rolagem.filter(dice => dice < 8).length;
   const critFailDices = resultData.rolagem.filter((dice) => dice === 1).length;
 
-
-  if (successes === 0 && critFailDices > 0) {
-    newSuccessElement.innerText = `Falha Crítica!`;
-  } else {
-    newSuccessElement.innerText =
-      successes > 1 ? `${successes} sucessos` : `${successes} sucesso`;
-  }
   rolledDices.forEach((dice, index) => {
     const newDice = document.createElement("span");
     newDice.innerText = `${dice}`;
     if (dice >= getExplosionTargetNum()) newDice.classList.add("D10");
-    if (dice >= 8 && dice >= successesTargetNum) newDice.classList.add("DSuccess");
-    if (dice > 1 && dice < successesTargetNum) newDice.classList.add("Droll");
+    // if (dice >= 8 && dice >= successesTargetNum) newDice.classList.add("DSuccess");
+    // if (dice > 1 && dice < successesTargetNum) newDice.classList.add("Droll");
     if (dice === 1) newDice.classList.add("D1");
-    if (index !== rolledDices.length - 1) newDice.innerText += `, `;
+    if (index !== rolledDices.length - 1) newDice.innerText += `,`;
     newRollElement.appendChild(newDice);
 
 

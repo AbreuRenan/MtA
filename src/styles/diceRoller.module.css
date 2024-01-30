@@ -15,12 +15,6 @@
 :global(.Droll) {
     color: var(--amarelo);
 }
-:global(.rollLine)::before {
-    content: "[ ";
-}
-:global(.rollLine)::after {
-    content: " ]";
-}
 .bg {
   background-size: cover;
 }
@@ -110,21 +104,36 @@ center>label {
 }
 :global(#history)>div {
     display: grid;
+    align-items: center;
     gap: 4px;
-    grid-template-areas: 'hash data' 'roll roll' 'success success';
+    grid-template-areas: 'hash data roll';
+    grid-template-columns: 70px 1fr 2fr;
     margin-top: 10px;
 }
-
+:global(#history)>div>span{
+  font-size: 12px;
+  font-family: var(--magoFont);
+}
 :global(#history)>div>*:nth-child(1) {
     grid-area: hash;
 }
 
 :global(#history)>div>*:nth-child(2) {
     grid-area: data;
+    text-transform: capitalize;
+    text-wrap: nowrap;
 }
 
 :global(#history)>div>*:nth-child(3) {
     grid-area: roll;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 2px;
+    padding-left: 5px;
+}
+:global(#history)>div>*:nth-child(3)>span{
+  font-size: 12px;
 }
 
 :global(#history)>div>*:nth-child(4) {
@@ -238,13 +247,13 @@ div:global(.qtdSucesso), div:global(.qtdFalha) {
   left: 20px;
   color: white;
 }
+
 div:global(.qtdFalha)>span, div:global(.qtdSucesso)>span{
   color: white;
   font-size: 1rem;
   font-weight: 600;
-  
-
 }
+
 div:global(.qtdFalha)>span:nth-child(1), div:global(.qtdSucesso)>span:nth-child(1){
   color: white;
   display: flex;
