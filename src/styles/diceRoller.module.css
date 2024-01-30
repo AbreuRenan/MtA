@@ -109,6 +109,8 @@ center>label {
     grid-template-areas: 'hash data roll';
     grid-template-columns: 70px 1fr 2fr;
     margin-top: 10px;
+    border-top: 2px solid #3f4329;
+    padding-top: 10px;
 }
 :global(#history)>div>span{
   font-size: 12px;
