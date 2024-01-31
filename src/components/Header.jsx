@@ -18,6 +18,7 @@ function Header() {
           isOpen={mobileMenuIsOpen}
           setMenuMobileIsOpen={setMenuMobileIsOpen}
         />
+        <img src="mtashare.png" className={`${styles.mtaLogo}`} />
       </nav>
     </header>
   );

@@ -59,11 +59,13 @@ center>label {
 .inputVal{
     background-color: transparent;
     border: initial;
-    color: var(--amarelo);
+    color: white;
     width: 120px;
     height: 137px;
     text-align: center;
-    font-size: 1.75rem;
+    text-indent: -3px;
+    font-size: 2.825rem;
+    font-weight: 500;
     margin: 0 5px;
     background-image: url('/assets/hexagon.svg');
     background-position: 50% 50%;
@@ -86,6 +88,22 @@ center>label {
 .options>div {
     display: flex;
     gap: 4px;
+}
+.options :global(.targetNumExplosion) {
+  border: 1px solid var(--amarelo);
+  appearance: initial;
+  border-radius: 1px;
+  height: 18px;
+  width: 18px;
+  box-shadow:  0 0 10px -1px var(--amarelo) ;
+}
+.options :global(.targetNumExplosion):checked, .options :global(.targetNumExplosion):active {
+  border-color: #2d37a5;
+  background-image: url('../../public/checkmark.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: invert(1);
 }
 
 .rollBtn {
@@ -249,7 +267,7 @@ div:global(.qtdSucesso), div:global(.qtdFalha) {
   border-radius: 50%;
   width: 160px;
   text-wrap: wrap;
-  bottom: -5px;
+  bottom: -3px;
   right: 20px;
   padding: 2px;
 }

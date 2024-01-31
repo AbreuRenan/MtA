@@ -11,6 +11,7 @@
   --azul: #009cb9;
   --vermelho: #9e4141;
   --amarelo: #d2c85a;
+  --separador: #3f4329;
   --bg1: #0c0e00;
   --bg2: #242424;
   --magoFont: 'Trajan';
@@ -62,6 +63,9 @@ button {
   color: var(--amarelo);
   width: 100%;
   text-align: center;
+  background-color: rgba(255,255,0,0.1);
+  box-shadow: inset 0px 0 20px 0px rgba(255,255,0,0.15);
+  padding: 10px;
 }
 .box-teste {
   height: 110px;

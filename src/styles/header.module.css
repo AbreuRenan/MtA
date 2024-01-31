@@ -1,51 +1,61 @@
 header {
   position: sticky;
   top: 1px;
-  background: url('assets/bg.jpg') no-repeat top;
+  background: url("assets/bg.jpg") no-repeat top;
   background-size: cover;
   z-index: 10;
 }
 .headerNav {
-    height: 50px;
-  }
-
+  height: 50px;
+  position: relative;
+  
+}
 
 .mobileMenuButton {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 40px;
-    height: 40px;
-    z-index: 10;
-    background-color: transparent;
-    transition: ease .2s;
-    border-radius: 8px;
-    border: 2px solid transparent;
-  }
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 40px;
+  height: 40px;
+  z-index: 10;
+  background-color: transparent;
+  transition: ease 0.2s;
+  border-radius: 8px;
+  border: 2px solid transparent;
+}
 
-  .mobileMenuButton::after{
-    content: '';
-    position: absolute;
-    display: flex;
-    width: 25px;
-    height: 3px;
-    top: 50%;
-    left: 50%;
-    border-radius: 9px;
-    transform: translateX(-50%) rotate(0);
-    transition: ease .2s;
-    box-shadow: 0 8px 0 0px white, 0 -8px 0 0px white;
-    background-color: white;
-  }
-  .mobileMenuButton.isOpen{
-    transition: ease .2s;
+.mobileMenuButton::after {
+  content: "";
+  position: absolute;
+  display: flex;
+  width: 25px;
+  height: 3px;
+  top: 50%;
+  left: 50%;
+  border-radius: 9px;
+  transform: translateX(-50%) rotate(0);
+  transition: ease 0.2s;
+  box-shadow: 0 8px 0 0px white, 0 -8px 0 0px white;
+  background-color: white;
+}
+.mobileMenuButton.isOpen {
+  transition: ease 0.2s;
+}
+.mobileMenuButton.isOpen::after {
+  transform: translateX(-50%) rotate(-90deg);
+  transition: ease 0.2s;
+  top: 45%;
+  width: 5px;
+  height: 5px;
+  box-shadow: 0 10px 0 0px white, 0 -10px 0 0px white;
+}
 
-  }
-  .mobileMenuButton.isOpen::after {
-    transform: translateX(-50%) rotate(-90deg);
-    transition: ease .2s;
-    top: 45%;
-    width: 5px;
-    height: 5px;
-    box-shadow: 0 10px 0 0px white,  0 -10px 0 0px white;
-  }
+.mtaLogo {
+  height: 40px;
+  width: auto;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: brightness(1.2) saturate(2);
+}

@@ -1,0 +1,15 @@
+.dotsContainer{
+    display: grid;
+    grid-template-columns: repeat(5,min-content);
+    gap: 1px;
+}
+.dots {
+    width: 10px;
+    height: 10px;
+    border:1px solid white;
+    border-radius: 50%;
+    background-color: white;
+}
+.dots.isMarked {
+    background-color: black;
+}
