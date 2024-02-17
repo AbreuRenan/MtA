@@ -267,7 +267,7 @@ div:global(.qtdSucesso), div:global(.qtdFalha) {
   border-radius: 50%;
   width: 160px;
   text-wrap: wrap;
-  bottom: -3px;
+  bottom: 0px;
   right: 20px;
   padding: 2px;
 }
@@ -290,7 +290,24 @@ div:global(.qtdFalha)>span:nth-child(1), div:global(.qtdSucesso)>span:nth-child(
   align-items: center;
   justify-content: center;
   font-size: 2rem;
-  border: 1px solid white;
+  border: 2px solid white;
   border-radius: 50%;
   font-weight: 600;
+  min-height: 40px;
+  min-width: 40px;
+}
+div:global(.qtdSucesso)>span:nth-child(1) {
+  /* background-color: rgba(0, 255, 0, 0.20); */
+}
+
+.rollDisplayArea :global(.falhaCrit) {
+  position: absolute;
+  background-color: var(--vermelho);
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}
+.rollDisplayArea :global(.falhaCrit)>span {
+  color: black;
+  /* font-family: var(--magoFont); */
 }

@@ -74,16 +74,20 @@ function updateHistory(resultData, numberOfDices) {
     const newDice = document.createElement("span");
     newDice.innerText = `${dice}`;
     if (dice >= getExplosionTargetNum()) newDice.classList.add("D10");
-    // if (dice >= 8 && dice >= successesTargetNum) newDice.classList.add("DSuccess");
-    // if (dice > 1 && dice < successesTargetNum) newDice.classList.add("Droll");
     if (dice === 1) newDice.classList.add("D1");
     if (index !== rolledDices.length - 1) newDice.innerText += `,`;
     newRollElement.appendChild(newDice);
-
     fillDisplayRoll(dice, successesTargetNum);
   });
-  rollDisplayArea.appendChild(createDisplayQtd(fails, false));
-  rollDisplayArea.appendChild(createDisplayQtd(successes, true));
+
+
+
+  if (successes === 0 && critFailDices > 0) {
+    rollDisplayArea.appendChild(createCritFail(critFailDices))
+  } else {
+    rollDisplayArea.appendChild(createDisplayQtd(fails, false));
+    rollDisplayArea.appendChild(createDisplayQtd(successes, true));
+  }
 
   divHistory.insertBefore(newDivContainer, divHistory.children[0]);
 }
@@ -170,10 +174,44 @@ function createDisplayQtd(qtd, type) {
     newDivElement.appendChild(newSpanTextElement);
   }
 
-  newSpanNumElement.innerText = qtd;
+  newSpanNumElement.innerText = 0;
+  newSpanNumElement.setAttribute('data-count', qtd);
   newSpanTextElement.innerText = `Quantidade de ${
     type ? "Sucessos" : "Falhas"
   }`;
-
+  
+  animateCount(newSpanNumElement);
   return newDivElement;
+}
+
+function createCritFail(qtdDices) {
+  const newDivElement = document.createElement("div");
+  const newSpanNumElement = document.createElement("span");
+  const newSpanTextElement = document.createElement("span");
+  const classToAdd = "falhaCrit";
+
+  newDivElement.classList.add(classToAdd);
+  newSpanNumElement.innerText = qtdDices;
+  newSpanTextElement.innerText = 'Falha Crítica!!!'
+  // newDivElement.appendChild(newSpanNumElement);
+  newDivElement.appendChild(newSpanTextElement);
+  return newDivElement
+
+
+}
+
+function animateCount(element) {
+  const interval  = 250;
+  let startValue = 0;
+  let endValue = parseInt(element.getAttribute('data-count'));
+  const duration = Math.floor(interval / endValue);
+  if (endValue != 0){
+    let counter = setInterval( () => {
+      startValue += 1;
+      element.innerText = startValue
+      if (startValue == endValue) {
+        clearInterval(counter)
+      }
+    }, duration )
+  }
 }
