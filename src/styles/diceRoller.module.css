@@ -95,15 +95,14 @@ center>label {
   border-radius: 1px;
   height: 18px;
   width: 18px;
-  box-shadow:  0 0 10px -1px var(--amarelo) ;
 }
 .options :global(.targetNumExplosion):checked, .options :global(.targetNumExplosion):active {
-  border-color: #2d37a5;
   background-image: url('../../public/checkmark.png');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  filter: invert(1);
+  background-color: var(--amarelo);
+  box-shadow:  0 0 10px 1px var(--amarelo) ;
 }
 
 .rollBtn {
