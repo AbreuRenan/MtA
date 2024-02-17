@@ -25,7 +25,9 @@
     flex-direction: column;
     padding-top: 70px;
     animation: enterLeft .2s forwards;
-    background-image: url('assets/bg.jpg');
+    background-image: url('/assets/bg.jpg');
+
+    
     
 }
 
