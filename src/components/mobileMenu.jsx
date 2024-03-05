@@ -21,6 +21,9 @@ function MobileMenu({isOpen, setMenuMobileIsOpen}) {
             <NavLink to="/dice" end onClick={() => setMenuMobileIsOpen(false)}>
               Dado
             </NavLink>
+            <NavLink to="/reports" end onClick={() => setMenuMobileIsOpen(false)}>
+              Relatórios
+            </NavLink>
           </nav>
         </div>
       </>

@@ -5,6 +5,7 @@ import './App.css'
 import Home from './components/Home'
 import SpellBook from './components/SpellBook'
 import Header from './components/Header'
+import ReportScreen from './components/reportScreen/reportScreen'
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/spellbook" element={<SpellBook />} />
           <Route path="/dice" element={<DiceRollerComponent />} />
+          <Route path="/reports" element={<ReportScreen />} />
         </Routes>
       </HashRouter>
     </>
