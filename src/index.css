@@ -1,10 +1,11 @@
 @font-face {
   font-family: PentaGramsSalemica ;
-  src: url('/assets/fonts/PentaGramsSalemica.ttf');
+  src: url('/src/assets/fonts/PentaGramsSalemica.ttf');
 }
 @font-face {
   font-family: Trajan ;
-  src: url('/assets/fonts/Trajan.ttf');
+  /* src: url('/assets/fonts/Trajan.ttf'); */
+  src: url('/src/assets/fonts/Trajan.ttf');
 }
 :root {
   --verde: #389b3c;
