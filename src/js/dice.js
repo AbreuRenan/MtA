@@ -131,7 +131,7 @@ function fillDisplayRoll(diceRolled, successesTargetNum) {
   newDiceDiv.appendChild(newDiceImg);
 
   if (diceRolled >= getExplosionTargetNum()) {
-    newDiceImg.src = 'src/assets/gd.png';
+    newDiceImg.src = 'assets/gd.png';
     newDiceText.classList.add("gd");
     newDiceDiv.classList.add("aura");
   }
@@ -140,15 +140,15 @@ function fillDisplayRoll(diceRolled, successesTargetNum) {
     diceRolled >= successesTargetNum &&
     !newDiceText.classList.contains("gd")
   ) {
-    newDiceImg.src = 'src/assets/bd.png';
+    newDiceImg.src = 'assets/bd.png';
     newDiceText.classList.add("bd");
   }
   if (diceRolled > 1 && diceRolled < successesTargetNum) {
-    newDiceImg.src = 'src/assets/yd.png';
+    newDiceImg.src = 'assets/yd.png';
     newDiceText.classList.add("yd");
   }
   if (diceRolled === 1) {
-    newDiceImg.src = 'src/assets/rd.png';
+    newDiceImg.src = 'assets/rd.png';
     newDiceText.classList.add("rd");
   }
 }
