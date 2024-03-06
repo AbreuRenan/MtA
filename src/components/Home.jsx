@@ -1,7 +1,5 @@
 import React from "react";
 
-import styles from "../styles/home.module.css";
-import InputComponent from "./InputComponent";
 import { onValue, ref } from "firebase/database";
 import RollHistory from "./diceScreenComponents/RollHistory";
 
@@ -21,6 +19,8 @@ function Home({firestore}) {
   },[] )
   return (
     <div className="container" style={{paddingTop: '70px'}}>
+
+      
       <RollHistory firestoreData={firestoreData}/>
     </div>
   );

@@ -1,0 +1,25 @@
+.inputGroupContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding-top: 100px;
+}
+
+.inputField {
+    border-radius: 6px;
+    border: 1px solid #768e71;
+    background-color: rgba(255,255,255,0.75);
+    color: #0b0f00;
+    font-family: var(--magoFont);
+    font-weight: bolder;
+    font-size: 10px;
+    text-align: center;
+    width: 200px;
+    height: 44px;
+}
+.inputField::placeholder {
+    color: #0b0f00;
+}

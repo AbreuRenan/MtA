@@ -10,6 +10,8 @@ import ReportScreen from "./components/reportScreen/reportScreen";
 
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, get, remove } from "firebase/database";
+import LoginScreen from "./components/auth/LoginScreen";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBza5P8Nn30uu3WrT8HaEJfl3IiGeg1fbs",
@@ -23,8 +25,10 @@ const firebaseConfig = {
 };
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false)
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
+  const auth = getAuth()
 
   function deleteNodesFromRollsHistory() {
     const rollsHistoryRef = ref(database, "rollsHistory");
@@ -53,9 +57,10 @@ function App() {
   return (
     <>
       <HashRouter>
-        <Header />
+        {isLoggedIn ?? <Header />}
         <Routes>
-          <Route path="/" element={<Home firestore={database} />} />
+          <Route path="/" element={<LoginScreen firestore={auth} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/home" element={<Home firestore={database} />} />
           <Route
             path="/spellbook"
             element={<SpellBook firestore={database} />}
