@@ -40,7 +40,7 @@ body {
   height: 100svh;
   color: #f2f3eb;
   background-color: #030600;
-  background-image: url('assets/bg.jpg');
+  background-image: url('src/assets/bg.jpg');
   background-repeat: no-repeat;
   background-position: top;
   background-size: contain;
