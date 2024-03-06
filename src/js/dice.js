@@ -5,13 +5,13 @@ export default function roll() {
 
   const resultado = {
     hash: "#" + Math.random().toString(16).slice(8),
-    data: `${dataRolagem.getHours()}:${dataRolagem.getMinutes()}:${dataRolagem.getSeconds() < 10 ? '0'+dataRolagem.getSeconds() : dataRolagem.getSeconds() }`,
+    date: `${dataRolagem.getHours()}:${dataRolagem.getMinutes()}:${dataRolagem.getSeconds() < 10 ? '0'+dataRolagem.getSeconds() : dataRolagem.getSeconds() }`,
     rolagem: [...resultadoRolagem],
   };
   clearDisplayArea();
-
   updateHistory(resultado, inputNumberOfDices.value);
   playDiceSound();
+  return resultado;
 }
 function rollDice(qtdOfSides = 10) {
   const min = 1;
@@ -61,7 +61,7 @@ function updateHistory(resultData, numberOfDices) {
   newDivContainer.appendChild(newRollElement);
 
   newHashElement.innerText = resultData.hash;
-  newDataElement.innerText = 'Hora: '+resultData.data;
+  newDataElement.innerText = 'Hora: '+resultData.date;
   newRollElement.classList.add("rollLine");
 
   const successes = resultData.rolagem.filter(
@@ -89,7 +89,7 @@ function updateHistory(resultData, numberOfDices) {
     rollDisplayArea.appendChild(createDisplayQtd(successes, true));
   }
 
-  divHistory.insertBefore(newDivContainer, divHistory.children[0]);
+  // divHistory.insertBefore(newDivContainer, divHistory.children[0]);
 }
 
 function getExplosionTargetNum() {
@@ -131,7 +131,7 @@ function fillDisplayRoll(diceRolled, successesTargetNum) {
   newDiceDiv.appendChild(newDiceImg);
 
   if (diceRolled >= getExplosionTargetNum()) {
-    newDiceImg.src = "/assets/gd.png";
+    newDiceImg.src = 'src/assets/gd.png';
     newDiceText.classList.add("gd");
     newDiceDiv.classList.add("aura");
   }
@@ -140,15 +140,15 @@ function fillDisplayRoll(diceRolled, successesTargetNum) {
     diceRolled >= successesTargetNum &&
     !newDiceText.classList.contains("gd")
   ) {
-    newDiceImg.src = "/assets/bd.png";
+    newDiceImg.src = 'src/assets/bd.png';
     newDiceText.classList.add("bd");
   }
   if (diceRolled > 1 && diceRolled < successesTargetNum) {
-    newDiceImg.src = "/assets/yd.png";
+    newDiceImg.src = 'src/assets/yd.png';
     newDiceText.classList.add("yd");
   }
   if (diceRolled === 1) {
-    newDiceImg.src = "/assets/rd.png";
+    newDiceImg.src = 'src/assets/rd.png';
     newDiceText.classList.add("rd");
   }
 }

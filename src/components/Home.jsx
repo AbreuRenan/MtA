@@ -2,40 +2,26 @@ import React from "react";
 
 import styles from "../styles/home.module.css";
 import InputComponent from "./InputComponent";
+import { onValue, ref } from "firebase/database";
+import RollHistory from "./diceScreenComponents/RollHistory";
 
-function Home() {
+function Home({firestore}) {
+  const [firestoreData, setFirestoreData] = React.useState(null);
+
+  React.useEffect( ()=> {
+    function fetchFirestoreData(){
+      const query = ref(firestore, 'rollsHistory/');
+      onValue(query, (snapshot) => {
+        const data = snapshot.val();
+        setFirestoreData(data)
+      })
+    }
+
+    fetchFirestoreData()
+  },[] )
   return (
-    <div className="container">
-      <main>
-        <div className={`${styles.sheetInfo}`}>
-          <InputComponent label="Nome:" inputName="nomeInput" />
-          <InputComponent label="Jogador:" inputName="jogadorInput" />
-          <InputComponent label="Crônica:" inputName="cronicaInput" />
-          <InputComponent label="Conceito:" inputName="conceitoInput" />
-          <InputComponent label="Virtude:" inputName="virtudeInput" />
-          <InputComponent label="Vício:" inputName="vicioInput" />
-          <InputComponent label="Senda:" inputName="sendaInput" />
-          <InputComponent label="Ordem:" inputName="ordemInput" />
-          <InputComponent label="Cabala:" inputName="cabalaInput" />
-        </div>
-        <div className={`${styles.sheetAtrib}`}>
-          <div>
-            <InputComponent label="Inteligência:" inputName="inteligenciaInput" isDoted={true}/>
-            <InputComponent label="Raciocínio:" inputName="racicinioInput" isDoted={true}/>
-            <InputComponent label="Perseverança:" inputName="perserverancaInput" isDoted={true}/>
-          </div>
-          <div>
-            <InputComponent label="Força:" inputName="forcaInput" isDoted={true}/>
-            <InputComponent label="Destreza:" inputName="destrezaInput" isDoted={true}/>
-            <InputComponent label="Vigor:" inputName="vigorInput" isDoted={true}/>
-          </div>
-          <div>
-            <InputComponent label="Presença:" inputName="presencaInput" isDoted={true}/>
-            <InputComponent label="Manipulação:" inputName="manipulacaoInput" isDoted={true}/>
-            <InputComponent label="Autocontrole:" inputName="autocontroleInput" isDoted={true}/>
-          </div>
-        </div>
-      </main>
+    <div className="container" style={{paddingTop: '70px'}}>
+      <RollHistory firestoreData={firestoreData}/>
     </div>
   );
 }

@@ -25,10 +25,8 @@
     flex-direction: column;
     padding-top: 70px;
     animation: enterLeft .2s forwards;
-    background-image: url('/assets/bg.jpg');
-
-    
-    
+    background-size: cover;
+    background-image: url('../assets/bg.jpg');   
 }
 
 @keyframes enterLeft {

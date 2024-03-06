@@ -2,6 +2,7 @@ import React from "react";
 import MobileMenu from "./mobileMenu";
 
 import styles from '../styles/header.module.css';
+import mtashare from '../assets/mtashare.png'
 
 function Header() {
   const [mobileMenuIsOpen, setMenuMobileIsOpen] = React.useState(false);
@@ -18,7 +19,7 @@ function Header() {
           isOpen={mobileMenuIsOpen}
           setMenuMobileIsOpen={setMenuMobileIsOpen}
         />
-        <img src="mtashare.png" className={`${styles.mtaLogo}`} />
+        <img src={mtashare} className={`${styles.mtaLogo}`} />
       </nav>
     </header>
   );
