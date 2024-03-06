@@ -74,3 +74,24 @@ button {
   background: linear-gradient(135deg, rgba(210,200,90,1) 5%, rgba(200,157,0,1) 100%);
 
 }
+
+.gd-dice{
+  background: url('assets/gd.png') no-repeat center;
+  background-size: contain;
+  border: 1px transparent 
+}
+.bd-dice{
+  background: url('assets/bd.png') no-repeat center;
+  background-size: contain;
+  border: 1px transparent 
+}
+.yd-dice{
+  background: url('assets/yd.png') no-repeat center;
+  background-size: contain;
+  border: 1px transparent 
+}
+.rd-dice{
+  background: url('assets/rd.png') no-repeat center;
+  background-size: contain;
+  border: 1px transparent 
+}

@@ -218,7 +218,7 @@ div.history>div>*:nth-child(4) {
   font-weight: 600;
   
 }
-.rollDisplayArea>div>img {
+.rollDisplayArea :global(.dice) {
   position: absolute;
   top: 0;
   left: 0;

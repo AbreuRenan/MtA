@@ -111,7 +111,7 @@ function fillDisplayRoll(diceRolled, successesTargetNum) {
   const displayArea = document.getElementById("rollDisplayArea");
   const delay = (displayArea.childElementCount + 1) * 100 + 50;
   const newDiceDiv = document.createElement("div");
-  const newDiceImg = document.createElement("img");
+  const newDiceImg = document.createElement("div");
   const newDiceText = document.createElement("span");
 
   newDiceText.innerText = diceRolled;
@@ -131,7 +131,8 @@ function fillDisplayRoll(diceRolled, successesTargetNum) {
   newDiceDiv.appendChild(newDiceImg);
 
   if (diceRolled >= getExplosionTargetNum()) {
-    newDiceImg.src = 'assets/gd.png';
+    newDiceImg.classList.add('gd-dice');
+    newDiceImg.classList.add('dice');
     newDiceText.classList.add("gd");
     newDiceDiv.classList.add("aura");
   }
@@ -140,15 +141,18 @@ function fillDisplayRoll(diceRolled, successesTargetNum) {
     diceRolled >= successesTargetNum &&
     !newDiceText.classList.contains("gd")
   ) {
-    newDiceImg.src = 'assets/bd.png';
+    newDiceImg.classList.add('bd-dice');
+    newDiceImg.classList.add('dice');
     newDiceText.classList.add("bd");
   }
   if (diceRolled > 1 && diceRolled < successesTargetNum) {
-    newDiceImg.src = 'assets/yd.png';
+    newDiceImg.classList.add('yd-dice');
+    newDiceImg.classList.add('dice');
     newDiceText.classList.add("yd");
   }
   if (diceRolled === 1) {
-    newDiceImg.src = 'assets/rd.png';
+    newDiceImg.classList.add('rd-dice');
+    newDiceImg.classList.add('dice');
     newDiceText.classList.add("rd");
   }
 }
