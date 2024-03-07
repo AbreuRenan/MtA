@@ -90,13 +90,7 @@ export default function LoginScreen() {
             Despertar
           </button>
         </form>
-        <button
-          className={`btn ${styles.loginBtn} `}
-          style={{ position: "absolute", top: 40, left: 60 }}
-          onClick={() => console.log(userState)}
-        >
-          Show User Data
-        </button>
+
         {erroMsgState && <div>{erroMsgState}</div>}
       </BackgroundImage>
     </div>
