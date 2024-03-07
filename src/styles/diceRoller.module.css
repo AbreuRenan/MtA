@@ -111,7 +111,6 @@ center>label {
     margin: 20px auto;
     border-radius: 4px;
     width: 160px;
-
   }
 .rollBtn:active, .btnVal:active {
   box-shadow: none;

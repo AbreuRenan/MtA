@@ -72,12 +72,13 @@ button {
   box-shadow: inset 0px 0 20px 0px rgba(255,255,0,0.15);
   padding: 10px;
 }
-.box-teste {
-  height: 110px;
-  width: 110px;
-  padding: 10px;
-  background: linear-gradient(135deg, rgba(210,200,90,1) 5%, rgba(200,157,0,1) 100%);
-
+.btn {
+  background: var(--amarelo);
+  box-shadow: 0 4px 0 0 #837e2e;
+  height: 50px;
+  margin: 20px auto;
+  border-radius: 4px;
+  width: 160px;
 }
 
 .gd-dice{

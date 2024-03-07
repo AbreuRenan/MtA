@@ -23,3 +23,23 @@
 .inputField::placeholder {
     color: #0b0f00;
 }
+
+button.loginBtn {
+    width: 200px;
+    font-family: var(--magoFont);
+    font-weight: bold;
+    font-size: 12px;
+    /* filter: brightness(1.1); */
+}
+
+div:global(.light) {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100svw;
+    height: 100svh;
+    pointer-events: none;
+    background-color: red;
+
+    background: radial-gradient(circle at var(--x) var(--y), transparent 20%, rgba(0,0,0,.90) 40% );
+    z-index: 10;
+}
