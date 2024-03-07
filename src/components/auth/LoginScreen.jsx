@@ -67,7 +67,7 @@ export default function LoginScreen() {
     }
   }
   return (
-    <div className="container" style={{ border: "red 1px solid" }}>
+    <div className="container" >
       <BackgroundImage src={mtaLoginBg}>
         <form className={styles.inputGroupContainer} onSubmit={handleSubmit}>
           <input
