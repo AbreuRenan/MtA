@@ -6,8 +6,10 @@ import audioURL from "../assets/audio/diceRollRedux.mp3";
 
 import { set, onValue, ref, push } from "firebase/database";
 import RollHistory from "./diceScreenComponents/RollHistory";
+import { AppContext } from "../AppContext";
 
-function DiceRollerComponent({ firestore }) {
+function DiceRollerComponent() {
+  const { firestore } = React.useContext(AppContext);
   const [totalOfDices, setTotalOfDices] = React.useState(0);
   const [DisableRoll, setDisableRoll] = React.useState(false);
   const [rollReturn, setRollReturn] = React.useState(null);

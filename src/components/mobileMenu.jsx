@@ -12,7 +12,7 @@ function MobileMenu({isOpen, setMenuMobileIsOpen}) {
             className={`${styles.mobileNavigation}`}
             aria-label="mobile menu "
           >
-            <NavLink to="/" end onClick={() => setMenuMobileIsOpen(false)}>
+            <NavLink to="/home" end onClick={() => setMenuMobileIsOpen(false)}>
               Home
             </NavLink>
             <NavLink to="/spellbook" end onClick={() => setMenuMobileIsOpen(false)}>

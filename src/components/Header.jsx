@@ -3,14 +3,19 @@ import MobileMenu from "./mobileMenu";
 
 import styles from '../styles/header.module.css';
 import mtashare from '../assets/mtashare.png'
+import { AppContext } from "../AppContext";
+
+
 
 function Header() {
+  const context = React.useContext(AppContext);
+  const {isLoggedIn} = context;
   const [mobileMenuIsOpen, setMenuMobileIsOpen] = React.useState(false);
 
   function toggleMenu() {
     setMenuMobileIsOpen(!mobileMenuIsOpen);
   }
-
+  if (!isLoggedIn) return null
   return (
     <header>
       <nav className={`${styles.headerNav} `} >
