@@ -25,7 +25,7 @@ const firebaseConfig = {
 };
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false)
+  const [isLoggedIn, setIsLoggedIn] = React.useState(true)
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
   const auth = getAuth()
@@ -57,9 +57,9 @@ function App() {
   return (
     <>
       <HashRouter>
-        {isLoggedIn ?? <Header />}
+        {isLoggedIn && <Header />}
         <Routes>
-          <Route path="/" element={<LoginScreen firestore={auth} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/" element={<LoginScreen auth={auth} firestore={database} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/home" element={<Home firestore={database} />} />
           <Route
             path="/spellbook"

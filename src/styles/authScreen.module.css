@@ -1,11 +1,12 @@
 .inputGroupContainer {
     display: flex;
     flex-direction: column;
-    height: 100%;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding-top: 100px;
+
+    position: relative;
+    top: 50%;
 }
 
 .inputField {
@@ -20,8 +21,21 @@
     width: 200px;
     height: 44px;
 }
+
+.inputField:focus-within{
+    outline-width: 0;
+    box-shadow: 0 0 4px 2px rgba(227, 220, 119, 0.3) inset, 0 0 4px 4px rgba(255, 248, 152, 0.3);
+    /* border: 1px solid rgba(227, 220, 119, 0.3); */
+    background-color: white;
+}
+.inputField:focus {
+}
 .inputField::placeholder {
     color: #0b0f00;
+}
+.inputField:focus::placeholder {
+    color: #0b0f003e;
+    content: attr('cssname');
 }
 
 button.loginBtn {
@@ -29,7 +43,16 @@ button.loginBtn {
     font-family: var(--magoFont);
     font-weight: bold;
     font-size: 12px;
-    /* filter: brightness(1.1); */
+    transition: .1s all ease;
+    box-shadow: 0 6px 0 0 #837e2e;
+}
+button.loginBtn:hover {
+    filter: brightness(1.1);
+    animation: buttonHoverEffect .1s ease forwards;
+}
+button.loginBtn:active {
+    filter: brightness(1.1);
+    animation: buttonPressEffect .1s ease forwards;
 }
 
 div:global(.light) {
@@ -38,8 +61,28 @@ div:global(.light) {
     width: 100svw;
     height: 100svh;
     pointer-events: none;
-    background-color: red;
-
-    background: radial-gradient(circle at var(--x) var(--y), transparent 20%, rgba(0,0,0,.90) 40% );
+    background: radial-gradient(circle at var(--x) var(--y),  transparent 10%, rgba(0,0,0,0.95) 25% );
     z-index: 10;
 }
+
+@keyframes buttonPressEffect {
+    from {
+        box-shadow: 0 4px 0 0 #837e2e; 
+        transform: translateY(1px);
+    }
+    to {
+        box-shadow: 0 2px 0 0 #837e2e; 
+        transform: translateY(3px);
+    } 
+    
+  }
+  @keyframes buttonHoverEffect {
+    from {
+        box-shadow: 0 4px 0 0 #837e2e; 
+        transform: initial;
+    }
+    to {
+        box-shadow: 0 4px 0 0 #837e2e; 
+        transform: translateY(1px);
+    } 
+  }

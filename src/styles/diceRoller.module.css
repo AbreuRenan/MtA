@@ -170,7 +170,7 @@ div.history>div>*:nth-child(4) {
     grid-area: success;
 }
 
-.rollDisplayArea {
+/* .rollDisplayArea {
   height: 150px;
   display: grid;
   grid-template-columns: repeat(5,55px);
@@ -180,7 +180,7 @@ div.history>div>*:nth-child(4) {
   overflow-y: scroll;
   scrollbar-width: none;
   padding: .5rem;
-}
+} */
 
 .rollDisplayArea {
   position: relative;
