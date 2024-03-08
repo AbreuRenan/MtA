@@ -9,6 +9,7 @@ import RollHistory from "./diceScreenComponents/RollHistory";
 import { AppContext } from "../AppContext";
 
 function DiceRollerComponent() {
+  const { userData } = React.useContext(AppContext);
   const { firestore } = React.useContext(AppContext);
   const [totalOfDices, setTotalOfDices] = React.useState(0);
   const [DisableRoll, setDisableRoll] = React.useState(false);
@@ -21,7 +22,7 @@ function DiceRollerComponent() {
     function saveRollOnFirebase({ hash, date, rolagem }) {
       const newReg = push(rollHistoryDBRef);
       set(newReg, {
-        user: "teste",
+        user: userData?.nome,
         date: date,
         roll: [...rolagem],
       });
