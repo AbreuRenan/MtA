@@ -25,11 +25,9 @@
 .inputField:focus-within{
     outline-width: 0;
     box-shadow: 0 0 4px 2px rgba(227, 220, 119, 0.3) inset, 0 0 4px 4px rgba(255, 248, 152, 0.3);
-    /* border: 1px solid rgba(227, 220, 119, 0.3); */
     background-color: white;
 }
-.inputField:focus {
-}
+
 .inputField::placeholder {
     color: #0b0f00;
 }
@@ -49,13 +47,12 @@ button.loginBtn {
 }
 button.loginBtn:hover {
     filter: brightness(1.1);
-    animation: buttonHoverEffect .1s ease forwards;
+    animation: buttonHoverEffect .2s ease forwards;
 }
 button.loginBtn:active {
     filter: brightness(1.1);
     animation: buttonPressEffect .1s ease forwards;
 }
-
 
 div:global(.light) {
     position: absolute;
@@ -80,11 +77,11 @@ div:global(.light) {
   }
   @keyframes buttonHoverEffect {
     from {
-        box-shadow: 0 4px 0 0 #837e2e; 
+        box-shadow: 0 6px 0 0 #837e2e; 
         transform: initial;
     }
     to {
-        box-shadow: 0 4px 0 0 #837e2e; 
+        box-shadow: 0 6px 0 0 #837e2e; 
         transform: translateY(1px);
     } 
   }

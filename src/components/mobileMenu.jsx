@@ -25,6 +25,9 @@ function MobileMenu({ isOpen, setMenuMobileIsOpen }) {
           {/* <NavLink to="/reports" end onClick={() => setMenuMobileIsOpen(false)}>
             Relatórios
           </NavLink> */}
+          <NavLink to="/admin" end onClick={() => setMenuMobileIsOpen(false)}>
+            Admin
+          </NavLink>
           <NavLink to="/logout" end onClick={() => setMenuMobileIsOpen(false)}>
             Logout
           </NavLink>

@@ -58,6 +58,7 @@ export function AppContextComponent({children}) {
       userData,
       setUserData,
       firestore: database,
+      database,
       auth,
       performLoginApp
     }}>{children}</AppContext.Provider>

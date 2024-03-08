@@ -11,6 +11,7 @@ import ReportScreen from "./components/reportScreen/reportScreen";
 import { AppContextComponent } from "./AppContext";
 import RouterGuard from "./components/helpers/RouterGuard";
 import Logout from "./components/auth/Logout";
+import AdminConsole from "./components/adminConsole/AdminConsole";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/spellbook" element={<RouterGuard><SpellBook /></RouterGuard>} />
           <Route path="/dice" element={<RouterGuard><DiceRollerComponent /></RouterGuard>} />
           <Route path="/reports" element={<RouterGuard><ReportScreen /></RouterGuard>} />
+          <Route path="/admin" element={<RouterGuard><AdminConsole /></RouterGuard>} />
         </Routes>
       </AppContextComponent>
     </HashRouter>
