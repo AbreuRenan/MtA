@@ -26,12 +26,15 @@ export function AppContextComponent({children}) {
   const auth = getAuth()
   const navigate = useNavigate();
 
-  function performLoginApp(userData) {
-
-    setUserData(userData);
-    setIsLoggedIn(true);
+  function saveLocalData(userData) {
     const json = JSON.stringify(userData)
     localStorage.setItem("userdata", json);
+  }
+
+  function performLoginApp(userData, fromLocal = false) {
+    setUserData(userData);
+    setIsLoggedIn(true);
+    if(!fromLocal) saveLocalData(userData)
 
     navigate("/home");
   }
@@ -39,10 +42,11 @@ export function AppContextComponent({children}) {
 
   React.useEffect( ()=>{
     const localData = localStorage.getItem('userdata');
-    const userLocalData = JSON.parse(localData)
-    if (userLocalData) {
-        performLoginApp(userLocalData);
+    const userLocalData = JSON.parse(localData);
+    if (userLocalData !== null) {
+        performLoginApp(userLocalData, true);
     } else {
+      localStorage.clear()
       navigate('/login')
     }
   }, []) 

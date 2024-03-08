@@ -4,10 +4,12 @@ import MobileMenu from "./mobileMenu";
 import styles from '../styles/header.module.css';
 import mtashare from '../assets/mtashare.png'
 import { AppContext } from "../AppContext";
+import { useNavigate } from "react-router-dom";
 
 
 
 function Header() {
+  const navigate = useNavigate();
   const context = React.useContext(AppContext);
   const {isLoggedIn} = context;
   const [mobileMenuIsOpen, setMenuMobileIsOpen] = React.useState(false);
@@ -24,7 +26,7 @@ function Header() {
           isOpen={mobileMenuIsOpen}
           setMenuMobileIsOpen={setMenuMobileIsOpen}
         />
-        <img src={mtashare} className={`${styles.mtaLogo}`} />
+        <img src={mtashare} className={`${styles.mtaLogo}`} onClick={()=>{ navigate('/login')}}/>
       </nav>
     </header>
   );

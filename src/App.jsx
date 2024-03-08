@@ -10,6 +10,7 @@ import DiceRollerComponent from "./components/diceRoller";
 import ReportScreen from "./components/reportScreen/reportScreen";
 import { AppContextComponent } from "./AppContext";
 import RouterGuard from "./components/helpers/RouterGuard";
+import Logout from "./components/auth/Logout";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginScreen />} />
           <Route path="/login" element={<LoginScreen />} />
+          <Route path="/logout" element={<Logout />} />
           <Route path="/home" element={<RouterGuard><Home /></RouterGuard>} />
           <Route path="/spellbook" element={<RouterGuard><SpellBook /></RouterGuard>} />
           <Route path="/dice" element={<RouterGuard><DiceRollerComponent /></RouterGuard>} />

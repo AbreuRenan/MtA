@@ -76,7 +76,7 @@ button {
   background: var(--amarelo);
   box-shadow: 0 4px 0 0 #837e2e;
   height: 50px;
-  margin: 20px auto;
+  margin: 0 auto;
   border-radius: 4px;
   width: 160px;
 }

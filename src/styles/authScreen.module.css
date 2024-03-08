@@ -45,6 +45,7 @@ button.loginBtn {
     font-size: 12px;
     transition: .1s all ease;
     box-shadow: 0 6px 0 0 #837e2e;
+    margin: 10px auto;
 }
 button.loginBtn:hover {
     filter: brightness(1.1);
@@ -54,6 +55,7 @@ button.loginBtn:active {
     filter: brightness(1.1);
     animation: buttonPressEffect .1s ease forwards;
 }
+
 
 div:global(.light) {
     position: absolute;

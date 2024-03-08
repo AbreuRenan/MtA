@@ -7,18 +7,27 @@ import styles from "../../styles/authScreen.module.css";
 import BackgroundImage from "../helpers/BackgroundImage";
 import mtaLoginBg from "../../assets/mtaLoginBg.png";
 import { AppContext } from "../../AppContext";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginScreen() {
-  const { firestore, auth, performLoginApp, userData, setUserData } = React.useContext(AppContext);
+  const {
+    firestore,
+    auth,
+    performLoginApp,
+    userData,
+    setUserData,
+    isLoggedIn,
+  } = React.useContext(AppContext);
   const [emailState, setEmail] = React.useState("");
   const [passwordState, setPassword] = React.useState("");
   const [erroMsgState, setErroMsg] = React.useState(null);
+  const navigate = useNavigate();
 
   function performLoginFirebase() {
     signInWithEmailAndPassword(auth, emailState, passwordState)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log(user)
+        console.log(user);
         setUserData(user);
       })
       .catch((error) => {
@@ -29,7 +38,6 @@ export default function LoginScreen() {
         });
       });
   }
-
 
   React.useEffect(() => {
     async function fetchFirebase() {
@@ -50,13 +58,6 @@ export default function LoginScreen() {
     fetchFirebase();
   }, [userData]);
 
-  React.useEffect(() => {
-    const userLocalData = localStorage.getItem("userdata");
-    if (userLocalData) {
-      performLoginApp(userLocalData);
-    }
-  }, []);
-
   function handleInputChange({ target }, inputName) {
     if (inputName === "email") setEmail(target.value);
     if (inputName === "password") setPassword(target.value);
@@ -74,6 +75,7 @@ export default function LoginScreen() {
       <BackgroundImage src={mtaLoginBg}>
         <form className={styles.inputGroupContainer} onSubmit={handleSubmit}>
           <input
+            style={{ display: `${isLoggedIn ? "none" : "initial"}` }}
             type="email"
             className={styles.inputField}
             placeholder="Nome Umbrático"
@@ -82,6 +84,7 @@ export default function LoginScreen() {
             value={emailState}
           />
           <input
+            style={{ display: `${isLoggedIn ? "none" : "initial"}` }}
             type="password"
             className={styles.inputField}
             placeholder="Mystério"
@@ -89,8 +92,19 @@ export default function LoginScreen() {
             onChange={(e) => handleInputChange(e, "password")}
             value={passwordState}
           />
+
           <button className={`btn ${styles.loginBtn} `} type="submit">
             Despertar
+          </button>
+
+          <button
+            className={`btn ${styles.loginBtn} }`}
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/logout");
+            }}
+          >
+            Purgar o Nimbus
           </button>
         </form>
 
