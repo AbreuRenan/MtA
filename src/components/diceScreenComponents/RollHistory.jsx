@@ -25,7 +25,7 @@ export default function RollHistory({ firestoreData }) {
             return `${i}`
         })
         return (
-          <div key={index}>
+          <div key={index} style={{padding: '0 10px'}}>
             <span>{item.date}</span>
             <span>{` [ ${rollString} ] `}</span>
             <span>{item.user}</span>
