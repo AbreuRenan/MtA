@@ -5,7 +5,7 @@ export default function roll() {
 
   const resultado = {
     hash: "#" + Math.random().toString(16).slice(8),
-    date: `${dataRolagem.getHours()}:${dataRolagem.getMinutes()}:${dataRolagem.getSeconds() < 10 ? '0'+dataRolagem.getSeconds() : dataRolagem.getSeconds() }`,
+    date: `${dataRolagem.getHours() < 10 ? '0'+dataRolagem.getHours() : dataRolagem.getHours()}:${dataRolagem.getMinutes()}:${dataRolagem.getSeconds() < 10 ? '0'+dataRolagem.getSeconds() : dataRolagem.getSeconds() }`,
     rolagem: [...resultadoRolagem],
   };
   clearDisplayArea();

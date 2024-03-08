@@ -9,8 +9,7 @@ import RollHistory from "./diceScreenComponents/RollHistory";
 import { AppContext } from "../AppContext";
 
 function DiceRollerComponent() {
-  const { userData } = React.useContext(AppContext);
-  const { firestore } = React.useContext(AppContext);
+  const { firestore, userData } = React.useContext(AppContext);
   const [totalOfDices, setTotalOfDices] = React.useState(0);
   const [DisableRoll, setDisableRoll] = React.useState(false);
   const [rollReturn, setRollReturn] = React.useState(null);
