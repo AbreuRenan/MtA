@@ -5,7 +5,19 @@ export default function roll() {
 
   const resultado = {
     hash: "#" + Math.random().toString(16).slice(8),
-    date: `${dataRolagem.getHours() < 10 ? '0'+dataRolagem.getHours() : dataRolagem.getHours()}:${dataRolagem.getMinutes()}:${dataRolagem.getSeconds() < 10 ? '0'+dataRolagem.getSeconds() : dataRolagem.getSeconds() }`,
+    date: `${
+      dataRolagem.getHours() < 10
+        ? "0" + dataRolagem.getHours()
+        : dataRolagem.getHours()
+    }:${
+      dataRolagem.getMinutes() < 10
+        ? "0" + dataRolagem.getMinutes()
+        : dataRolagem.getMinutes()
+    }:${
+      dataRolagem.getSeconds() < 10
+        ? "0" + dataRolagem.getSeconds()
+        : dataRolagem.getSeconds()
+    }`,
     rolagem: [...resultadoRolagem],
   };
   clearDisplayArea();
@@ -61,7 +73,7 @@ function updateHistory(resultData, numberOfDices) {
   newDivContainer.appendChild(newRollElement);
 
   newHashElement.innerText = resultData.hash;
-  newDataElement.innerText = 'Hora: '+resultData.date;
+  newDataElement.innerText = "Hora: " + resultData.date;
   newRollElement.classList.add("rollLine");
 
   const successes = resultData.rolagem.filter(
@@ -80,10 +92,8 @@ function updateHistory(resultData, numberOfDices) {
     fillDisplayRoll(dice, successesTargetNum);
   });
 
-
-
   if (successes === 0 && critFailDices > 0) {
-    rollDisplayArea.appendChild(createCritFail(critFailDices))
+    rollDisplayArea.appendChild(createCritFail(critFailDices));
   } else {
     rollDisplayArea.appendChild(createDisplayQtd(fails, false));
     rollDisplayArea.appendChild(createDisplayQtd(successes, true));
@@ -131,8 +141,8 @@ function fillDisplayRoll(diceRolled, successesTargetNum) {
   newDiceDiv.appendChild(newDiceImg);
 
   if (diceRolled >= getExplosionTargetNum()) {
-    newDiceImg.classList.add('gd-dice');
-    newDiceImg.classList.add('dice');
+    newDiceImg.classList.add("gd-dice");
+    newDiceImg.classList.add("dice");
     newDiceText.classList.add("gd");
     newDiceDiv.classList.add("aura");
   }
@@ -141,18 +151,18 @@ function fillDisplayRoll(diceRolled, successesTargetNum) {
     diceRolled >= successesTargetNum &&
     !newDiceText.classList.contains("gd")
   ) {
-    newDiceImg.classList.add('bd-dice');
-    newDiceImg.classList.add('dice');
+    newDiceImg.classList.add("bd-dice");
+    newDiceImg.classList.add("dice");
     newDiceText.classList.add("bd");
   }
   if (diceRolled > 1 && diceRolled < successesTargetNum) {
-    newDiceImg.classList.add('yd-dice');
-    newDiceImg.classList.add('dice');
+    newDiceImg.classList.add("yd-dice");
+    newDiceImg.classList.add("dice");
     newDiceText.classList.add("yd");
   }
   if (diceRolled === 1) {
-    newDiceImg.classList.add('rd-dice');
-    newDiceImg.classList.add('dice');
+    newDiceImg.classList.add("rd-dice");
+    newDiceImg.classList.add("dice");
     newDiceText.classList.add("rd");
   }
 }
@@ -179,11 +189,11 @@ function createDisplayQtd(qtd, type) {
   }
 
   newSpanNumElement.innerText = 0;
-  newSpanNumElement.setAttribute('data-count', qtd);
+  newSpanNumElement.setAttribute("data-count", qtd);
   newSpanTextElement.innerText = `Quantidade de ${
     type ? "Sucessos" : "Falhas"
   }`;
-  
+
   animateCount(newSpanNumElement);
   return newDivElement;
 }
@@ -196,26 +206,24 @@ function createCritFail(qtdDices) {
 
   newDivElement.classList.add(classToAdd);
   newSpanNumElement.innerText = qtdDices;
-  newSpanTextElement.innerText = 'Falha Crítica!!!'
+  newSpanTextElement.innerText = "Falha Crítica!!!";
   // newDivElement.appendChild(newSpanNumElement);
   newDivElement.appendChild(newSpanTextElement);
-  return newDivElement
-
-
+  return newDivElement;
 }
 
 function animateCount(element) {
-  const interval  = 250;
+  const interval = 250;
   let startValue = 0;
-  let endValue = parseInt(element.getAttribute('data-count'));
+  let endValue = parseInt(element.getAttribute("data-count"));
   const duration = Math.floor(interval / endValue);
-  if (endValue != 0){
-    let counter = setInterval( () => {
+  if (endValue != 0) {
+    let counter = setInterval(() => {
       startValue += 1;
-      element.innerText = startValue
+      element.innerText = startValue;
       if (startValue == endValue) {
-        clearInterval(counter)
+        clearInterval(counter);
       }
-    }, duration )
+    }, duration);
   }
 }

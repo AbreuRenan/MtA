@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { ref, get } from "firebase/database";
@@ -10,18 +9,16 @@ import mtaLoginBg from "../../assets/mtaLoginBg.png";
 import { AppContext } from "../../AppContext";
 
 export default function LoginScreen() {
-  const {firestore, auth, setUserData, setIsLoggedIn} = React.useContext(AppContext);
-  const navigate = useNavigate();
+  const { firestore, auth, performLoginApp, userData, setUserData } = React.useContext(AppContext);
   const [emailState, setEmail] = React.useState("");
   const [passwordState, setPassword] = React.useState("");
-  const [userState, setUserState] = React.useState(null);
   const [erroMsgState, setErroMsg] = React.useState(null);
 
-  function performLogin() {
+  function performLoginFirebase() {
     signInWithEmailAndPassword(auth, emailState, passwordState)
       .then((userCredential) => {
-        const user = userCredential.user;
-        setUserState(user);
+        const user = userCredential?.user;
+        setUserData(user);
         console.log(user);
       })
       .catch((error) => {
@@ -33,9 +30,10 @@ export default function LoginScreen() {
       });
   }
 
+
   React.useEffect(() => {
     async function fetchFirebase() {
-      const idRefs = ref(firestore, `usersToId/${userState?.uid}`);
+      const idRefs = ref(firestore, `usersToId/${userData?.uid}`);
       const IDSnapshot = await get(idRefs);
 
       if (IDSnapshot.exists()) {
@@ -44,15 +42,20 @@ export default function LoginScreen() {
         const userSnapshot = await get(userRef);
 
         if (userSnapshot.exists()) {
-          setUserData(userSnapshot.val());
-          setIsLoggedIn(true);
-          navigate("/home");
+          performLoginApp(userSnapshot.val());
         }
       }
     }
 
     fetchFirebase();
-  }, [userState]);
+  }, [userData]);
+
+  React.useEffect(() => {
+    const userLocalData = localStorage.getItem("userdata");
+    if (userLocalData) {
+      performLoginApp(userLocalData);
+    }
+  }, []);
 
   function handleInputChange({ target }, inputName) {
     if (inputName === "email") setEmail(target.value);
@@ -61,13 +64,13 @@ export default function LoginScreen() {
   function handleSubmit(e) {
     e.preventDefault();
     if (emailState && passwordState) {
-      performLogin();
+      performLoginFirebase();
     } else {
       setErroMsg("Dados Incorretos");
     }
   }
   return (
-    <div className="container" >
+    <div className="container">
       <BackgroundImage src={mtaLoginBg}>
         <form className={styles.inputGroupContainer} onSubmit={handleSubmit}>
           <input

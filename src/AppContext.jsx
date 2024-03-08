@@ -3,6 +3,7 @@ import React from 'react';
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import { useNavigate } from 'react-router-dom';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBza5P8Nn30uu3WrT8HaEJfl3IiGeg1fbs",
@@ -23,7 +24,23 @@ export function AppContextComponent({children}) {
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
   const auth = getAuth()
+  const navigate = useNavigate();
 
+  function performLoginApp(userData) {
+    setUserData(userData);
+    setIsLoggedIn(true);
+    localStorage.setItem("userdata", userData);
+
+    navigate("/home");
+  }
+
+
+  React.useEffect( ()=>{
+    const userLocalData = localStorage.getItem('userdata');
+    if (userLocalData) {
+        performLoginApp(userLocalData);
+    }
+  }, []) 
 
   return (
     <AppContext.Provider value={{
@@ -32,7 +49,8 @@ export function AppContextComponent({children}) {
       userData,
       setUserData,
       firestore: database,
-      auth
+      auth,
+      performLoginApp
     }}>{children}</AppContext.Provider>
   )
 }
