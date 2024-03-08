@@ -20,25 +20,30 @@ export const AppContext = React.createContext();
 
 export function AppContextComponent({children}) {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  const [userData, setUserData] = React.useState({});
+  const [userData, setUserData] = React.useState();
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
   const auth = getAuth()
   const navigate = useNavigate();
 
   function performLoginApp(userData) {
+
     setUserData(userData);
     setIsLoggedIn(true);
-    localStorage.setItem("userdata", userData);
+    const json = JSON.stringify(userData)
+    localStorage.setItem("userdata", json);
 
     navigate("/home");
   }
 
 
   React.useEffect( ()=>{
-    const userLocalData = localStorage.getItem('userdata');
+    const localData = localStorage.getItem('userdata');
+    const userLocalData = JSON.parse(localData)
     if (userLocalData) {
         performLoginApp(userLocalData);
+    } else {
+      navigate('/login')
     }
   }, []) 
 

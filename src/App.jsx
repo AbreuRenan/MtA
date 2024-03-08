@@ -13,7 +13,7 @@ import RouterGuard from "./components/helpers/RouterGuard";
 
 function App() {
   return (
-    <HashRouter initialEntries={['/login']}>
+    <HashRouter >
       <AppContextComponent>
         <Header />
         <Routes>

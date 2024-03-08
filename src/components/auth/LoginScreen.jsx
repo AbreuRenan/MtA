@@ -17,9 +17,9 @@ export default function LoginScreen() {
   function performLoginFirebase() {
     signInWithEmailAndPassword(auth, emailState, passwordState)
       .then((userCredential) => {
-        const user = userCredential?.user;
+        const user = userCredential.user;
+        console.log(user)
         setUserData(user);
-        console.log(user);
       })
       .catch((error) => {
         const code = error.code;
