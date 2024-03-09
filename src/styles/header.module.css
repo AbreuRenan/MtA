@@ -1,7 +1,7 @@
 header {
   position: sticky;
   top: 1px;
-  background: url("assets/bg.jpg") no-repeat top;
+  background: url("../assets/bg.jpg") no-repeat top;
   background-size: cover;
   z-index: 10;
 }
