@@ -15,7 +15,7 @@ import AdminConsole from "./components/adminConsole/AdminConsole";
 
 function App() {
   return (
-    <HashRouter >
+    <HashRouter initialEntries={['/']}>
       <AppContextComponent>
         <Header />
         <Routes>

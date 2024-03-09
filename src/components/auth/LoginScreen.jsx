@@ -27,7 +27,6 @@ export default function LoginScreen() {
     signInWithEmailAndPassword(auth, emailState, passwordState)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log(user);
         setUserData(user);
       })
       .catch((error) => {

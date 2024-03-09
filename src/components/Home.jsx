@@ -22,7 +22,7 @@ function Home() {
   },[] )
   
   return (
-    <div className="container" style={{paddingTop: '70px'}}>
+    <div className="container" >
 
       
       <RollHistory firestoreData={firestoreData}/>

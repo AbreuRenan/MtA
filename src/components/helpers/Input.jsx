@@ -6,12 +6,12 @@ export default function Input({label, type}) {
 
 
     function inputChangeHandler(e) {
-        console.log(e)
+      setInputState(e.target.value)
     }
   return (
     <>
     <labelState for={labelState}>{labelState}</labelState>
-    <input id={labelState} name={labelState} type={type ?? 'text'} onChange={inputChangeHandler}/>
+    <input id={labelState} name={labelState} type={type ?? 'text'} onChange={inputChangeHandler} value={inputState}/>
     
     </>
   )

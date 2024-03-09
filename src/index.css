@@ -17,6 +17,7 @@
   --vermelho: #9e4141;
   --amarelo: #d2c85a;
   --separador: #3f4329;
+  --vermelhoSombra: #3f1818;
   --bg1: #0c0e00;
   --bg2: #242424;
   --magoFont: 'Trajan';
@@ -36,7 +37,8 @@
   list-style: none;
   text-decoration: none;
   box-sizing: border-box!important;
-  scroll-behavior: smooth
+  scroll-behavior: smooth;
+
 }
 
 body {
@@ -45,7 +47,7 @@ body {
   height: 100svh;
   color: #f2f3eb;
   background-color: #030600;
-  background-image: url('src/assets/bg.jpg');
+  background-image: url('assets/bg.jpg');
   background-repeat: no-repeat;
   background-position: top;
   background-size: contain;
@@ -100,4 +102,19 @@ button {
   background: url('assets/rd.png') no-repeat center;
   background-size: contain;
   border: 1px transparent 
+}
+
+.adminConsoleContainer {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 100vh;
+}
+.DELETAR:active, .DELETAR:hover {
+  background-color: var(--vermelho);
+  box-shadow: 0 4px 0 0 var(--vermelhoSombra);
+
 }
