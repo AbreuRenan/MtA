@@ -1,37 +1,51 @@
 import React from "react";
+import { AppContext } from "../../AppContext";
+import { onValue, ref } from "firebase/database";
 
-export default function RollHistory({ firestoreData }) {
-  const [data, setData] = React.useState(() => {
-    const dataArray = [];
-    for (const key in firestoreData) {
-      dataArray.push(firestoreData[key]);
-    }
-    return dataArray;
-  });
 
-  React.useEffect(() => {
-    const dataArray = [];
-    for (const key in firestoreData) {
-      dataArray.push(firestoreData[key]);
+import styles from '../../styles/rollHistory.module.css'
+
+export default function RollHistory() {
+  const {database} = React.useContext(AppContext);
+  const [ rollsHistoryData, setRollsHistoryData] = React.useState([])
+
+  function getRollsHistory(){
+    const rollsHistoryRef = ref(database, 'rollsHistory');
+    onValue(rollsHistoryRef, (snapshotRollsHistory) => {
+      setSnapshotDataToState(snapshotRollsHistory.val())
+    })
+  }
+
+  function setSnapshotDataToState(snapshotVal) {
+    const dataArray = []
+    for (const key in snapshotVal) {
+      dataArray.push(snapshotVal[key])
     }
-    setData(dataArray.reverse());
-  }, [firestoreData]);
+    setRollsHistoryData(dataArray.reverse())
+  }
+
+
+  React.useEffect( () => {
+    getRollsHistory()
+  }, [])
+
+
 
   return (
-    <div>
-      {data?.map((item, index) => {
+    <>
+      {rollsHistoryData.map((item, index) => {
         const rollString = item.roll.map( (i, index)=> {
             if (index !== item.roll.length -1) return `${i} `
             return `${i}`
         })
         return (
-          <div key={index} style={{padding: '0 10px'}}>
+          <div key={index} className={`${styles.historyRow} ${index%2 ? styles.evenRow : styles.oddRow}`} >
             <span>{item.date}</span>
             <span>{` [ ${rollString} ] `}</span>
             <span>{item.user}</span>
           </div>
         );
       })}
-    </div>
+    </>
   );
 }

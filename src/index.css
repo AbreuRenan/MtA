@@ -16,6 +16,7 @@
   --azul: #009cb9;
   --vermelho: #9e4141;
   --amarelo: #d2c85a;
+  --amareloSombra: #837e2e;
   --separador: #3f4329;
   --vermelhoSombra: #3f1818;
   --bg1: #0c0e00;
@@ -76,7 +77,7 @@ button {
 }
 .btn {
   background: var(--amarelo);
-  box-shadow: 0 4px 0 0 #837e2e;
+  box-shadow: 0 4px 0 0 var(--amareloSombra);
   height: 50px;
   margin: 0 auto;
   border-radius: 4px;

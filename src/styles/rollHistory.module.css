@@ -1,0 +1,12 @@
+.historyRow {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    padding: 4px 10px;
+}
+
+.evenRow{
+    background-color: rgba(210, 200, 90, 0.15);
+}
+.oddRow{
+    background-color: rgba(131, 125, 46, 0.15);
+}

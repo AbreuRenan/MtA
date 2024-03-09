@@ -173,7 +173,7 @@ function DiceRollerComponent() {
         <span>Ultimas Rolagens</span>
         <i>filtro</i>
       </div>
-      <RollHistory firestoreData={firestoreData}/>
+      <RollHistory />
     </div>
   );
 }
