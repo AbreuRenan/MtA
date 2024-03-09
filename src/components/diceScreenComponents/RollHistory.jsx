@@ -32,11 +32,11 @@ export default function RollHistory() {
 
 
   return (
-    <>
+    <div className={styles.rollHistoryContainer}>
       {rollsHistoryData.map((item, index) => {
         const rollString = item.roll.map( (i, index)=> {
-            if (index !== item.roll.length -1) return `${i} `
-            return `${i}`
+            if (index !== item.roll.length -1) return ` ${i}`
+            return ` ${i}`
         })
         return (
           <div key={index} className={`${styles.historyRow} ${index%2 ? styles.evenRow : styles.oddRow}`} >
@@ -46,6 +46,6 @@ export default function RollHistory() {
           </div>
         );
       })}
-    </>
+    </div>
   );
 }
