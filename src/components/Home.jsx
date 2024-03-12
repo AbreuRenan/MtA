@@ -1,6 +1,7 @@
 import React from "react";
 
 import RollHistory from "./diceScreenComponents/RollHistory";
+import PlayerCompanion from "./homeScreen/PlayerCompanion";
 
 function Home() {
 
@@ -9,9 +10,8 @@ function Home() {
   }, []);
   
   return (
-    <div className="container" >
-
-      
+    <div className="container" style={{padding: "20px"}} >
+      <PlayerCompanion/>
       <RollHistory />
     </div>
   );

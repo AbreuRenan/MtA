@@ -5,7 +5,7 @@ function Logout() {
     const navigate = useNavigate()
     React.useEffect( ()=> {
         localStorage.clear()
-        navigate('/login')
+        navigate('/')
         window.location.reload()
     }, [])
   return null

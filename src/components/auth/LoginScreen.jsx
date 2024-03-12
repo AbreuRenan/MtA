@@ -8,6 +8,7 @@ import BackgroundImage from "../helpers/BackgroundImage";
 import mtaLoginBg from "../../assets/mtaLoginBg.png";
 import { AppContext } from "../../AppContext";
 import { useNavigate } from "react-router-dom";
+import ErrorComponent from "../helpers/ErrorComponent";
 
 export default function LoginScreen() {
   const {
@@ -17,25 +18,29 @@ export default function LoginScreen() {
     userData,
     setUserData,
     isLoggedIn,
+    setLoggedIn,
+    errorContextState, setErrorContextState
   } = React.useContext(AppContext);
   const [emailState, setEmail] = React.useState("");
   const [passwordState, setPassword] = React.useState("");
-  const [erroMsgState, setErroMsg] = React.useState(null);
   const navigate = useNavigate();
 
   function performLoginFirebase() {
-    signInWithEmailAndPassword(auth, emailState, passwordState)
+    if (auth && emailState && passwordState) {
+      signInWithEmailAndPassword(auth, emailState, passwordState)
       .then((userCredential) => {
         const user = userCredential.user;
         setUserData(user);
       })
-      .catch((error) => {
-        const code = error.code;
-        const message = error.message;
-        setErroMsg(() => {
-          return { code, message };
-        });
+      .catch((err) => {
+        console.log(err)
+        setLoggedIn(true)
+        setErrorContextState(err);
       });
+    } else {
+      console.log('not signed in with Email')
+    }
+
   }
 
   React.useEffect(() => {
@@ -107,7 +112,7 @@ export default function LoginScreen() {
           </button>
         </form>
 
-        {erroMsgState && <div>{erroMsgState}</div>}
+        {errorContextState && <ErrorComponent msg={'Sem conexão com Internet'} />}
       </BackgroundImage>
     </div>
   );

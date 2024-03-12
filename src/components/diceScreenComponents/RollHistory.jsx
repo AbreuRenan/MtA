@@ -6,7 +6,7 @@ import { onValue, ref } from "firebase/database";
 import styles from '../../styles/rollHistory.module.css'
 
 export default function RollHistory() {
-  const {database} = React.useContext(AppContext);
+  const {database, errorContextState, setErrorContextState} = React.useContext(AppContext);
   const [ rollsHistoryData, setRollsHistoryData] = React.useState([])
 
   function getRollsHistory(){
@@ -22,13 +22,11 @@ export default function RollHistory() {
       dataArray.push(snapshotVal[key])
     }
     setRollsHistoryData(dataArray.reverse())
-  }
-
+    }
 
   React.useEffect( () => {
-    getRollsHistory()
+      getRollsHistory()
   }, [])
-
 
 
   return (
