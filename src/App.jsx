@@ -25,7 +25,7 @@ function App() {
           <Route path="/home" element={<RouterGuard><Home /></RouterGuard>} />
           <Route path="/spellbook" element={<RouterGuard><SpellBook /></RouterGuard>} />
           <Route path="/dice" element={<RouterGuard><DiceRollerComponent /></RouterGuard>} />
-          <Route path="/reports" element={<RouterGuard><ReportScreen /></RouterGuard>} />
+          <Route path="/reports/*" element={<RouterGuard><ReportScreen /></RouterGuard>} />
           <Route path="/admin" element={<RouterGuard><AdminConsole /></RouterGuard>} />
         </Routes>
       </AppContextComponent>

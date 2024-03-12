@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 import { getAuth } from "firebase/auth";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBza5P8Nn30uu3WrT8HaEJfl3IiGeg1fbs",
@@ -18,49 +18,56 @@ const firebaseConfig = {
 
 export const AppContext = React.createContext();
 
-export function AppContextComponent({children}) {
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+export function AppContextComponent({ children }) {
+  const [isLoggedIn, setLoggedIn] = React.useState(false);
   const [userData, setUserData] = React.useState();
+  const [errorContextState, setErrorContextState] = React.useState(false);
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
-  const auth = getAuth()
+  const auth = getAuth();
   const navigate = useNavigate();
 
   function saveLocalData(userData) {
-    const json = JSON.stringify(userData)
+    const json = JSON.stringify(userData);
     localStorage.setItem("userdata", json);
   }
 
   function performLoginApp(userData, fromLocal = false) {
     setUserData(userData);
-    setIsLoggedIn(true);
-    if(!fromLocal) saveLocalData(userData)
+    setLoggedIn(true);
+    if (!fromLocal) saveLocalData(userData);
 
     navigate("/home");
   }
 
-
-  React.useEffect( ()=>{
-    const localData = localStorage.getItem('userdata');
+  React.useEffect(() => {
+    const localData = localStorage.getItem("userdata");
     const userLocalData = JSON.parse(localData);
     if (userLocalData !== null) {
-        performLoginApp(userLocalData, true);
+      performLoginApp(userLocalData, true);
     } else {
-      localStorage.clear()
-      navigate('/login')
+      localStorage.clear();
+      navigate("/");
     }
-  }, []) 
+  }, []);
 
   return (
-    <AppContext.Provider value={{
-      isLoggedIn,
-      setIsLoggedIn,
-      userData,
-      setUserData,
-      firestore: database,
-      database,
-      auth,
-      performLoginApp
-    }}>{children}</AppContext.Provider>
-  )
+    <AppContext.Provider
+      value={{
+        isLoggedIn,
+        setIsLoggedIn: setLoggedIn,
+        setLoggedIn,
+        userData,
+        setUserData,
+        firestore: database,
+        database,
+        auth,
+        performLoginApp,
+        errorContextState,
+        setErrorContextState,
+      }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
 }
