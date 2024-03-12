@@ -8,11 +8,11 @@
 }
 
 :global(.contusivo) {
-    background-image: url('src/assets/1.png');
+    background-image: url('../assets/1.png');
 }
 :global(.letal) {
-    background-image: url('src/assets/2.png');
+    background-image: url('../assets/2.png');
 }
 :global(.agravado) {
-    background-image: url('src/assets/3.png');
+    background-image: url('../assets/3.png');
 }
