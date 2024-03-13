@@ -6,7 +6,7 @@ import PlayerCompanion from "./homeScreen/PlayerCompanion";
 function Home() {
 
   React.useEffect(() => {
-    window.scrollTo(0, 0); // Isso faz com que a página role para o topo quando o componente for montado
+    window.scrollTo(0, 0); 
   }, []);
   
   return (
