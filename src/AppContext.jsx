@@ -19,8 +19,8 @@ const firebaseConfig = {
 export const AppContext = React.createContext();
 
 export function AppContextComponent({ children }) {
+  const [userData, setUserData] = React.useState(null);
   const [isLoggedIn, setLoggedIn] = React.useState(false);
-  const [userData, setUserData] = React.useState();
   const [errorContextState, setErrorContextState] = React.useState(false);
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
@@ -30,13 +30,13 @@ export function AppContextComponent({ children }) {
   function saveLocalData(userData) {
     const json = JSON.stringify(userData);
     localStorage.setItem("userdata", json);
+    setUserData(userData);
   }
 
   function performLoginApp(userData, fromLocal = false) {
     setUserData(userData);
     setLoggedIn(true);
     if (!fromLocal) saveLocalData(userData);
-
     navigate("/home");
   }
 
@@ -51,6 +51,11 @@ export function AppContextComponent({ children }) {
     }
   }, []);
 
+React.useEffect( ()=>{
+  console.log('userdata mudou')
+  console.log(userData)
+} ,[userData])
+
   return (
     <AppContext.Provider
       value={{
@@ -59,6 +64,7 @@ export function AppContextComponent({ children }) {
         setLoggedIn,
         userData,
         setUserData,
+        saveLocalData,
         firestore: database,
         database,
         auth,

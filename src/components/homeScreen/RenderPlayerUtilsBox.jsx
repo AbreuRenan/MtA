@@ -1,28 +1,34 @@
-import React from 'react'
-import styles from "../../styles/playerCompanion.module.css"
-function RenderPlayerUtilsBox({boxToRender}) {
-    const [state, setState] = React.useState(boxToRender);
+import React from "react";
+import styles from "../../styles/playerCompanion.module.css";
+import { AppContext } from "../../AppContext";
+import { ref } from "firebase/database";
+function RenderPlayerUtilsBox({ boxToRender, type, clickHandler }) {
+  const { database } = React.useContext(AppContext)
+  const [state, setState] = React.useState([0]);
+  React.useEffect( () => {
+    setState(boxToRender)
+  }, [boxToRender]) 
+  
 
 
-    function handleClick() {
 
-    }
-
-    state.map((box, index) => {
-        const classNames = ["", "contusivo", "letal", "agravado"];
-        return (
-          <div
-            key={index}
-            index={index}
-            className={`${styles.BoxStyle} ${classNames[box]}`}
-            value={box}
-            onClick={handleClick}
-          ></div>
-        );
-      })
   return (
-    <div>RenderPlayerUtilsBox</div>
-  )
+    <div>
+      <span>{type}</span>
+      <div className={styles.boxContainer}>{state?.map((box, index) => {
+    const classNames = ["", "contusivo", "letal", "agravado"];
+    return (
+      <div
+        key={index}
+        index={index}
+        className={`${styles.BoxStyle} ${classNames[box]}`}
+        value={box}
+        onClick={clickHandler}
+      ></div>
+    );
+  })}</div>
+    </div>
+  );
 }
 
-export default RenderPlayerUtilsBox
+export default RenderPlayerUtilsBox;
