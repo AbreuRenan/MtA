@@ -10,6 +10,8 @@ import { AppContext } from "../../AppContext";
 import { useNavigate } from "react-router-dom";
 import ErrorComponent from "../helpers/ErrorComponent";
 
+
+
 export default function LoginScreen() {
   const {
     firestore,
@@ -19,7 +21,8 @@ export default function LoginScreen() {
     setUserData,
     isLoggedIn,
     setLoggedIn,
-    errorContextState, setErrorContextState
+    errorContextState,
+    setErrorContextState,
   } = React.useContext(AppContext);
   const [emailState, setEmail] = React.useState("");
   const [passwordState, setPassword] = React.useState("");
@@ -28,19 +31,18 @@ export default function LoginScreen() {
   function performLoginFirebase() {
     if (auth && emailState && passwordState) {
       signInWithEmailAndPassword(auth, emailState, passwordState)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        setUserData(user);
-      })
-      .catch((err) => {
-        console.log(err)
-        setLoggedIn(true)
-        setErrorContextState(err);
-      });
+        .then((userCredential) => {
+          const user = userCredential.user;
+          setUserData(user);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoggedIn(true);
+          setErrorContextState(err);
+        });
     } else {
-      console.log('not signed in with Email')
+      console.log("not signed in with Email");
     }
-
   }
 
   React.useEffect(() => {
@@ -72,9 +74,49 @@ export default function LoginScreen() {
       performLoginFirebase();
     } else {
       setErrorContextState("Dados Incorretos");
-
     }
   }
+
+  function pwaClickHandler() {
+    console.log('oi')
+  }
+
+
+  React.useEffect( () => {
+    let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  // Guardar o evento para ser usado posteriormente
+  deferredPrompt = event;
+  // Exibir o botão de instalação
+  document.getElementById("installButton").style.display = "block";
+
+  // Prevenir o comportamento padrão do evento
+  event.preventDefault();
+});
+
+// Lidar com o clique no botão de instalação
+document.getElementById("installButton").addEventListener("click", () => {
+  // Verificar se existe um evento de instalação pendente
+  console.log('ia')
+  if (deferredPrompt) {
+    // Mostrar a solicitação de instalação
+    deferredPrompt.prompt();
+    // Aguardar a resposta do usuário
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === "accepted") {
+        console.log("Usuário aceitou a instalação");
+      } else {
+        console.log("Usuário recusou a instalação");
+      }
+      // Limpar o evento de instalação pendente
+      deferredPrompt = null;
+    });
+  }
+});
+
+  }, [])
+ 
   return (
     <div className="container">
       <BackgroundImage src={mtaLoginBg}>
@@ -113,7 +155,14 @@ export default function LoginScreen() {
           </button>
         </form>
 
-        {errorContextState && <ErrorComponent state={errorContextState} msg={'Sem conexão com Internet'} />}
+        <div id="installButton" className={styles.installStyle} ></div>
+
+        {errorContextState && (
+          <ErrorComponent
+            state={errorContextState}
+            msg={"Sem conexão com Internet"}
+          />
+        )}
       </BackgroundImage>
     </div>
   );
