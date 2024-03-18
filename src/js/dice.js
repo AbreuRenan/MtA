@@ -19,6 +19,7 @@ export default function roll() {
         : dataRolagem.getSeconds()
     }`,
     rolagem: [...resultadoRolagem],
+    sucessos: [...resultadoRolagem].filter( roll => roll >= 8).length
   };
   clearDisplayArea();
   updateHistory(resultado, inputNumberOfDices.value);

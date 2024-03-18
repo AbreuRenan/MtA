@@ -28,12 +28,14 @@ export default function RollHistory() {
     getRollsHistory();
   }, []);
 
-  const numSucessos = rollsHistoryData[0]?.roll?.filter(
-    (roll) => roll >= 8
-  ).length;
   return (
     <div className={styles.rollHistoryContainer}>
       {rollsHistoryData.map((item, index) => {
+        const numOfOnes = item.roll.filter((roll) => roll === 1).length;
+        let falhaMizeravi = false;
+        if (item.sucessos === 0 && numOfOnes > 0) {
+          falhaMizeravi = "Falhou Mizeravi";
+        }
         const rollString = item.roll.map((i, index) => {
           if (index !== item.roll.length - 1) return ` ${i}`;
           return ` ${i}`;
@@ -46,10 +48,18 @@ export default function RollHistory() {
             }`}
           >
             <span>{item.date}</span>
-            <span style={{paddingRight: '10px'}}>
-              <p style={{padding: '2px 0'}}>{` [ ${rollString} ] `}</p>
-              <hr/>
-              <p style={{padding: '2px 0'}}>{`  ${numSucessos} sucessos `}</p>
+            <span style={{ paddingRight: "10px" }}>
+              <p style={{ padding: "2px 0" }}>{` [ ${rollString} ] `}</p>
+              <hr />
+              {item.sucessos && !falhaMizeravi ? (
+                <p
+                  style={{ padding: "2px 0" }}
+                >{`  ${item?.sucessos} sucessos `}</p>
+              ) : (
+                <p
+                  style={{ padding: "2px 0" }}
+                >{`  ${falhaMizeravi} `}</p>
+              )}
             </span>
             <span>{item.user}</span>
           </div>

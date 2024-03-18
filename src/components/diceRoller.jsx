@@ -18,12 +18,13 @@ function DiceRollerComponent() {
   const rollHistoryDBRef = ref(firestore, "rollsHistory/");
 
   React.useEffect(() => {
-    function saveRollOnFirebase({ hash, date, rolagem }) {
+    function saveRollOnFirebase({ hash, date, rolagem, sucessos }) {
       const newReg = push(rollHistoryDBRef);
       set(newReg, {
         user: userData?.nome,
         date: date,
         roll: [...rolagem],
+        sucessos
       });
     }
     if (rollReturn) saveRollOnFirebase(rollReturn);
