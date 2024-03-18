@@ -3,7 +3,7 @@
   "description": "Kit de utilidades para RPG Mago o Despertar, com ficha, grimorio e rolador de dados",
   "dir": "ltr",
   "display": "standalone",
-  "name": "mt-a.vercel",
+  "name": "Mage The Awakening Companion",
   "orientation": "portrait-primary",
   "scope": "/",
   "short_name": "mt-a",
