@@ -58,13 +58,15 @@ export function AppContextComponent({ children }) {
         setGameOpen(status.gameStatus)
       }
     })
-    const userStatusRef = ref(database, `users/${userData.id}`);
-    onValue(userStatusRef, (snapshot) => {
-      if(snapshot.exists()){
-        const newUserData = snapshot.val()
-        setUserData(newUserData)
-      }
-    })
+    if (userData) {
+      const userStatusRef = ref(database, `users/${userData.id}`);
+      onValue(userStatusRef, (snapshot) => {
+        if(snapshot.exists()){
+          const newUserData = snapshot.val()
+          setUserData(newUserData)
+        }
+      })
+    }
     setLoading(false)
   }, []);
 

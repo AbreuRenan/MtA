@@ -1,27 +1,48 @@
 import React from "react";
+import styles from "./adminStyles.module.css";
 
 function PlayerDisplayAdmin({ player }) {
-  const { exp, expA, nome, vitalidade, mana, fv } = player;
-  const { max, dano } = vitalidade 
+  const [expState, setExpState] = React.useState(0)
+  const [expAState, setExpAState] = React.useState(0)
 
-  const divContainerStyle = {
-    backgroundColor: "#777",
-    padding: "20px",
-    borderRadius: "8px",
-    width: "50%",
-    display: "grid",
-  };
-console.log(player)
+  React.useEffect( ()=> {
+    setExpState(player.exp)
+    setExpAState(player.expA)
+  }, [player])
+
+
+  function handleClick(type, value) {
+    if (type === 'exp') setExpState( (prev) => prev+value)
+    if (type === 'expA') setExpAState( (prev) => prev+value)
+
+  }
 
   return (
-    <div style={divContainerStyle}>
-      <h1>{nome}</h1>
-      <div>
-        <span>{exp}</span>
-        <span> | </span>
-        <span>{expA}</span>
+    <div className={styles.divContainerStyle}>
+      <h1>{player?.nome ? player.nome : "Jogador Não Selecionado"}</h1>
+      <div className={styles.expContainer}>
+        <div>
+          <span>Exp: {player?.exp ? expState : "N/A"}</span>
+          <div>
+            <button className={styles.btn} onClick={() => handleClick('exp',1)}>+</button>
+            <button className={styles.btn} onClick={() => handleClick('exp',-1)}>-</button>
+          </div>
+        </div>
+        <div>
+          <span>Exp Arcana:{player?.expA ? expAState : "N/A"}</span>
+          <div>
+            <button className={styles.btn} onClick={() => handleClick('expA',1)}>+</button>
+            <button className={styles.btn} onClick={() => handleClick('expA',-1)}>-</button>
+          </div>
+        </div>
       </div>
-      <div>{max} |  {Object.keys(dano).map( key => <span key={key}>{dano[key]}</span>)}</div>
+      <div>
+        {player &&
+          Object.keys(player?.vitalidade?.dano).map((key) => (
+            <div key={key}>{key}: {player?.vitalidade?.dano[key]} </div>
+          ))}{" "}
+         max: {player?.vitalidade?.max}
+      </div>
     </div>
   );
 }

@@ -1,0 +1,31 @@
+.divContainerStyle {
+    background-color: #000;
+    border: 1px solid var(--amarelo);
+    width: calc(100% - 50px);
+    height: 200px;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .expContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+  .expContainer>div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; 
+  }
+  .expContainer>div>div {
+    display: flex;
+    gap: 10px;
+  }
+  .btn {
+    height: 30px; width: 50px;
+    background-color: var(--amarelo);
+    box-shadow: 0 4px 0 0 var(--amareloSombra);
+    margin: 0 ;
+  }

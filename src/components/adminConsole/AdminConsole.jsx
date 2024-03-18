@@ -63,7 +63,11 @@ export default function AdminConsole() {
           </option>
         ))}
       </select>
-      {selectedPlayer && <PlayerDisplayAdmin player={selectedPlayer} />}
+
+      
+      <PlayerDisplayAdmin player={selectedPlayer} />
+
+
       <button className="btn DELETAR" onClick={handleDeleteHistory}>
         Apagar RollsHistory
       </button>
