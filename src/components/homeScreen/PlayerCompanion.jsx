@@ -185,8 +185,8 @@ function PlayerCompanion() {
         clickHandler={(e) => handleBoxClick(e, manaBox, setManaBox, 1, "mana")}
       />
       <div className={styles.expContainer}>
-        <div>Exp: {userData.exp ? userData.exp : 999}</div>
-        <div>Exp Arcana: {userData.expA ? userData.expA : 999}</div>
+        <div>Exp: {userData.exp ? userData.exp : 0}</div>
+        <div>Exp Arcana: {userData.expA ? userData.expA : 0}</div>
       </div>
     </div>
   );
