@@ -6,8 +6,8 @@ function PlayerDisplayAdmin({ player }) {
   const [expAState, setExpAState] = React.useState(0)
 
   React.useEffect( ()=> {
-    setExpState(player.exp)
-    setExpAState(player.expA)
+    setExpState(player?.exp)
+    setExpAState(player?.expA)
   }, [player])
 
 
@@ -36,10 +36,10 @@ function PlayerDisplayAdmin({ player }) {
           </div>
         </div>
       </div>
-      <div>
+      <div className={styles.dmgTxtContainer}>
         {player &&
           Object.keys(player?.vitalidade?.dano).map((key) => (
-            <div key={key}>{key}: {player?.vitalidade?.dano[key]} </div>
+            <div key={key} className={styles.dmgTxtContainer}>{key}: {player?.vitalidade?.dano[key]} </div>
           ))}{" "}
          max: {player?.vitalidade?.max}
       </div>

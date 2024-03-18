@@ -30,7 +30,6 @@ function PlayerCompanion() {
       usado: userData?.fv?.usado,
     },
   };
-  console.log(userData)
   React.useEffect(() => {
     let danoObjc = userData.vitalidade.dano;
     setVitalidadeBox(
@@ -146,13 +145,17 @@ function PlayerCompanion() {
   }
 
   React.useEffect(() => {
-    const danoObj = userData.vitalidade.dano;
-    danoObj.contusivo = vitalidadeBox.filter((item) => item === 1).length;
-    danoObj.letal = vitalidadeBox.filter((item) => item === 2).length;
-    danoObj.agravado = vitalidadeBox.filter((item) => item === 3).length;
-    setDamageTaken((prev) => danoObj);
 
-    updatateVitOnDB();
+    if (userData.vitalidade.dano) {
+
+      const danoObj = userData.vitalidade.dano;
+      danoObj.contusivo = vitalidadeBox.filter((item) => item === 1).length;
+      danoObj.letal = vitalidadeBox.filter((item) => item === 2).length;
+      danoObj.agravado = vitalidadeBox.filter((item) => item === 3).length;
+      setDamageTaken((prev) => danoObj);
+      updatateVitOnDB();
+    }
+
   }, [vitalidadeBox]);
 
   React.useEffect(() => {
