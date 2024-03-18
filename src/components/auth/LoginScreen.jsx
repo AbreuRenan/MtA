@@ -71,7 +71,8 @@ export default function LoginScreen() {
     if (emailState && passwordState) {
       performLoginFirebase();
     } else {
-      setErroMsg("Dados Incorretos");
+      setErrorContextState("Dados Incorretos");
+
     }
   }
   return (
@@ -112,7 +113,7 @@ export default function LoginScreen() {
           </button>
         </form>
 
-        {errorContextState && <ErrorComponent msg={'Sem conexão com Internet'} />}
+        {errorContextState && <ErrorComponent state={errorContextState} msg={'Sem conexão com Internet'} />}
       </BackgroundImage>
     </div>
   );
