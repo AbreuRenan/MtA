@@ -57,7 +57,7 @@ export default function RollHistory() {
                 >{`  ${item?.sucessos} sucessos `}</p>
               ) : (
                 <p
-                  style={{ padding: "2px 0" }}
+                  style={{ padding: "2px 0", color: 'red' }}
                 >{`  ${falhaMizeravi} `}</p>
               )}
             </span>
