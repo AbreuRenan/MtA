@@ -6,7 +6,7 @@
   "name": "mt-a.vercel",
   "orientation": "portrait-primary",
   "scope": "/",
-  "short_name": "mt-a.vercel",
+  "short_name": "mt-a",
   "start_url": "/",
   "theme_color": "#d2c85a",
   "icons": [
@@ -25,5 +25,12 @@
     "entertainment",
     "games",
     "utilities"
+  ],
+  "shortcuts": [
+    {
+      "name": "Dado",
+      "url": "https://mt-a.vercel.app/#/dice",
+      "description": "Ir para Rolador de Dados"
+    }
   ]
 }
