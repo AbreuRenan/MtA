@@ -178,7 +178,7 @@ div.closeGame {
   background-color: var(--vermelho);
   box-shadow: 0 4px 0 0 var(--vermelhoSombra);
   transition: all .5s ease-in;;
-  animation: sinal .5s alternate-reverse .5s 6 forwards, final 1s 3s forwards
+  animation: sinal .5s alternate-reverse .1s 6 forwards, final 1s 3s forwards
 }
 
 @keyframes sinal {
