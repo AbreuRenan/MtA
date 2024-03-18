@@ -97,7 +97,7 @@ div:global(.light) {
     border: 1px solid transparent;
     border-radius: 50px;
     background-color: rgba(255,255,255,0.7);
-    background-image: url('assets/skull-95qLtZEu.png.png');
+    background-image: url('src/assets/skull.png');
     background-size: contain;
     background-repeat: no-repeat;
     opacity: .8;
