@@ -155,8 +155,7 @@ document.getElementById("installButton").addEventListener("click", () => {
           </button>
         </form>
 
-        <div id="installButton" className={styles.installStyle} ></div>
-
+        <div id="installButton" className={`installStyle`} ></div>
         {errorContextState && (
           <ErrorComponent
             state={errorContextState}
