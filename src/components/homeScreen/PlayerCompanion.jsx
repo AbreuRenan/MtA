@@ -30,7 +30,7 @@ function PlayerCompanion() {
       usado: userData?.fv?.usado,
     },
   };
-
+  console.log(userData)
   React.useEffect(() => {
     let danoObjc = userData.vitalidade.dano;
     setVitalidadeBox(
