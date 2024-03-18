@@ -1,0 +1,29 @@
+{
+  "background_color": "#0c0e00",
+  "description": "Kit de utilidades para RPG Mago o Despertar, com ficha, grimorio e rolador de dados",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "mt-a.vercel",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "short_name": "mt-a.vercel",
+  "start_url": "/",
+  "theme_color": "#d2c85a",
+  "icons": [
+    {
+      "src": "/assets/skull-k5V50jRF.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/mtashare.png"
+    }
+  ],
+  "id": "mt-aCompanion",
+  "lang": "pt",
+  "categories": [
+    "entertainment",
+    "games",
+    "utilities"
+  ]
+}
