@@ -6,7 +6,7 @@ import PlayerDisplayAdmin from "./playerDisplayAdmin";
 
 export default function AdminConsole() {
   const navigate = useNavigate();
-  const { userData, database } = useContext(AppContext);
+  const { userData, database, gameOpen, setGameOpen} = useContext(AppContext);
   const [playersData, setPlayersData] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
 
@@ -42,6 +42,11 @@ export default function AdminConsole() {
     setSelectedPlayer(selectPlayerData);
 
   }
+
+  function handleOpenGame() {
+    setGameOpen(!gameOpen);
+  }
+  console.log(gameOpen)
   return (
     <div className="container adminConsoleContainer">
       <select name="players" onChange={handleOptionSelect} defaultValue={'default'}>
@@ -55,6 +60,9 @@ export default function AdminConsole() {
       {selectedPlayer && <PlayerDisplayAdmin player={selectedPlayer} />}
       <button className="btn DELETAR" onClick={handleDeleteHistory}>
         Apagar RollsHistory
+      </button>
+      <button className={`btn ${!gameOpen ? 'openGame' : 'closeGame'}`} onClick={handleOpenGame}>
+        {!gameOpen ? 'Abrir Jogo' : 'Fechar Jogo'}
       </button>
     </div>
   );

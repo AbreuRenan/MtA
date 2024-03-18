@@ -22,6 +22,7 @@ export function AppContextComponent({ children }) {
   const [userData, setUserData] = React.useState(null);
   const [isLoggedIn, setLoggedIn] = React.useState(false);
   const [errorContextState, setErrorContextState] = React.useState(false);
+  const [gameOpen, setGameOpen] = React.useState(false)
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
   const auth = getAuth();
@@ -41,20 +42,15 @@ export function AppContextComponent({ children }) {
   }
 
   React.useEffect(() => {
-    const localData = localStorage.getItem("userdata");
-    const userLocalData = JSON.parse(localData);
-    if (userLocalData !== null) {
-      performLoginApp(userLocalData, true);
+    const localData = JSON.parse(localStorage.getItem("userdata"));
+    if (localData !== null) {
+      performLoginApp(localData, true);
     } else {
       localStorage.clear();
       navigate("/");
     }
   }, []);
 
-React.useEffect( ()=>{
-  console.log('userdata mudou')
-  console.log(userData)
-} ,[userData])
 
   return (
     <AppContext.Provider
@@ -71,6 +67,8 @@ React.useEffect( ()=>{
         performLoginApp,
         errorContextState,
         setErrorContextState,
+        gameOpen, 
+        setGameOpen
       }}
     >
       {children}

@@ -1,18 +1,19 @@
 @font-face {
-  font-family: PentaGramsSalemica ;
-  src: url('/src/assets/fonts/PentaGramsSalemica.ttf');
+  font-family: PentaGramsSalemica;
+  src: url("/src/assets/fonts/PentaGramsSalemica.ttf");
 }
 @font-face {
-  font-family: Trajan ;
+  font-family: Trajan;
   /* src: url('/assets/fonts/Trajan.ttf'); */
-  src: url('/src/assets/fonts/Trajan.ttf');
+  src: url("/src/assets/fonts/Trajan.ttf");
 }
 @font-face {
-  font-family: TrajanBold ;
-  src: url('/src/assets/fonts/TrajanBold.ttf');
+  font-family: TrajanBold;
+  src: url("/src/assets/fonts/TrajanBold.ttf");
 }
 :root {
   --verde: #389b3c;
+  --verdeSombra: #0d5510;
   --azul: #009cb9;
   --vermelho: #9e4141;
   --amarelo: #d2c85a;
@@ -21,25 +22,27 @@
   --vermelhoSombra: #3f1818;
   --bg1: #0c0e00;
   --bg2: #242424;
-  --magoFont: 'Trajan';
-  --magoFontBold: 'TrajanBold';
-  --grad-dourado-chic:  linear-gradient(135deg, rgba(210,200,90,1) 25%, rgba(200,157,0,1) 75%);
+  --magoFont: "Trajan";
+  --magoFontBold: "TrajanBold";
+  --grad-dourado-chic: linear-gradient(
+    135deg,
+    rgba(210, 200, 90, 1) 25%,
+    rgba(200, 157, 0, 1) 75%
+  );
 }
-
 
 * {
   margin: 0;
   padding: 0;
   min-width: 0;
-  
+
   font-size: 16px;
-  font-family: 'Roboto',  sans-serif;
+  font-family: "Roboto", sans-serif;
 
   list-style: none;
   text-decoration: none;
-  box-sizing: border-box!important;
+  box-sizing: border-box !important;
   scroll-behavior: smooth;
-
 }
 
 body {
@@ -48,13 +51,14 @@ body {
   height: 100svh;
   color: #f2f3eb;
   background-color: #030600;
-  background-image: url('assets/bg.jpg');
+  background-image: url("assets/bg.jpg");
   background-repeat: no-repeat;
   background-position: top;
   background-size: contain;
   border-radius: 10px;
 }
-a, :visited {
+a,
+:visited {
   color: #f2f3eb;
 }
 
@@ -67,12 +71,12 @@ button {
 .container {
   height: 100vh;
 }
-.active{
+.active {
   color: var(--amarelo);
   width: 100%;
   text-align: center;
-  background-color: rgba(255,255,0,0.1);
-  box-shadow: inset 0px 0 20px 0px rgba(255,255,0,0.15);
+  background-color: rgba(255, 255, 0, 0.1);
+  box-shadow: inset 0px 0 20px 0px rgba(255, 255, 0, 0.15);
   padding: 10px;
 }
 .btn {
@@ -84,25 +88,25 @@ button {
   width: 160px;
 }
 
-.gd-dice{
-  background: url('assets/gd.png') no-repeat center;
+.gd-dice {
+  background: url("assets/gd.png") no-repeat center;
   background-size: contain;
-  border: 1px transparent 
+  border: 1px transparent;
 }
-.bd-dice{
-  background: url('assets/bd.png') no-repeat center;
+.bd-dice {
+  background: url("assets/bd.png") no-repeat center;
   background-size: contain;
-  border: 1px transparent 
+  border: 1px transparent;
 }
-.yd-dice{
-  background: url('assets/yd.png') no-repeat center;
+.yd-dice {
+  background: url("assets/yd.png") no-repeat center;
   background-size: contain;
-  border: 1px transparent 
+  border: 1px transparent;
 }
-.rd-dice{
-  background: url('assets/rd.png') no-repeat center;
+.rd-dice {
+  background: url("assets/rd.png") no-repeat center;
   background-size: contain;
-  border: 1px transparent 
+  border: 1px transparent;
 }
 
 .adminConsoleContainer {
@@ -114,8 +118,55 @@ button {
   gap: 10px;
   height: 100vh;
 }
-.DELETAR:active, .DELETAR:hover {
+.DELETAR:active,
+.DELETAR:hover {
   background-color: var(--vermelho);
   box-shadow: 0 4px 0 0 var(--vermelhoSombra);
+}
 
+.openGame {
+  background-color: var(--verde);
+  box-shadow: 0 4px 0 0 var(--verdeSombra);
+}
+.closeGame {
+  background-color: var(--vermelho);
+  box-shadow: 0 4px 0 0 var(--vermelhoSombra);
+}
+div.openGame {
+  position: relative;
+  padding: 10px;
+  margin: 10px 0;
+  text-align: center;
+  font-size: 1.5rem;
+  background-color: var(--verde);
+  box-shadow: 0 4px 0 0 var(--verdeSombra);
+  transition: all 3.2s ease;
+  animation: sinal 3.2s forwards;
+}
+div.closeGame {
+  position: relative;
+  padding: 10px;
+  margin: 10px 0;
+  text-align: center;
+  font-size: 1.5rem;
+  background-color: var(--vermelho);
+  box-shadow: 0 4px 0 0 var(--vermelhoSombra);
+  transition: all .5s ease;
+  animation: sinal .5s alternate-reverse .5s 6 forwards, final 1s 3s forwards
+}
+
+@keyframes sinal {
+  from {
+    filter: brightness(1.5);
+  }
+  to {
+    filter: brightness(1);
+  }
+}
+@keyframes final {
+  to {
+    font-size: 1rem;
+    height: fit-content;
+    padding: 2px;
+  }
 }
