@@ -124,6 +124,28 @@ button {
   box-shadow: 0 4px 0 0 var(--vermelhoSombra);
 }
 
+.loadingScreen {
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  z-index: 10;
+  background-color: rgba(0,0,0,.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--magoFont);
+  font-size: 2rem;
+  z-index: 10;
+  transition: all ease-out .3s;
+}
+.loadingScreen.isLoading {
+  opacity: 1;
+  visibility: initial;
+}
+
 .openGame {
   background-color: var(--verde);
   box-shadow: 0 4px 0 0 var(--verdeSombra);
@@ -133,6 +155,8 @@ button {
   box-shadow: 0 4px 0 0 var(--vermelhoSombra);
 }
 div.openGame {
+  opacity: 0;
+  visibility: hidden;
   position: relative;
   padding: 10px;
   margin: 10px 0;
@@ -140,10 +164,12 @@ div.openGame {
   font-size: 1.5rem;
   background-color: var(--verde);
   box-shadow: 0 4px 0 0 var(--verdeSombra);
-  transition: all 3.2s ease;
-  animation: sinal 3.2s forwards;
+  transition: all .5s ease-in;
+  animation: sinal .5s alternate-reverse .5s 6 forwards, final 1s 3s forwards
 }
 div.closeGame {
+  opacity: 0;
+  visibility: hidden;
   position: relative;
   padding: 10px;
   margin: 10px 0;
@@ -151,15 +177,18 @@ div.closeGame {
   font-size: 1.5rem;
   background-color: var(--vermelho);
   box-shadow: 0 4px 0 0 var(--vermelhoSombra);
-  transition: all .5s ease;
+  transition: all .5s ease-in;;
   animation: sinal .5s alternate-reverse .5s 6 forwards, final 1s 3s forwards
 }
 
 @keyframes sinal {
   from {
+    opacity: 1;
     filter: brightness(1.5);
   }
   to {
+    visibility: initial;
+    opacity: 1;
     filter: brightness(1);
   }
 }

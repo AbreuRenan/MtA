@@ -1,7 +1,7 @@
 import React from "react";
 
 import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
+import { get, getDatabase, onValue, ref, set } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -23,6 +23,7 @@ export function AppContextComponent({ children }) {
   const [isLoggedIn, setLoggedIn] = React.useState(false);
   const [errorContextState, setErrorContextState] = React.useState(false);
   const [gameOpen, setGameOpen] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
   const auth = getAuth();
@@ -42,6 +43,7 @@ export function AppContextComponent({ children }) {
   }
 
   React.useEffect(() => {
+    setLoading(true)
     const localData = JSON.parse(localStorage.getItem("userdata"));
     if (localData !== null) {
       performLoginApp(localData, true);
@@ -49,6 +51,14 @@ export function AppContextComponent({ children }) {
       localStorage.clear();
       navigate("/");
     }
+    const gameStatusRef = ref(database, 'gameStatus');
+    onValue(gameStatusRef, (snapshot) => {
+      if(snapshot.exists()){
+        const status = snapshot.val()
+        setGameOpen(status.gameStatus)
+      }
+      setLoading(false)
+    })
   }, []);
 
 
@@ -68,7 +78,8 @@ export function AppContextComponent({ children }) {
         errorContextState,
         setErrorContextState,
         gameOpen, 
-        setGameOpen
+        setGameOpen,
+        loading, setLoading
       }}
     >
       {children}

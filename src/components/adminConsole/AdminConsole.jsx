@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AppContext } from "../../AppContext";
 import { useNavigate } from "react-router-dom";
-import { get, ref, remove, set } from "firebase/database";
+import { get, ref, remove, set, update } from "firebase/database";
 import PlayerDisplayAdmin from "./playerDisplayAdmin";
 
 export default function AdminConsole() {
@@ -23,9 +23,16 @@ export default function AdminConsole() {
         setPlayersData(data);
       }
     }
-
     fetchPlayersData();
   }, [userData, database, navigate]);
+
+  useEffect( ()=> {
+    const gameRef = ref(database, "gameStatus");
+    const newGameStatus = {gameStatus: gameOpen}
+    update(gameRef, newGameStatus)
+  }, [gameOpen])
+
+
 
   const handleDeleteHistory = () => {
     const rollsRef = ref(database, "rollsHistory");
