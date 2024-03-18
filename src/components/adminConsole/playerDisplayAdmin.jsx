@@ -11,8 +11,7 @@ function PlayerDisplayAdmin({ player }) {
     width: "50%",
     display: "grid",
   };
-
-  console.log(Object.keys(dano))
+console.log(player)
 
   return (
     <div style={divContainerStyle}>
@@ -22,7 +21,7 @@ function PlayerDisplayAdmin({ player }) {
         <span> | </span>
         <span>{expA}</span>
       </div>
-      <div>{max} |  {Object.keys(dano).map( key => <span>{dano[key]}</span>)}</div>
+      <div>{max} |  {Object.keys(dano).map( key => <span key={key}>{dano[key]}</span>)}</div>
     </div>
   );
 }

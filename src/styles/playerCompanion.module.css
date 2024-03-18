@@ -19,3 +19,16 @@
 :global(.agravado) {
     background-image: url('../assets/3.png');
 }
+
+.expContainer{
+    display: flex;
+    padding: 20px 0;
+    gap: 20px;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.expContainer>div {
+    font-family: var(--magoFont);
+    font-weight: bold;
+}

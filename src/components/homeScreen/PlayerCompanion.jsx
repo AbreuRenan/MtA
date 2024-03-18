@@ -30,32 +30,42 @@ function PlayerCompanion() {
       usado: userData?.fv?.usado,
     },
   };
-  
+
   React.useEffect(() => {
     let danoObjc = userData.vitalidade.dano;
     setVitalidadeBox(
       Array.from({ length: firebasePlayerDataScheema.vitalidade.max }, () => {
-        if (danoObjc.agravado > 0) {danoObjc.agravado--; return 3}
-        else if (danoObjc.letal > 0)  {danoObjc.letal--; return 2}
-        else if (danoObjc.contusivo > 0)  {danoObjc.contusivo--; return 1}
-        else return 0
-    })
+        if (danoObjc.agravado > 0) {
+          danoObjc.agravado--;
+          return 3;
+        } else if (danoObjc.letal > 0) {
+          danoObjc.letal--;
+          return 2;
+        } else if (danoObjc.contusivo > 0) {
+          danoObjc.contusivo--;
+          return 1;
+        } else return 0;
+      })
     );
     let manaObj = userData.mana.usado;
     setManaBox(
       Array.from({ length: firebasePlayerDataScheema.mana.max }, () => {
-        if (manaObj > 0) {manaObj--; return 1}
-        else return 0
+        if (manaObj > 0) {
+          manaObj--;
+          return 1;
+        } else return 0;
       })
     );
-    let fvObj = userData.fv.usado
-    setFvBox(Array.from({ length: firebasePlayerDataScheema.fv.max }, () => {
-      if(fvObj > 0) {fvObj--; return 1}
-      else return 0
-    }));
+    let fvObj = userData.fv.usado;
+    setFvBox(
+      Array.from({ length: firebasePlayerDataScheema.fv.max }, () => {
+        if (fvObj > 0) {
+          fvObj--;
+          return 1;
+        } else return 0;
+      })
+    );
   }, []);
-
-
 
   async function updatateVitOnDB() {
     const userRefInDB = ref(database, `users/${userData.id}`);
@@ -65,17 +75,19 @@ function PlayerCompanion() {
         dano: damageTaken,
       },
     };
-    if(gameOpen || userData.role === "narrador") {
-      const response = await update(userRefInDB, newDmgData).then(()=> true).catch(e => e)
-      if(response) {
-        const newUserData = userData
+    if (gameOpen || userData.role === "narrador") {
+      const response = await update(userRefInDB, newDmgData)
+        .then(() => true)
+        .catch((e) => e);
+      if (response) {
+        const newUserData = userData;
         userData.vitalidade.dano = damageTaken;
         saveLocalData(newUserData);
       }
     }
   }
 
-  async function updatateFvOnDB(fv){
+  async function updatateFvOnDB(fv) {
     const userRefInDB = ref(database, `users/${userData.id}`);
     const newFVData = {
       fv: {
@@ -83,18 +95,19 @@ function PlayerCompanion() {
         usado: fv,
       },
     };
-    if(gameOpen || userData.role === "narrador"){
-      const response = await update(userRefInDB, newFVData).then( ()=> true).catch(e => console.log(e))
+    if (gameOpen || userData.role === "narrador") {
+      const response = await update(userRefInDB, newFVData)
+        .then(() => true)
+        .catch((e) => console.log(e));
       if (response) {
         const newUserData = userData;
         userData.fv.usado = fv;
         saveLocalData(newUserData);
       }
     }
-
   }
 
-  async function updatateManaOnDB(m){
+  async function updatateManaOnDB(m) {
     const userRefInDB = ref(database, `users/${userData.id}`);
     const newFVData = {
       mana: {
@@ -102,15 +115,16 @@ function PlayerCompanion() {
         usado: m,
       },
     };
-    if(gameOpen || userData.role === "narrador") {
-      const response = await update(userRefInDB, newFVData).then( ()=> true).catch(e => console.log(e))
+    if (gameOpen || userData.role === "narrador") {
+      const response = await update(userRefInDB, newFVData)
+        .then(() => true)
+        .catch((e) => console.log(e));
       if (response) {
         const newUserData = userData;
         userData.mana.usado = m;
         saveLocalData(newUserData);
       }
     }
-
   }
 
   function handleBoxClick(
@@ -133,27 +147,26 @@ function PlayerCompanion() {
 
   React.useEffect(() => {
     const danoObj = userData.vitalidade.dano;
-    danoObj.contusivo = vitalidadeBox.filter( (item) => item === 1).length
-    danoObj.letal = vitalidadeBox.filter( (item) => item === 2).length
-    danoObj.agravado = vitalidadeBox.filter( (item) => item === 3).length
+    danoObj.contusivo = vitalidadeBox.filter((item) => item === 1).length;
+    danoObj.letal = vitalidadeBox.filter((item) => item === 2).length;
+    danoObj.agravado = vitalidadeBox.filter((item) => item === 3).length;
     setDamageTaken((prev) => danoObj);
 
-    updatateVitOnDB()
+    updatateVitOnDB();
   }, [vitalidadeBox]);
 
   React.useEffect(() => {
-    const fvObj = fvBox.filter( (item) => item === 1).length
-    updatateFvOnDB(fvObj)
+    const fvObj = fvBox.filter((item) => item === 1).length;
+    updatateFvOnDB(fvObj);
   }, [fvBox]);
 
   React.useEffect(() => {
-    const manaObj = manaBox.filter( (item) => item === 1).length
-    updatateManaOnDB(manaObj)
+    const manaObj = manaBox.filter((item) => item === 1).length;
+    updatateManaOnDB(manaObj);
   }, [manaBox]);
 
-
   return (
-    <div style={{marginBottom: '50px'}}>
+    <div >
       <RenderPlayerUtilsBox
         boxToRender={vitalidadeBox}
         type={"Vitalidade"}
@@ -164,13 +177,17 @@ function PlayerCompanion() {
       <RenderPlayerUtilsBox
         boxToRender={fvBox}
         type={"Força de Vontade"}
-        clickHandler={(e) => handleBoxClick(e, fvBox, setFvBox, 1,'fv')}
+        clickHandler={(e) => handleBoxClick(e, fvBox, setFvBox, 1, "fv")}
       />
       <RenderPlayerUtilsBox
         boxToRender={manaBox}
         type={"Mana"}
-        clickHandler={(e) => handleBoxClick(e, manaBox, setManaBox, 1, 'mana')}
+        clickHandler={(e) => handleBoxClick(e, manaBox, setManaBox, 1, "mana")}
       />
+      <div className={styles.expContainer}>
+        <div>Exp: {userData.exp ? userData.exp : 999}</div>
+        <div>Exp Arcana: {userData.expA ? userData.expA : 999}</div>
+      </div>
     </div>
   );
 }

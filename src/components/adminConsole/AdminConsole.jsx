@@ -53,7 +53,6 @@ export default function AdminConsole() {
   function handleOpenGame() {
     setGameOpen(!gameOpen);
   }
-  console.log(gameOpen)
   return (
     <div className="container adminConsoleContainer">
       <select name="players" onChange={handleOptionSelect} defaultValue={'default'}>
