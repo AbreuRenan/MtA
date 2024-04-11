@@ -8,6 +8,10 @@
   height: 100%;
 }
 
+.adminConsoleContainer>:first-child {
+    width: calc(100% - 50px);
+}
+
 .divContainerStyle {
     background-color: #000;
     border: 1px solid var(--amarelo);

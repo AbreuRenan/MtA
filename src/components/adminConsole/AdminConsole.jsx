@@ -5,6 +5,7 @@ import { get, ref, remove, set, update } from "firebase/database";
 import PlayerDisplayAdmin from "./playerDisplayAdmin";
 
 import styles from './adminStyles.module.css'
+import RollHistory from "../diceScreenComponents/RollHistory";
 
 export default function AdminConsole() {
   const navigate = useNavigate();
@@ -27,9 +28,7 @@ export default function AdminConsole() {
           let fa = a.nome.toLowerCase();
           let fb = b.nome.toLowerCase();
           return fa < fb ? -1 : fa > fb ? 1 : 0;
-        })
-        console.log(data)
-   
+        }) 
         setPlayersData(data);
       }
     }
@@ -62,18 +61,10 @@ export default function AdminConsole() {
   }
   return (
     <div className={`${styles.adminConsoleContainer}`}>
-      {/* <select name="players" onChange={handleOptionSelect} defaultValue={'default'}>
-        <option value="default" disabled hidden>Escolha um jogador</option>
-        {playersData.map((player, index) => (
-          <option key={index} value={index}>
-            {player.nome}
-          </option>
-        ))}
-      </select> */}
+      <RollHistory />
       {playersData.map((selectedPlayer, index) => {
         const { exp, expA, fv, mana, nome, vitalidade } = selectedPlayer;
-        console.log(nome, mana);
-        return <PlayerDisplayAdmin player={selectedPlayer} />;
+        return <PlayerDisplayAdmin player={selectedPlayer} key={index}/>;
       })}
 
       <div className={styles.btnContainer}>
