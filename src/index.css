@@ -110,22 +110,6 @@ button {
   border: 1px transparent;
 }
 
-.adminConsoleContainer {
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  height: 100%;
-}
-
-.DELETAR:active,
-.DELETAR:hover {
-  background-color: var(--vermelho);
-  box-shadow: 0 4px 0 0 var(--vermelhoSombra);
-}
-
 .loadingScreen {
   position: absolute;
   opacity: 0;
@@ -148,40 +132,7 @@ button {
   visibility: initial;
 }
 
-.openGame {
-  background-color: var(--verde);
-  box-shadow: 0 4px 0 0 var(--verdeSombra);
-}
-.closeGame {
-  background-color: var(--vermelho);
-  box-shadow: 0 4px 0 0 var(--vermelhoSombra);
-}
-div.openGame {
-  opacity: 0;
-  visibility: hidden;
-  position: relative;
-  padding: 10px;
-  margin: 10px 0;
-  text-align: center;
-  font-size: 1.5rem;
-  background-color: var(--verde);
-  box-shadow: 0 4px 0 0 var(--verdeSombra);
-  transition: all .5s ease-in;
-  animation: sinal .5s alternate-reverse .5s 6 forwards, final 1s 3s forwards
-}
-div.closeGame {
-  opacity: 0;
-  visibility: hidden;
-  position: relative;
-  padding: 10px;
-  margin: 10px 0;
-  text-align: center;
-  font-size: 1.5rem;
-  background-color: var(--vermelho);
-  box-shadow: 0 4px 0 0 var(--vermelhoSombra);
-  transition: all .5s ease-in;;
-  animation: sinal .5s alternate-reverse .1s 6 forwards, final 1s 3s forwards
-}
+
 
 @keyframes sinal {
   from {

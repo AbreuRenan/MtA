@@ -22,19 +22,29 @@ function PlayerDisplayAdmin({ player }) {
       <h1>{player?.nome ? player.nome : "Jogador Não Selecionado"}</h1>
       <div className={styles.expContainer}>
         <div>
-          <span>Exp: {player?.exp ? expState : "N/A"}</span>
+          <span>FV Max: {player?.fv?.max}</span>
         </div>
         <div>
-          <span>Exp Arcana:{player?.expA ? expAState : "N/A"}</span>
+          <span>FV Gasto: {player?.fv?.usado}</span>
         </div>
       </div>
+      <div className={styles.manaContainer}>
+        <div>
+          <span>Mana Max: {player?.mana?.max}</span>
+        </div>
+        <div>
+          <span>Mana Gasto: {player?.mana?.usado}</span>
+        </div>
+      </div>
+      <hr />
       <div className={styles.dmgTxtContainer}>
+      
         {player &&
           Object.keys(player?.vitalidade?.dano).map((key) => (
             <div key={key} className={styles.dmgItem}>{key}: {player?.vitalidade?.dano[key]} </div>
           ))}{" "}
          <div>
-            max: {player?.vitalidade?.max}
+            Vitalidade max: {player?.vitalidade?.max}
          </div>
       </div>
     </div>
