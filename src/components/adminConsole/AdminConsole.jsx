@@ -23,7 +23,13 @@ export default function AdminConsole() {
       if (playerSnapshot.exists()) {
         const data = Object.values(playersList).filter(
           (user) => user.role !== "narrador"
-        );
+        ).sort( (a, b) => {
+          let fa = a.nome.toLowerCase();
+          let fb = b.nome.toLowerCase();
+          return fa < fb ? -1 : fa > fb ? 1 : 0;
+        })
+        console.log(data)
+   
         setPlayersData(data);
       }
     }
