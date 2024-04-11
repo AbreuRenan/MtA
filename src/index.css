@@ -117,8 +117,9 @@ button {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  height: 100vh;
+  height: 100%;
 }
+
 .DELETAR:active,
 .DELETAR:hover {
   background-color: var(--vermelho);

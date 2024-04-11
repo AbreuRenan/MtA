@@ -1,23 +1,28 @@
+.adminConsoleContainer{
+  
+}
 .divContainerStyle {
     background-color: #000;
     border: 1px solid var(--amarelo);
     width: calc(100% - 50px);
-    min-height: 200px;
-    padding: 20px;
+    padding: 10px;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 2px;
   }
 
   .divContainerStyle h1 {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     font-family: var(--magoFont);
     line-height: 1;
   }
 
   .dmgTxtContainer {
-    font-size: 1.2rem;
+    font-size: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
   
   }
   .dmgTxtContainer>* {

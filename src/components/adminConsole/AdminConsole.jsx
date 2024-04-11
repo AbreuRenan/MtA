@@ -8,7 +8,7 @@ export default function AdminConsole() {
   const navigate = useNavigate();
   const { userData, database, gameOpen, setGameOpen} = useContext(AppContext);
   const [playersData, setPlayersData] = useState([]);
-  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  // const [selectedPlayer, setSelectedPlayer] = useState(null);
 
   useEffect(() => {
     if (userData.role !== "narrador") {
@@ -55,17 +55,21 @@ export default function AdminConsole() {
   }
   return (
     <div className="container adminConsoleContainer">
-      <select name="players" onChange={handleOptionSelect} defaultValue={'default'}>
+      {/* <select name="players" onChange={handleOptionSelect} defaultValue={'default'}>
         <option value="default" disabled hidden>Escolha um jogador</option>
         {playersData.map((player, index) => (
           <option key={index} value={index}>
             {player.nome}
           </option>
         ))}
-      </select>
-
+      </select> */}
+      {playersData.map( (selectedPlayer, index) => {
+        const { exp, expA, fv, mana, nome, vitalidade} = selectedPlayer
+        console.log(nome, mana)
+        return <PlayerDisplayAdmin player={selectedPlayer}/>
+      })}
       
-      <PlayerDisplayAdmin player={selectedPlayer} />
+      
 
 
       <button className="btn DELETAR" onClick={handleDeleteHistory}>

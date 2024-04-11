@@ -23,25 +23,19 @@ function PlayerDisplayAdmin({ player }) {
       <div className={styles.expContainer}>
         <div>
           <span>Exp: {player?.exp ? expState : "N/A"}</span>
-          <div>
-            <button className={styles.btn} onClick={() => handleClick('exp',1)}>+</button>
-            <button className={styles.btn} onClick={() => handleClick('exp',-1)}>-</button>
-          </div>
         </div>
         <div>
           <span>Exp Arcana:{player?.expA ? expAState : "N/A"}</span>
-          <div>
-            <button className={styles.btn} onClick={() => handleClick('expA',1)}>+</button>
-            <button className={styles.btn} onClick={() => handleClick('expA',-1)}>-</button>
-          </div>
         </div>
       </div>
       <div className={styles.dmgTxtContainer}>
         {player &&
           Object.keys(player?.vitalidade?.dano).map((key) => (
-            <div key={key} className={styles.dmgTxtContainer}>{key}: {player?.vitalidade?.dano[key]} </div>
+            <div key={key} className={styles.dmgItem}>{key}: {player?.vitalidade?.dano[key]} </div>
           ))}{" "}
-         max: {player?.vitalidade?.max}
+         <div>
+            max: {player?.vitalidade?.max}
+         </div>
       </div>
     </div>
   );

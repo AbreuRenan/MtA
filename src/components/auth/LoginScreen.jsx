@@ -37,7 +37,7 @@ export default function LoginScreen() {
         })
         .catch((err) => {
           console.log(err);
-          setLoggedIn(true);
+          setLoggedIn(false);
           setErrorContextState(err);
         });
     } else {
@@ -60,8 +60,9 @@ export default function LoginScreen() {
         }
       }
     }
+    fetchFirebase()
 
-    fetchFirebase();
+    
   }, [userData]);
 
   function handleInputChange({ target }, inputName) {
@@ -76,11 +77,6 @@ export default function LoginScreen() {
       setErrorContextState("Dados Incorretos");
     }
   }
-
-  function pwaClickHandler() {
-    console.log('oi')
-  }
-
 
   React.useEffect( () => {
     let deferredPrompt;
