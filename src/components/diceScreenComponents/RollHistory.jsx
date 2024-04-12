@@ -4,7 +4,7 @@ import { onValue, ref } from "firebase/database";
 
 import styles from "../../styles/rollHistory.module.css";
 
-export default function RollHistory() {
+export default function RollHistory({single = false}) {
   const { database, errorContextState, setErrorContextState } =
     React.useContext(AppContext);
   const [rollsHistoryData, setRollsHistoryData] = React.useState([]);
@@ -21,7 +21,12 @@ export default function RollHistory() {
     for (const key in snapshotVal) {
       dataArray.push(snapshotVal[key]);
     }
-    setRollsHistoryData(dataArray.reverse());
+    if(single) {
+      const single = dataArray.reverse();
+      setRollsHistoryData([single[0]])
+    } else {
+      setRollsHistoryData(dataArray.reverse());
+    }
   }
 
   React.useEffect(() => {
@@ -33,9 +38,13 @@ export default function RollHistory() {
       {rollsHistoryData.map((item, index) => {
         const numOfOnes = item.roll.filter((roll) => roll === 1).length;
         let falhaMizeravi = false;
+        if (item.sucessos === 0 && numOfOnes === 0) {
+          falhaMizeravi = "Nenhum Sucesso";
+        }
         if (item.sucessos === 0 && numOfOnes > 0) {
           falhaMizeravi = "Falhou Mizeravi";
         }
+
         const rollString = item.roll.map((i, index) => {
           if (index !== item.roll.length - 1) return ` ${i}`;
           return ` ${i}`;

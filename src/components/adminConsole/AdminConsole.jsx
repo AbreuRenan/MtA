@@ -61,7 +61,7 @@ export default function AdminConsole() {
   }
   return (
     <div className={`${styles.adminConsoleContainer}`}>
-      <RollHistory />
+      <RollHistory single={true}/>
       {playersData.map((selectedPlayer, index) => {
         const { exp, expA, fv, mana, nome, vitalidade } = selectedPlayer;
         return <PlayerDisplayAdmin player={selectedPlayer} key={index}/>;
