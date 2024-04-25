@@ -35,18 +35,20 @@ export default function RollHistory({single = false}) {
 
   return (
     <div className={styles.rollHistoryContainer}>
-      {rollsHistoryData?.map((item, index) => {
-        const numOfOnes = item.roll.filter((roll) => roll === 1).length;
+      
+      {rollsHistoryData == false ? <></> : rollsHistoryData?.map((item, index) => {
+
+        const numOfOnes = item?.roll.filter((roll) => roll === 1).length;
         let falhaMizeravi = false;
-        if (item.sucessos === 0 && numOfOnes === 0) {
+        if (item?.sucessos === 0 && numOfOnes === 0) {
           falhaMizeravi = "Nenhum Sucesso";
         }
-        if (item.sucessos === 0 && numOfOnes > 0) {
+        if (item?.sucessos === 0 && numOfOnes > 0) {
           falhaMizeravi = "Falhou Mizeravi";
         }
 
-        const rollString = item.roll.map((i, index) => {
-          if (index !== item.roll.length - 1) return ` ${i}`;
+        const rollString = item?.roll.map((i, index) => {
+          if (index !== item?.roll.length - 1) return ` ${i}`;
           return ` ${i}`;
         });
         return (
@@ -56,11 +58,11 @@ export default function RollHistory({single = false}) {
               index % 2 ? styles.evenRow : styles.oddRow
             }`}
           >
-            <span>{item.date}</span>
+            <span>{item?.date}</span>
             <span style={{ paddingRight: "10px" }}>
               <p style={{ padding: "2px 0" }}>{` [ ${rollString} ] `}</p>
               <hr />
-              {item.sucessos && !falhaMizeravi ? (
+              {item?.sucessos && !falhaMizeravi ? (
                 <p
                   style={{ padding: "2px 0" }}
                 >{`  ${item?.sucessos} sucessos `}</p>
@@ -70,7 +72,7 @@ export default function RollHistory({single = false}) {
                 >{`  ${falhaMizeravi} `}</p>
               )}
             </span>
-            <span>{item.user}</span>
+            <span>{item?.user}</span>
           </div>
         );
       })}
