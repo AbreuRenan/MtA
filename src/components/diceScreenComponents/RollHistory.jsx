@@ -35,7 +35,7 @@ export default function RollHistory({single = false}) {
 
   return (
     <div className={styles.rollHistoryContainer}>
-      {rollsHistoryData.map((item, index) => {
+      {rollsHistoryData?.map((item, index) => {
         const numOfOnes = item.roll.filter((roll) => roll === 1).length;
         let falhaMizeravi = false;
         if (item.sucessos === 0 && numOfOnes === 0) {
