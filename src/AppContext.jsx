@@ -19,11 +19,12 @@ const firebaseConfig = {
 export const AppContext = React.createContext();
 
 export function AppContextComponent({ children }) {
+  const [hasEvent, setEvent] = React.useState(null);
   const [userData, setUserData] = React.useState(null);
   const [isLoggedIn, setLoggedIn] = React.useState(false);
   const [errorContextState, setErrorContextState] = React.useState(false);
-  const [gameOpen, setGameOpen] = React.useState(false)
-  const [loading, setLoading] = React.useState(false)
+  const [gameOpen, setGameOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
   const auth = getAuth();
@@ -68,14 +69,22 @@ export function AppContextComponent({ children }) {
       })
     }
     setLoading(false)
+
+    const gameEventRef = ref(database, 'event');
+    onValue(gameEventRef, (snapshot) => {
+      if(snapshot.exists()){
+        const status = snapshot.val()
+        setEvent(status.hasEvent);
+      }
+    })
   }, []);
 
 
   return (
     <AppContext.Provider
       value={{
-        isLoggedIn,
-        setIsLoggedIn: setLoggedIn,
+        hasEvent, setEvent,
+        isLoggedIn, setIsLoggedIn: setLoggedIn,
         setLoggedIn,
         userData,
         setUserData,

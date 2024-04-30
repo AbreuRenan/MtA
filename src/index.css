@@ -1,3 +1,4 @@
+@import './Event.css';
 @font-face {
   font-family: PentaGramsSalemica;
   src: url("/src/assets/fonts/PentaGramsSalemica.ttf");
@@ -11,6 +12,9 @@
   font-family: TrajanBold;
   src: url("/src/assets/fonts/TrajanBold.ttf");
 }
+
+
+
 :root {
   --verde: #389b3c;
   --verdeSombra: #0d5510;

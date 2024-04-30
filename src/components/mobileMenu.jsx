@@ -1,10 +1,11 @@
 import React from "react";
-import DiceRollerComponent from "./diceRoller";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 import styles from "../styles/mobileMenu.module.css";
+import { AppContext } from "../AppContext";
 
 function MobileMenu({ isOpen, setMenuMobileIsOpen }) {
+  const { hasEvent } = React.useContext(AppContext)
   return (
     <>
       <div className={`${isOpen ? styles.isOpen : ""} ${styles.mobileMenu}`}>
@@ -12,13 +13,13 @@ function MobileMenu({ isOpen, setMenuMobileIsOpen }) {
           <NavLink to="/home" end onClick={() => setMenuMobileIsOpen(false)}>
             Home
           </NavLink>
-          {/* <NavLink
-            to="/spellbook"
+{hasEvent && <NavLink
+            to="/event"
             end
             onClick={() => setMenuMobileIsOpen(false)}
           >
-            Grimório
-          </NavLink> */}
+            Evento
+          </NavLink>}
           <NavLink to="/dice" end onClick={() => setMenuMobileIsOpen(false)}>
             Dado
           </NavLink>

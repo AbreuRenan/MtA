@@ -1,0 +1,79 @@
+.gradContainer{
+    position: relative;
+    transform: translateY(-50px);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 320px;
+}
+
+.gradOverImg{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1));
+    z-index: 1;
+}
+
+.imgDoEvento{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.eventContainer {
+ padding: 1rem;
+}
+.eventContainer>h1 {
+    font-family: var(--magoFont);
+    text-align: center;
+    color: var(--amarelo);
+    text-shadow: 0 0 10px gold;
+    animation: glowTeasure 2.7s ease-in-out infinite;
+}
+
+.grid {
+    display: grid;
+    margin: 20px 1rem;
+    grid-template-columns: 70% 30%;
+    gap: 4px;
+}
+.gridItem {
+    position: relative;
+    font-size: .8rem;
+}
+.gridItem:hover>span{
+    display: block;
+}
+.gridItem>span{
+    position: absolute;
+    display: none;
+    font-size: .7rem;
+    padding: 10px;
+    background: rgba(0,0,0,0.85);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 4px;
+    width: 150px;
+    top: -40px;
+    right: -50px;
+}
+.titulo {
+    font-size: .9rem;
+    font-weight: bold;
+}
+
+@keyframes glowTeasure {
+    0% {
+        text-shadow: 0 0 10px gold;
+    }
+    50% {
+        text-shadow: 0 0 2px gold;
+    }
+    100% {
+        text-shadow: 0 0 10px gold;
+        
+    }
+    
+}
