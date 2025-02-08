@@ -12,6 +12,7 @@ import RouterGuard from "./components/helpers/RouterGuard";
 import Logout from "./components/auth/Logout";
 import AdminConsole from "./components/adminConsole/AdminConsole";
 import Event from "./components/eventScreen/Event";
+import SpellCalcScreen from "./components/spellCalcScreen/SpellCalcScreen";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/home" element={<RouterGuard><Home /></RouterGuard>} />
+          <Route path="/spellCalc" element={<RouterGuard><SpellCalcScreen /></RouterGuard>} />
           <Route path="/event" element={<RouterGuard><Event /></RouterGuard>} />
           <Route path="/dice" element={<RouterGuard><DiceRollerComponent /></RouterGuard>} />
           <Route path="/reports/*" element={<RouterGuard><ReportScreen /></RouterGuard>} />

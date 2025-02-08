@@ -3,7 +3,8 @@
     display: flex;
     flex-direction: column;
     gap: 50px;
-    margin-top: 70px;
+    margin-top: 5svh;
+    overflow-y: scroll;
 }
 .mobileNavigation>a{
     display: flex;
@@ -12,6 +13,7 @@
     font-size: 2rem;
     font-family: var(--magoFont);
     height: 60px;
+    text-align: center;
 }
 
 .mobileMenu{

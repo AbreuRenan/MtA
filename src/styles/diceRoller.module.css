@@ -185,17 +185,18 @@ div.history>div>*:nth-child(4) {
 .rollDisplayArea {
   position: relative;
   display: flex;
-  height: 270px;
+  height: 25svh;
   gap: 10px 8px;
   overflow-x: hidden;
   overflow-y: scroll;
   padding: .5rem;
+  padding-bottom: calc(.5rem + 50px);
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: center;
   align-items: flex-start;
   align-content: flex-start;
-  /* border: 1px solid red; */
+  border: 1px solid red;
   background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%);;
 }
 
@@ -261,12 +262,14 @@ div:global(.qtdSucesso), div:global(.qtdFalha) {
   grid-template-columns: 50px 1fr;
   grid-template-rows: 50px ;
   gap: 5px;
-  border-radius: 50%;
+  border-radius: 40px;
   width: 160px;
   text-wrap: wrap;
   bottom: 0px;
   right: 20px;
   padding: 2px;
+  background-color: black;
+  box-shadow: 0 0 6px 2px black;
 }
 
 :global(.qtdFalha) {
