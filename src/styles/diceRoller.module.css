@@ -29,9 +29,9 @@
 
 center {
   display: flex;
-  height: 40px;
   justify-content: center;
   align-items: center;
+  padding: 10px;
 }
 center>label {
   font-family: var(--magoFont);
@@ -39,7 +39,7 @@ center>label {
 .btnControlsRow {
     display: grid;
     grid-template-columns: repeat(5,1fr);
-    grid-template-rows: 80px;
+    grid-template-rows: 70px;
     gap: 5px;
     padding: 20px 10px;
     justify-items: center;
@@ -108,7 +108,7 @@ center>label {
     background: var(--amarelo);
     box-shadow: 0 4px 0 0 #837e2e;
     height: 50px;
-    margin: 20px auto;
+    margin: 10px auto 20px auto;
     border-radius: 4px;
     width: 160px;
   }
@@ -170,18 +170,6 @@ div.history>div>*:nth-child(4) {
     grid-area: success;
 }
 
-/* .rollDisplayArea {
-  height: 150px;
-  display: grid;
-  grid-template-columns: repeat(5,55px);
-  grid-auto-rows: 55px;
-  justify-content: space-between;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  scrollbar-width: none;
-  padding: .5rem;
-} */
-
 .rollDisplayArea {
   position: relative;
   display: flex;
@@ -196,7 +184,6 @@ div.history>div>*:nth-child(4) {
   justify-content: center;
   align-items: flex-start;
   align-content: flex-start;
-  border: 1px solid red;
   background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%);;
 }
 

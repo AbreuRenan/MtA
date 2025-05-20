@@ -4,7 +4,7 @@ import { onValue, ref } from "firebase/database";
 
 import styles from "../../styles/rollHistory.module.css";
 
-export default function RollHistory({single = false}) {
+export default function RollHistory({ single = false }) {
   const { database, errorContextState, setErrorContextState } =
     React.useContext(AppContext);
   const [rollsHistoryData, setRollsHistoryData] = React.useState([]);
@@ -21,9 +21,9 @@ export default function RollHistory({single = false}) {
     for (const key in snapshotVal) {
       dataArray.push(snapshotVal[key]);
     }
-    if(single) {
+    if (single) {
       const single = dataArray.reverse();
-      setRollsHistoryData([single[0]])
+      setRollsHistoryData([single[0]]);
     } else {
       setRollsHistoryData(dataArray.reverse());
     }
@@ -35,47 +35,51 @@ export default function RollHistory({single = false}) {
 
   return (
     <div className={styles.rollHistoryContainer}>
-      
-      {rollsHistoryData == false ? <></> : rollsHistoryData?.map((item, index) => {
+      {rollsHistoryData == false ? (
+        <></>
+      ) : (
+        rollsHistoryData?.map((item, index) => {
+          const numOfOnes = item?.roll.filter((roll) => roll === 1).length;
+          let falhaMizeravi = false;
+          if (item?.sucessos === 0 && numOfOnes === 0) {
+            falhaMizeravi = "Nenhum Sucesso";
+          }
+          if (item?.sucessos === 0 && numOfOnes > 0) {
+            falhaMizeravi = "Falhou Mizeravi";
+          }
 
-        const numOfOnes = item?.roll.filter((roll) => roll === 1).length;
-        let falhaMizeravi = false;
-        if (item?.sucessos === 0 && numOfOnes === 0) {
-          falhaMizeravi = "Nenhum Sucesso";
-        }
-        if (item?.sucessos === 0 && numOfOnes > 0) {
-          falhaMizeravi = "Falhou Mizeravi";
-        }
-
-        const rollString = item?.roll.map((i, index) => {
-          if (index !== item?.roll.length - 1) return ` ${i}`;
-          return ` ${i}`;
-        });
-        return (
-          <div
-            key={index}
-            className={`${styles.historyRow} ${
-              index % 2 ? styles.evenRow : styles.oddRow
-            }`}
-          >
-            <span>{item?.date}</span>
-            <span style={{ paddingRight: "10px" }}>
-              <p style={{ padding: "2px 0" }}>{` [ ${rollString} ] `}</p>
-              <hr />
-              {item?.sucessos && !falhaMizeravi ? (
-                <p
-                  style={{ padding: "2px 0" }}
-                >{`  ${item?.sucessos} sucessos `}</p>
-              ) : (
-                <p
-                  style={{ padding: "2px 0", color: 'red' }}
-                >{`  ${falhaMizeravi} `}</p>
-              )}
-            </span>
-            <span>{item?.user}</span>
-          </div>
-        );
-      })}
+          const rollString = item?.roll.map((i, index) => {
+            if (index !== item?.roll.length - 1) return ` ${i}`;
+            return ` ${i}`;
+          });
+          return (
+            <div
+              key={index}
+              className={`${styles.historyRow} ${
+                index % 2 ? styles.evenRow : styles.oddRow
+              }`}
+            >
+              <span>{item?.date}</span>
+              <span>
+                <p style={{ padding: "2px 0" }}>{` [ ${rollString} ] `}</p>
+                <hr />
+                {item?.sucessos && !falhaMizeravi ? (
+                  <p
+                    className={`${styles.historyRowSuccesses}`}
+                    style={{ padding: "2px 0" }}
+                  >{`  ${item?.sucessos} sucessos `}</p>
+                ) : (
+                  <p
+                    className={`${styles.historyRowSuccesses}`}
+                    style={{ padding: "2px 0", color: "red" }}
+                  >{`  ${falhaMizeravi} `}</p>
+                )}
+              </span>
+              <span>{item?.user}</span>
+            </div>
+          );
+        })
+      )}
     </div>
   );
 }
