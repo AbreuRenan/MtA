@@ -7,7 +7,6 @@ import { AppContext } from "../AppContext";
 function MobileMenu({ isOpen, setMenuMobileIsOpen }) {
   const { hasEvent } = React.useContext(AppContext);
   const { userData } = React.useContext(AppContext);
-  console.log(userData)
   return (
     <>
       <div className={`${isOpen ? styles.isOpen : ""} ${styles.mobileMenu}`}>

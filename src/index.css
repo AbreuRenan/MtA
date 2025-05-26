@@ -16,6 +16,7 @@
 
 
 :root {
+  --branco: #f2f3eb;
   --verde: #389b3c;
   --verdeSombra: #0d5510;
   --azul: #009cb9;
@@ -75,7 +76,9 @@ button {
 
 .container {
   height: 100vh;
+  padding: 20px;
 }
+
 .active {
   color: var(--amarelo);
   width: 100%;

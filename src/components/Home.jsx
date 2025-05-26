@@ -13,7 +13,7 @@ function Home() {
   return (
     <>
       <div className={`loadingScreen ${loading && 'isLoading'}`}>Carregando...</div>
-      <div className="container" style={{ padding: "20px" }}>
+      <div className="container">
         {!loading && gameOpen ? (
           <div className="openGame">Jogo Aberto</div>
         ) : (

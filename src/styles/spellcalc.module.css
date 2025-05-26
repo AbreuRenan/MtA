@@ -1,0 +1,235 @@
+.spellCalcHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.spellCalcHeader > h1 {
+  position: relative;
+  font-family: var(--magoFont);
+  font-weight: 600;
+  color: transparent;
+  background: linear-gradient(
+    90deg,
+    var(--amarelo) 0%,
+    var(--amareloSombra) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  overflow: hidden;
+  text-shadow: 0 0 2px var(--amarelo);
+}
+
+.spellCalcHeader > h1::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -10px;
+  width: 10px;
+  height: 110%;
+  background: white;
+  filter: blur(4px);
+  opacity: 0.2;
+  transform: skew(-20deg);
+  animation: shinyText 5s ease-in forwards infinite;
+}
+
+.spellCalcFooter {
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  bottom: 5%;
+  left: 0;
+  width: 100%;
+  padding: 0 20px;
+}
+.spellCalcFooter > button {
+  background: var(--amarelo);
+  box-shadow: 0 4px 0 0 #837e2e;
+  font-weight: 600;
+  padding: 14px 38px;
+  border-radius: 6px;
+}
+
+.mageData {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: minmax(20px, auto);
+  gap: 10px;
+}
+
+.inputGroupControl {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.inputGroupControl > button {
+  background: var(--amarelo);
+  box-shadow: 0 4px 0 0 #837e2e;
+  font-weight: 600;
+  height: 42px;
+  width: 42px;
+}
+
+.inputGroupControl > button:active,
+.spellCalcFooter > button:active {
+  box-shadow: 0 2px 0 0 #837e2e;;
+  transform: translateY(2px);
+  transition: all 0.05s ease-in-out;
+}
+.inputGroupControl > button:first-of-type {
+  border-left: 1px solid var(--amarelo);
+  border-radius: 4px 0 0 4px;
+}
+.inputGroupControl > button:last-of-type {
+  border-right: 1px solid var(--amareloSombra);
+  border-radius: 0 4px 4px 0;
+}
+.inputNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.inputNumber {
+  appearance: none;
+  border: 0px solid transparent;
+  border-top: 1px solid var(--amareloSombra);
+  border-bottom: 3px solid var(--amareloSombra);
+  appearance: initial;
+  background-color: transparent;
+  height: 46px;
+  width: 46px;
+  color: var(--branco);
+  text-align: center;
+}
+.inputNumber:focus-within {
+  outline: none;
+  box-shadow: 0 0 10px 4px var(--amarelo);
+}
+input.inputCheckbox {
+  display: none;
+}
+label.inputCheckbox {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: calc(42px + 46px + 42px);
+  border: 2px solid var(--amarelo);
+  border-bottom: 3px solid var(--amareloSombra);
+  border-right: 3px solid var(--amareloSombra);
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+label.inputCheckbox::before {
+  content: "";
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  left: 0%;
+  border-radius: 4px 0 0 4px;
+  background: white;
+  transition: all 0.15s;
+}
+label.inputCheckbox::before {
+  content: "";
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  left: 0%;
+  border-radius: 4px 0 0 4px;
+  background: var(--amarelo);
+  transition: all 0.15s;
+}
+input.inputCheckbox:checked + label.inputCheckbox::before {
+  left: 50%;
+  border-radius: 0 4px 4px 0;
+  background: var(--amarelo);
+  box-shadow: 0 0 10px 2px var(--amarelo);
+}
+
+label.inputCheckbox > div {
+  width: 100%;
+  height: 32px;
+  color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+input.inputCheckbox + label.inputCheckbox > div:first-child {
+  color: black;
+}
+input.inputCheckbox:checked + label.inputCheckbox > div:last-of-type {
+  color: black;
+}
+.inputCheckbox:checked {
+  background-image: url(/src/assets/checkmark.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: var(--amarelo);
+  box-shadow: 0 0 10px 1px var(--amarelo);
+}
+
+.inputNumber::-webkit-inner-spin-button {
+  display: none !important;
+  appearance: none;
+}
+
+fieldset.inputGroupSpellType {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  padding: 10px;
+  grid-column: span 2;
+  padding-top: 40px;
+  min-inline-size: min-content;
+  margin-inline: 0px;
+  border-width: 2px;
+  border-style: inset;
+  border-color: var(--amarelo);
+  border-image: initial;
+  padding-block: 0.75em;
+  padding-inline: 0.75em;
+}
+.inputGroupSpellType > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.options input[type="radio"] {
+  border: 1px solid var(--amarelo);
+  appearance: initial;
+  border-radius: 1px;
+  height: 18px;
+  width: 18px;
+}
+.options input[type="radio"]:checked,
+.options input[type="radio"]:active {
+  background-image: url("../assets/checkmark.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: var(--amarelo);
+  box-shadow: 0 0 10px 1px var(--amarelo);
+}
+
+@keyframes shinyText {
+  0% {
+    left: -20%;
+  }
+  25% {
+    left: 110%;
+    transform: skew(-18deg);
+  }
+  100% {
+    left: 110%;
+  }
+}
