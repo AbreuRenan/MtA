@@ -5,8 +5,9 @@ import "./App.css";
 import Header from "./components/Header";
 import LoginScreen from "./components/auth/LoginScreen";
 import Home from "./components/Home";
-import DiceRollerComponent from "./components/diceRoller";
+import DiceRollerComponent from "./components/DiceRollerComponent";
 import ReportScreen from "./components/reportScreen/reportScreen";
+import DiceRoller from "./components/diceScreenComponents/DiceRoller";
 import { AppContextComponent } from "./AppContext";
 import RouterGuard from "./components/helpers/RouterGuard";
 import Logout from "./components/auth/Logout";
@@ -26,7 +27,8 @@ function App() {
           <Route path="/home" element={<RouterGuard><Home /></RouterGuard>} />
           <Route path="/spellCalc" element={<RouterGuard><SpellCalcScreen /></RouterGuard>} />
           <Route path="/event" element={<RouterGuard><Event /></RouterGuard>} />
-          <Route path="/dice" element={<RouterGuard><DiceRollerComponent /></RouterGuard>} />
+          <Route path="/dice" element={<RouterGuard><DiceRollerComponent/></RouterGuard>} />
+          {/* <Route path="/dice" element={<RouterGuard><DiceRoller/></RouterGuard>} /> */}
           <Route path="/reports/*" element={<RouterGuard><ReportScreen /></RouterGuard>} />
           <Route path="/admin" element={<RouterGuard><AdminConsole /></RouterGuard>} />
         </Routes>

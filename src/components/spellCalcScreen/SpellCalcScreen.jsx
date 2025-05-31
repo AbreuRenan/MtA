@@ -7,7 +7,7 @@ export default function SpellCalcScreen() {
   const [gnosis, setGnosis] = React.useState(1);
   const [nivelArcana, setNivelArcana] = React.useState(1);
   const [nivelRequerido, setNivelRequerido] = React.useState(1);
-  const [magiasAtiva, setMagiasAtivas] = React.useState(0);
+  const [magiasAtivas, setMagiasAtivas] = React.useState(0);
   const [spellType, setSpellType] = React.useState("improvisado");
   const [regente, setRegente] = React.useState(false);
   const [page, setPage] = React.useState(1);
@@ -51,7 +51,7 @@ export default function SpellCalcScreen() {
         <InputGroup
           label="Magias Ativas"
           id="magiasAtiva"
-          value={magiasAtiva}
+          value={magiasAtivas}
           setValue={setMagiasAtivas}
           min={0}
         />
@@ -71,7 +71,7 @@ export default function SpellCalcScreen() {
               defaultChecked
               onChange={toggleRadioBtn}
             />
-            <label for="improvisado">Improvisado</label>
+            <label htmlFor="improvisado">Improvisado</label>
           </div>
 
           <div>
@@ -82,7 +82,7 @@ export default function SpellCalcScreen() {
               value="praxis"
               onChange={toggleRadioBtn}
             />
-            <label for="praxis">Praxis</label>
+            <label htmlFor="praxis">Praxis</label>
           </div>
 
           <div>
@@ -93,7 +93,7 @@ export default function SpellCalcScreen() {
               value="rote"
               onChange={toggleRadioBtn}
             />
-            <label for="rote">Clássico</label>
+            <label htmlFor="rote">Clássico</label>
           </div>
         </fieldset>
       </div>
@@ -101,7 +101,7 @@ export default function SpellCalcScreen() {
         <button
           className={styles.button}
           onClick={() => {
-            setPage((prev) => (prev === 3 ? 3 : prev + 1));
+            setPage((prev) => (prev === 1 ? 1 : prev - 1));
           }}
         >
           Back
@@ -109,7 +109,7 @@ export default function SpellCalcScreen() {
         <button
           className={styles.button}
           onClick={() => {
-            setPage((prev) => (prev === 1 ? 1 : prev - 1));
+            setPage((prev) => (prev === 3 ? 3 : prev + 1));
           }}
         >
           Next

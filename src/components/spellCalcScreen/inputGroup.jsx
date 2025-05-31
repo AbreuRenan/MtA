@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../../styles/spellcalc.module.css";
 
-export default function InputGroup({label, value, setValue,  min = 0, max = 10, ...props}) {
+export default function InputGroup({label, value, setValue,  min = 1, max = 10, ...props}) {
   const handleBtnAddOrRemove = (e) => {
     const btnValue = parseInt(e.currentTarget.value, 10);
     let newValue = value + btnValue;
@@ -20,6 +20,12 @@ export default function InputGroup({label, value, setValue,  min = 0, max = 10, 
       setValue(inputValue);
     }
 
+    function handleBlur(e) {
+      let inputValue = e.target.value;
+      if (inputValue === "") {
+        return setValue(min);
+      }
+    }
 
 
   const inputContent = (
@@ -36,6 +42,7 @@ export default function InputGroup({label, value, setValue,  min = 0, max = 10, 
           className={styles.inputNumber}
           value={value}
           onChange={handleInputChange}
+          onBlur={handleBlur}
         />
         <button data-inputname={props.id} value={1} onClick={handleBtnAddOrRemove}>
           +1
