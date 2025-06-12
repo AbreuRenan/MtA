@@ -1,102 +1,90 @@
 import React from "react";
 import styles from "../../styles/spellcalc.module.css";
-import InputGroup from "./inputGroup";
-import InputCheckBox from "./inputCheckBox";
+import MageDataComponent from "./MageDataComponent";
+import SpellDataComponent from "./SpellDataComponent";
 
 export default function SpellCalcScreen() {
-  const [gnosis, setGnosis] = React.useState(1);
+  const [gnose, setGnose] = React.useState(1);
   const [nivelArcana, setNivelArcana] = React.useState(1);
   const [nivelRequerido, setNivelRequerido] = React.useState(1);
   const [magiasAtivas, setMagiasAtivas] = React.useState(0);
   const [spellType, setSpellType] = React.useState("improvisado");
-  const [regente, setRegente] = React.useState(false);
+  const [regente, setRegente] = React.useState(true);
   const [page, setPage] = React.useState(1);
 
+  const [potencia, setPotencia] = React.useState(1);
+  const [duracao, setDuracao] = React.useState(1);
+  const [escala, setEscala] = React.useState(1);
+  const [alcance, setAlcance] = React.useState(1);
+  const [tempoConjuracao, setTempoConjuracao] = React.useState(1);
 
-  function toggleRadioBtn(e) {
-    const inputValue = e.target.value;
-    setSpellType(inputValue);
-  }
-
-
+  const [custoMana, setCustoMana] = React.useState(0);
+  const [custoVontade, setCustoVontade] = React.useState(0);
+  const [custoElevacoes, setCustoElevacoes] = React.useState(0);
 
   React.useEffect(() => {
-    console.log(spellType);
-  }, [spellType]);
+    if (!regente) {
+      setCustoMana((prev) => prev + 1);
+    } else {
+      setCustoMana((prev) => (prev > 0 ? prev - 1 : 0));
+    }
+    console.log("Regente:", regente);
+  }, [spellType, regente]);
+
+  React.useEffect(() => {
+    console.log("Custo Mana:", custoMana);
+  }, [custoMana]);
 
   return (
     <div className={`container `}>
-      <div className={styles.spellCalcHeader}>
-        <h1>Dados do Desperto</h1>
-      </div>
-      <div className={styles.mageData}>
-        <InputGroup
-          label="Gnosis"
-          id="gnosis"
-          value={gnosis}
-          setValue={setGnosis}
+      {page === 1 && (
+        <MageDataComponent
+          gnose={gnose}
+          setGnose={setGnose}
+          nivelArcana={nivelArcana}
+          setNivelArcana={setNivelArcana}
+          nivelRequerido={nivelRequerido}
+          setNivelRequerido={setNivelRequerido}
+          magiasAtivas={magiasAtivas}
+          setMagiasAtivas={setMagiasAtivas}
+          spellType={spellType}
+          setSpellType={setSpellType}
+          regente={regente}
+          setRegente={setRegente}
+          page={page}
+          setPage={setPage}
+          custoMana={custoMana}
+          setCustoMana={setCustoMana}
+          custoVontade={custoVontade}
+          setCustoVontade={setCustoVontade}
+          custoElevacoes={custoElevacoes}
+          setCustoElevacoes={setCustoElevacoes}
         />
-        <InputGroup
-          label="Nivel Arcana"
-          id="nivelArcana"
-          value={nivelArcana}
-          setValue={setNivelArcana}
-        />
-        <InputGroup
-          label="Nível Requerido"
-          id="nivelRequerido"
-          value={nivelRequerido}
-          setValue={setNivelRequerido}
-        />
-        <InputGroup
-          label="Magias Ativas"
-          id="magiasAtiva"
-          value={magiasAtivas}
-          setValue={setMagiasAtivas}
-          min={0}
-        />
-        <InputCheckBox
-          label="Arcana é Regente?"
-          id="regente"
-          setValue={setRegente}
-        />
-        <fieldset className={`${styles.inputGroupSpellType} ${styles.options}`}>
-          <legend>Tipo de Feitiço</legend>
-          <div>
-            <input
-              type="radio"
-              id="improvisado"
-              name="spellType"
-              value="improvisado"
-              defaultChecked
-              onChange={toggleRadioBtn}
-            />
-            <label htmlFor="improvisado">Improvisado</label>
-          </div>
+      )}
 
-          <div>
-            <input
-              type="radio"
-              id="praxis"
-              name="spellType"
-              value="praxis"
-              onChange={toggleRadioBtn}
-            />
-            <label htmlFor="praxis">Praxis</label>
-          </div>
+      {page === 2 && (
+        <SpellDataComponent
+          potencia={potencia}
+          setPotencia={setPotencia}
+          duracao={duracao}
+          setDuracao={setDuracao}
+          escala={escala}
+          setEscala={setEscala}
+          alcance={alcance}
+          setAlcance={setAlcance}
+          tempoConjuracao={tempoConjuracao}
+          setTempoConjuracao={setTempoConjuracao}
+          page={page}
+          setPage={setPage}
+          custoMana={custoMana}
+          setCustoMana={setCustoMana}
+          custoVontade={custoVontade}
+          setCustoVontade={setCustoVontade}
+          custoElevacoes={custoElevacoes}
+          setCustoElevacoes={setCustoElevacoes}
+        />
+      )}
 
-          <div>
-            <input
-              type="radio"
-              id="rote"
-              name="spellType"
-              value="rote"
-              onChange={toggleRadioBtn}
-            />
-            <label htmlFor="rote">Clássico</label>
-          </div>
-        </fieldset>
-      </div>
       <div className={styles.spellCalcFooter}>
         <button
           className={styles.button}
@@ -105,6 +93,28 @@ export default function SpellCalcScreen() {
           }}
         >
           Back
+        </button>
+        <button
+          className={styles.button}
+          onClick={() => {
+            setGnose(1);
+            setNivelArcana(1);
+            setNivelRequerido(1);
+            setMagiasAtivas(0);
+            setSpellType("improvisado");
+            setRegente(true);
+            setPage(1);
+            setPotencia(1);
+            setDuracao(1);
+            setEscala(1);
+            setAlcance(1);
+            setTempoConjuracao(1);
+            setCustoMana(0);
+            setCustoVontade(0);
+            setCustoElevacoes(0);
+          }}
+        >
+          Limpar
         </button>
         <button
           className={styles.button}

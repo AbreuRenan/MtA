@@ -52,13 +52,26 @@
   padding: 14px 38px;
   border-radius: 6px;
 }
-
+.spellData,
 .mageData {
   display: grid;
   align-items: center;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: minmax(20px, auto);
   gap: 10px;
+}
+.spellData {
+   grid-template-columns: 55% 15% 30%;
+   column-gap: 0;
+}
+
+.spellData .labelElevada{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
 }
 
 .inputGroupControl {
@@ -155,7 +168,7 @@ input.inputCheckbox:checked + label.inputCheckbox::before {
 
 label.inputCheckbox > div {
   width: 100%;
-  height: 32px;
+  height: 42px;
   color: transparent;
   display: flex;
   align-items: center;
@@ -198,12 +211,17 @@ fieldset.inputGroupSpellType {
   padding-block: 0.75em;
   padding-inline: 0.75em;
 }
+.spellData fieldset.inputGroupSpellType {
+  grid-column: span 3;
+
+}
 .inputGroupSpellType > div {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
 }
+input[type="checkbox"].checkboxElevada,
 .options input[type="radio"] {
   border: 1px solid var(--amarelo);
   appearance: initial;
@@ -211,6 +229,8 @@ fieldset.inputGroupSpellType {
   height: 18px;
   width: 18px;
 }
+input[type="checkbox"].checkboxElevada:checked,
+input[type="checkbox"].checkboxElevada:active,
 .options input[type="radio"]:checked,
 .options input[type="radio"]:active {
   background-image: url("../assets/checkmark.png");

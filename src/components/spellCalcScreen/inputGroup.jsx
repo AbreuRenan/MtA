@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../../styles/spellcalc.module.css";
 
-export default function InputGroup({label, value, setValue,  min = 1, max = 10, ...props}) {
+export default function InputGroup({label, value, setValue,  min = 1, max = 10, children, ...props}) {
   const handleBtnAddOrRemove = (e) => {
     const btnValue = parseInt(e.currentTarget.value, 10);
     let newValue = value + btnValue;
@@ -31,6 +31,7 @@ export default function InputGroup({label, value, setValue,  min = 1, max = 10, 
   const inputContent = (
     <>
       <label htmlFor={props.id}>{label}</label>
+      {children}
       <div className={styles.inputGroupControl}>
         <button data-inputname={props.id} value={-1} onClick={handleBtnAddOrRemove}>
           -1

@@ -8,7 +8,7 @@ export default function InputCheckBox({ label, value, setValue, ...props }) {
     };
   const inputContent = (
     <>
-      <label>Arcana é Regente?</label>
+      <label>{label}</label>
       <div className={styles.inputGroupControl}>
         <input
           id={props.id}
