@@ -64,6 +64,7 @@ export default function SpellCalcScreen() {
 
       {page === 2 && (
         <SpellDataComponent
+          nivelArcana={nivelArcana}
           potencia={potencia}
           setPotencia={setPotencia}
           duracao={duracao}

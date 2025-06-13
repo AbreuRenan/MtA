@@ -61,15 +61,14 @@
   gap: 10px;
 }
 .spellData {
-   grid-template-columns: 55% 15% 30%;
+   grid-template-columns: 7% 48% 15% 30%;
    column-gap: 0;
 }
 
-.spellData .labelElevada{
+.spellData .columnName {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 4px;
   font-size: 0.7rem;
 }
@@ -221,6 +220,7 @@ fieldset.inputGroupSpellType {
   justify-content: center;
   gap: 10px;
 }
+input[type="radio"].checkboxElevada,
 input[type="checkbox"].checkboxElevada,
 .options input[type="radio"] {
   border: 1px solid var(--amarelo);
@@ -229,6 +229,7 @@ input[type="checkbox"].checkboxElevada,
   height: 18px;
   width: 18px;
 }
+input[type="radio"].checkboxElevada:checked,
 input[type="checkbox"].checkboxElevada:checked,
 input[type="checkbox"].checkboxElevada:active,
 .options input[type="radio"]:checked,
