@@ -52,7 +52,6 @@
 }
 
 body {
-  max-width: 420px;
   width: 100svw;
   height: 100svh;
   color: #f2f3eb;
@@ -60,8 +59,9 @@ body {
   background-image: url("assets/bg.jpg");
   background-repeat: no-repeat;
   background-position: top;
-  background-size: contain;
+  background-size: cover;
   border-radius: 10px;
+  backdrop-filter: brightness(1.8);
 }
 a,
 :visited {
@@ -75,7 +75,7 @@ button {
 }
 
 .container {
-  height: 100vh;
+  height: 100svh;
   padding: 20px;
 }
 
@@ -200,4 +200,33 @@ div.closeGame {
   background-repeat: no-repeat;
   opacity: .8;
   box-shadow: 0 0 4px 2px rgba(227, 220, 119, 0.3) inset, 0 0 4px 4px rgba(255, 248, 152, 0.3);
+}
+
+
+@media screen and (max-width: 420px) {
+  body {
+    max-width: 100%;
+    width: 100%;
+    height: 100svh;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    background-image: none;
+  }
+  
+  .container {
+    padding: 10px;
+  }
+  
+  .headerNav {
+    height: auto;
+    position: relative;
+  }
+  
+  .mobileMenuButton {
+    top: 5px;
+    left: 5px;
+    width: 30px;
+    height: 30px;
+  }
 }

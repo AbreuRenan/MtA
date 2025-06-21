@@ -26,7 +26,7 @@ function Header() {
           isOpen={mobileMenuIsOpen}
           setMenuMobileIsOpen={setMenuMobileIsOpen}
         />
-        <img src={mtashare} className={`${styles.mtaLogo}`} onClick={()=>{ navigate('/login')}}/>
+        <img src={mtashare} className={`${styles.mtaLogo}`} onClick={()=>{ navigate('/login')}} alt="mage_logo_title"/>
       </nav>
     </header>
   );

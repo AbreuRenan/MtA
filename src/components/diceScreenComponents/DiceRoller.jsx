@@ -9,14 +9,13 @@ import styles from "../../styles/diceRoller.module.css";
 import useDiceRoll from "../hooks/useDiceRoll";
 
 function DiceRoller() {
-  const { firestore, userData } = React.useContext(AppContext);
+  const { firestore, userData, gameOpen } = React.useContext(AppContext);
   const [totalOfDices, setTotalOfDices] = React.useState(1);
   const [isRollDisabled, setIsRollDisabled] = React.useState(false);
   const [explosionTarget, setExplosionTarget] = React.useState(10);
   const audioRef = React.useRef(null);
   const { roll, result } = useDiceRoll();
 
-  // Salva no Firebase quando uma rolagem é feita
   React.useEffect(() => {
     if (result && firestore) {
       const rollHistoryDBRef = ref(firestore, "rollsHistory/");
@@ -30,7 +29,8 @@ function DiceRoller() {
     }
   }, [result]);
 
-  // Gerencia o estado do áudio
+
+
   const handleAudioEnd = () => setIsRollDisabled(false);
 
   React.useEffect(() => {
@@ -41,14 +41,12 @@ function DiceRoller() {
     }
   }, []);
 
-  // Função de rolagem
   const doRoll = () => {
     const rollResult = roll(totalOfDices, explosionTarget);
     setIsRollDisabled(true);
     audioRef.current?.play();
   };
 
-  // Ajusta o número de dados (+1, +5, -1, -5)
   const modifyDiceVal = (value) => {
     setTotalOfDices((prev) => Math.max(-5, prev + value));
   };

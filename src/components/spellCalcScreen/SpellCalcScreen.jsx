@@ -22,18 +22,32 @@ export default function SpellCalcScreen() {
   const [custoVontade, setCustoVontade] = React.useState(0);
   const [custoElevacoes, setCustoElevacoes] = React.useState(0);
 
-  React.useEffect(() => {
-    if (!regente) {
+ 
+  function onChangeToggle(e) {
+    const inputValue = e.target.checked
+    if (!inputValue) {
       setCustoMana((prev) => prev + 1);
     } else {
       setCustoMana((prev) => (prev > 0 ? prev - 1 : 0));
     }
-    console.log("Regente:", regente);
-  }, [spellType, regente]);
+
+    setRegente((prev) => !prev);
+  }
+  
+  React.useEffect(() => {
+    if (nivelRequerido > nivelArcana) {
+      alert("Nível Requerido não pode ser maior que o Nível Arcana");
+      setNivelRequerido(nivelArcana);
+    }
+
+  },[nivelRequerido]);
+
+
 
   React.useEffect(() => {
+    console.log("Regente:", regente);
     console.log("Custo Mana:", custoMana);
-  }, [custoMana]);
+  }, [regente, custoMana]);
 
   return (
     <div className={`container `}>
@@ -59,6 +73,7 @@ export default function SpellCalcScreen() {
           setCustoVontade={setCustoVontade}
           custoElevacoes={custoElevacoes}
           setCustoElevacoes={setCustoElevacoes}
+          onChangeToggle={onChangeToggle}
         />
       )}
 

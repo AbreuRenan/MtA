@@ -18,13 +18,19 @@ export default function MageDataComponent(props) {
         regente,
         setRegente,
         page,
-        setPage
+        setPage,
+        onChangeToggle
     } = props;
     
   function toggleRadioBtn(e) {
     const inputValue = e.target.value;
     setSpellType(inputValue);
   }
+
+  // function onChangeToggle(e) {
+  //   const isChecked = e.target.checked;
+  //   setRegente(isChecked);
+  // }
 
   return (
     <div className="page" data-page={page}>
@@ -60,8 +66,9 @@ export default function MageDataComponent(props) {
         <InputCheckBox
           label="Arcana é Regente?"
           id="regente"
-          setValue={setRegente}
           defaultChecked={regente}
+          onChange={onChangeToggle}
+          setValue={setRegente}
           value={regente}
         />
         <fieldset className={`${styles.inputGroupSpellType} ${styles.options}`}>
