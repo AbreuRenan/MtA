@@ -18,7 +18,6 @@ function DiceRollerComponent() {
   const rollHistoryDBRef = ref(firestore, "rollsHistory/");
 
   React.useEffect(() => {
-    console.log(userData)
     if (userData.role === "narrador") {
       setDisableRoll(false)
     } 

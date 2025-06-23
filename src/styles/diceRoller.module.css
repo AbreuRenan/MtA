@@ -175,7 +175,7 @@ div.history > div > *:nth-child(4) {
 .rollDisplayArea {
   position: relative;
   display: flex;
-  height: 25svh;
+  height: 35svh;
   gap: 10px 8px;
   overflow-x: hidden;
   overflow-y: scroll;

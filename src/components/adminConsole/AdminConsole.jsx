@@ -62,11 +62,6 @@ export default function AdminConsole() {
   return (
     <div className={`${styles.adminConsoleContainer}`}>
       <RollHistory single={true}/>
-      {playersData.map((selectedPlayer, index) => {
-        const { exp, expA, fv, mana, nome, vitalidade } = selectedPlayer;
-        return <PlayerDisplayAdmin player={selectedPlayer} key={index}/>;
-      })}
-
       <div className={styles.btnContainer}>
         <button className={`btn ${styles.deletar}`} onClick={handleDeleteHistory}>
           Apagar RollsHistory
@@ -78,6 +73,10 @@ export default function AdminConsole() {
           {!gameOpen ? "Abrir Jogo" : "Fechar Jogo"}
         </button>
       </div>
+            {playersData.map((selectedPlayer, index) => {
+        const { exp, expA, fv, mana, nome, vitalidade } = selectedPlayer;
+        return <PlayerDisplayAdmin player={selectedPlayer} key={index}/>;
+      })}
     </div>
   );
 }

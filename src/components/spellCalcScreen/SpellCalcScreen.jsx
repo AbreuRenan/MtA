@@ -2,6 +2,7 @@ import React from "react";
 import styles from "../../styles/spellcalc.module.css";
 import MageDataComponent from "./MageDataComponent";
 import SpellDataComponent from "./SpellDataComponent";
+import YantraDataComponent from "./YantraDataComponent";
 
 export default function SpellCalcScreen() {
   const [gnose, setGnose] = React.useState(1);
@@ -11,43 +12,72 @@ export default function SpellCalcScreen() {
   const [spellType, setSpellType] = React.useState("improvisado");
   const [regente, setRegente] = React.useState(true);
   const [page, setPage] = React.useState(1);
+  const [yantras, setYantras] = React.useState(0);
 
   const [potencia, setPotencia] = React.useState(1);
   const [duracao, setDuracao] = React.useState(1);
   const [escala, setEscala] = React.useState(1);
-  const [alcance, setAlcance] = React.useState(1);
+  const [alcance, setAlcance] = React.useState("toque");
   const [tempoConjuracao, setTempoConjuracao] = React.useState(1);
+  const [potenciaElevada, setPotenciaElevada] = React.useState(false);
+  const [duracaoElevada, setDuracaoElevada] = React.useState(false);
+  const [escalaElevada, setEscalaElevada] = React.useState(false);
+  const [alcanceElevado, setAlcanceElevado] = React.useState(false);
+  const [tempoConjuracaoElevada, setTempoConjuracaoElevada] = React.useState(false);
 
   const [custoMana, setCustoMana] = React.useState(0);
   const [custoVontade, setCustoVontade] = React.useState(0);
   const [custoElevacoes, setCustoElevacoes] = React.useState(0);
 
- 
+  const fatoresMagiaObj = {
+    potencia: { label: "Potência", value: potencia },
+    duracao: { label: "Duração", value: duracao },
+    escala: { label: "Escala", value: escala },
+    alcance: { label: "Alcance", value: alcance },
+    tempoConjuracao: { label: "Tempo de Conjuração", value: tempoConjuracao },
+    custoMana: { label: "Custo de Mana", value: custoMana },
+    custoVontade: { label: "Custo de Vontade", value: custoVontade },
+    custoElevacoes: { label: "Custo de Elevações", value: custoElevacoes },
+  };
+
+  function calcularDadosPorFator(fator, nivelArcana) {
+    const nivelFatorContabil = 0;
+    const dadoPenalidade = fator.value * 2
+
+  }
+
+  function ResumoMagia() {
+    return (
+      <div>
+        <center>
+          <h2>Resumo da Magia</h2>
+        </center>
+        <div className={styles.resumoMagia}>
+          <p>Total de Yantras: {yantras}</p>
+          <p>Custo de Mana: {custoMana}</p>
+          <p>Custo de Vontade: {custoVontade}</p>
+          <p>Custo de Elevações: {custoElevacoes}</p>
+        </div>
+      </div>
+    );
+  }
+
   function onChangeToggle(e) {
-    const inputValue = e.target.checked
+    const inputValue = e.target.checked;
     if (!inputValue) {
       setCustoMana((prev) => prev + 1);
     } else {
       setCustoMana((prev) => (prev > 0 ? prev - 1 : 0));
     }
-
     setRegente((prev) => !prev);
   }
-  
+
   React.useEffect(() => {
     if (nivelRequerido > nivelArcana) {
-      alert("Nível Requerido não pode ser maior que o Nível Arcana");
+      alert("Nível da Prática não pode ser maior que o seu Nível na Arcana");
       setNivelRequerido(nivelArcana);
     }
-
-  },[nivelRequerido]);
-
-
-
-  React.useEffect(() => {
-    console.log("Regente:", regente);
-    console.log("Custo Mana:", custoMana);
-  }, [regente, custoMana]);
+  }, [nivelRequerido]);
 
   return (
     <div className={`container `}>
@@ -98,10 +128,50 @@ export default function SpellCalcScreen() {
           setCustoVontade={setCustoVontade}
           custoElevacoes={custoElevacoes}
           setCustoElevacoes={setCustoElevacoes}
+          potenciaElevada={potenciaElevada}
+          setPotenciaElevada={setPotenciaElevada}
+          duracaoElevada={duracaoElevada}
+          setDuracaoElevada={setDuracaoElevada}
+          escalaElevada={escalaElevada}
+          setEscalaElevada={setEscalaElevada}
+          alcanceElevado={alcanceElevado}
+          setAlcanceElevado={setAlcanceElevado}
+          tempoConjuracaoElevada={tempoConjuracaoElevada}
+          setTempoConjuracaoElevada={setTempoConjuracaoElevada}
         />
       )}
 
+      {page === 3 && (
+        <YantraDataComponent
+          gnose={gnose}
+          setGnose={setGnose}
+          nivelArcana={nivelArcana}
+          setNivelArcana={setNivelArcana}
+          nivelRequerido={nivelRequerido}
+          setNivelRequerido={setNivelRequerido}
+          magiasAtivas={magiasAtivas}
+          setMagiasAtivas={setMagiasAtivas}
+          spellType={spellType}
+          setSpellType={setSpellType}
+          regente={regente}
+          setRegente={setRegente}
+          page={page}
+          setPage={setPage}
+          custoMana={custoMana}
+          setCustoMana={setCustoMana}
+          custoVontade={custoVontade}
+          setCustoVontade={setCustoVontade}
+          custoElevacoes={custoElevacoes}
+          setCustoElevacoes={setCustoElevacoes}
+          yantras={yantras}
+          setYantras={setYantras}
+        />
+      )}
+
+      
+
       <div className={styles.spellCalcFooter}>
+        <ResumoMagia />
         <button
           className={styles.button}
           onClick={() => {
