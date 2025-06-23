@@ -9,13 +9,20 @@ import RollHistory from "./diceScreenComponents/RollHistory";
 import { AppContext } from "../AppContext";
 
 function DiceRollerComponent() {
-  const { firestore, userData } = React.useContext(AppContext);
+  const { firestore, userData, gameOpen } = React.useContext(AppContext);
   const [totalOfDices, setTotalOfDices] = React.useState(0);
-  const [DisableRoll, setDisableRoll] = React.useState(false);
+  const [DisableRoll, setDisableRoll] = React.useState(gameOpen ? false : true);
   const [rollReturn, setRollReturn] = React.useState(null);
 
   const [firestoreData, setFirestoreData] = React.useState([]);
   const rollHistoryDBRef = ref(firestore, "rollsHistory/");
+
+  React.useEffect(() => {
+    console.log(userData)
+    if (userData.role === "narrador") {
+      setDisableRoll(false)
+    } 
+  }, [gameOpen]);
 
   React.useEffect(() => {
     function saveRollOnFirebase({ hash, date, rolagem, sucessos }) {

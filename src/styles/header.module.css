@@ -4,6 +4,9 @@ header {
   /* background: url("../assets/bg.jpg") no-repeat top;
   background-size: cover; */
   z-index: 10;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+
 }
 .headerNav {
   height: 50px;
@@ -58,4 +61,5 @@ header {
   left: 50%;
   transform: translateX(-50%);
   filter: brightness(1.2) saturate(2);
+  z-index: -100;
 }
