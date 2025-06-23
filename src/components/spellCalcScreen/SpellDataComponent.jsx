@@ -3,8 +3,6 @@ import styles from "../../styles/spellcalc.module.css";
 import InputGroup from "./inputGroup";
 
 export default function SpellDataComponent(props) {
-  const [currentFP, setCurrentFP] = React.useState("potencia");
-
 
   const {
     nivelArcana,
@@ -25,6 +23,8 @@ export default function SpellDataComponent(props) {
     custoVontade,
     setCustoVontade,
     custoElevacoes,
+    currentFP,
+    setCurrentFP,
     setCustoElevacoes,
     potenciaElevada,
     setPotenciaElevada,
@@ -135,7 +135,7 @@ export default function SpellDataComponent(props) {
           type="radio"
           name="fatorPrimario"
           value="potencia"
-          defaultChecked
+          checked={currentFP === "potencia"}
           className={styles.checkboxElevada}
           onChange={toggleFPradioBtn}
         />
@@ -161,6 +161,7 @@ export default function SpellDataComponent(props) {
           type="radio"
           name="fatorPrimario"
           value="duracao"
+          checked={currentFP === "duracao"}
           className={styles.checkboxElevada}
           onChange={toggleFPradioBtn}
         />
@@ -186,6 +187,7 @@ export default function SpellDataComponent(props) {
           type="radio"
           name="fatorPrimario"
           value="escala"
+          checked={currentFP === "escala"}
           className={styles.checkboxElevada}
           onChange={toggleFPradioBtn}
         />
@@ -211,6 +213,7 @@ export default function SpellDataComponent(props) {
           type="radio"
           name="fatorPrimario"
           value="tempoConjuracao"
+          
           disabled
           className={styles.checkboxElevada}
           onChange={toggleFPradioBtn}

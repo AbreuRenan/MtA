@@ -19,6 +19,7 @@ export default function SpellCalcScreen() {
   const [escala, setEscala] = React.useState(1);
   const [alcance, setAlcance] = React.useState("toque");
   const [tempoConjuracao, setTempoConjuracao] = React.useState(1);
+  const [currentFP, setCurrentFP] = React.useState("potencia");
   const [potenciaElevada, setPotenciaElevada] = React.useState(false);
   const [duracaoElevada, setDuracaoElevada] = React.useState(false);
   const [escalaElevada, setEscalaElevada] = React.useState(false);
@@ -43,7 +44,23 @@ export default function SpellCalcScreen() {
   function calcularDadosPorFator(fator, nivelArcana) {
     const nivelFatorContabil = 0;
     const dadoPenalidade = fator.value * 2
+  }
 
+  function calcularElevacoesGratis() {
+    const elevacoesGratis = (nivelArcana - nivelRequerido) + 1;
+    return elevacoesGratis
+  }
+
+  function calcularElevacoesExcedentes() {
+    const elevacoesGratis = calcularElevacoesGratis();
+    return Math.max(0, custoElevacoes - elevacoesGratis);
+  }
+
+  function calcularDadosParadoxo(){
+    const dadosPorGnose = Math.ceil(gnose / 2);
+    const elevacoesExcedentes = calcularElevacoesExcedentes();
+    const dadosDeParadoxo = elevacoesExcedentes * dadosPorGnose;
+    return dadosDeParadoxo;
   }
 
   function ResumoMagia() {
@@ -53,10 +70,13 @@ export default function SpellCalcScreen() {
           <h2>Resumo da Magia</h2>
         </center>
         <div className={styles.resumoMagia}>
-          <p>Total de Yantras: {yantras}</p>
+          <p>Dados de Yantras: {yantras}</p>
           <p>Custo de Mana: {custoMana}</p>
           <p>Custo de Vontade: {custoVontade}</p>
-          <p>Custo de Elevações: {custoElevacoes}</p>
+          <p>Total de Elevações: {custoElevacoes}</p>
+          <p>Elevações Grátis: {calcularElevacoesGratis()}</p>
+          <p>Elevações Passando: {calcularElevacoesExcedentes()}</p>
+          <p>Dados de Paradoxo: {calcularDadosParadoxo()}</p>
         </div>
       </div>
     );
@@ -126,6 +146,8 @@ export default function SpellCalcScreen() {
           setCustoMana={setCustoMana}
           custoVontade={custoVontade}
           setCustoVontade={setCustoVontade}
+          currentFP={currentFP}
+          setCurrentFP={setCurrentFP}
           custoElevacoes={custoElevacoes}
           setCustoElevacoes={setCustoElevacoes}
           potenciaElevada={potenciaElevada}
@@ -198,6 +220,14 @@ export default function SpellCalcScreen() {
             setCustoMana(0);
             setCustoVontade(0);
             setCustoElevacoes(0);
+            setYantras(0);
+            setPotenciaElevada(false);
+            setDuracaoElevada(false);
+            setEscalaElevada(false);
+            setAlcanceElevado(false);
+            setTempoConjuracaoElevada(false);
+            setCurrentFP("potencia");
+
           }}
         >
           Limpar
