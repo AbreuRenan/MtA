@@ -35,17 +35,29 @@
   animation: shinyText 5s ease-in forwards infinite;
 }
 
+.resumoMagia {
+  text-align: center;
+}
+
 .spellCalcFooter {
   position: fixed;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   bottom: 5%;
   left: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
   width: 100%;
   padding: 0 20px;
 }
+.spellCalcFooter :first-child {
+  grid-column: span 3;
+}
 .spellCalcFooter > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: var(--amarelo);
   box-shadow: 0 4px 0 0 #837e2e;
   font-weight: 600;
@@ -53,22 +65,23 @@
   border-radius: 6px;
 }
 .spellData,
+.yantraData,
 .mageData {
   display: grid;
   align-items: center;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: calc(100% - 146px) 136px;
   grid-auto-rows: minmax(20px, auto);
   gap: 10px;
+  padding-bottom: 10%;
 }
 .spellData {
-   grid-template-columns: 7% 48% 15% 30%;
-   column-gap: 0;
+  grid-template-columns: 10% 40% 10% 40%;
+  column-gap: 0;
 }
 
-.spellData .columnName {
+.columnName {
   position: relative;
   display: flex;
-  flex-direction: column;
   gap: 4px;
   font-size: 0.7rem;
 }
@@ -83,12 +96,12 @@
   box-shadow: 0 4px 0 0 #837e2e;
   font-weight: 600;
   height: 42px;
-  width: 42px;
+  width: 100%;
 }
 
 .inputGroupControl > button:active,
 .spellCalcFooter > button:active {
-  box-shadow: 0 2px 0 0 #837e2e;;
+  box-shadow: 0 2px 0 0 #837e2e;
   transform: translateY(2px);
   transition: all 0.05s ease-in-out;
 }
@@ -100,12 +113,7 @@
   border-right: 1px solid var(--amareloSombra);
   border-radius: 0 4px 4px 0;
 }
-.inputNumber {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
+
 
 .inputNumber {
   appearance: none;
@@ -115,7 +123,7 @@
   appearance: initial;
   background-color: transparent;
   height: 46px;
-  width: 46px;
+  width: 100%;
   color: var(--branco);
   text-align: center;
 }
@@ -212,7 +220,6 @@ fieldset.inputGroupSpellType {
 }
 .spellData fieldset.inputGroupSpellType {
   grid-column: span 3;
-
 }
 .inputGroupSpellType > div {
   display: flex;

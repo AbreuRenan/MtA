@@ -4,33 +4,28 @@ import InputGroup from "./inputGroup";
 import InputCheckBox from "./inputCheckBox";
 
 export default function MageDataComponent(props) {
-    const {
-        gnose,
-        setGnose,
-        nivelArcana,
-        setNivelArcana,
-        nivelRequerido,
-        setNivelRequerido,
-        magiasAtivas,
-        setMagiasAtivas,
-        spellType,
-        setSpellType,
-        regente,
-        setRegente,
-        page,
-        setPage,
-        onChangeToggle
-    } = props;
-    
+  const {
+    gnose,
+    setGnose,
+    nivelArcana,
+    setNivelArcana,
+    nivelRequerido,
+    setNivelRequerido,
+    magiasAtivas,
+    setMagiasAtivas,
+    spellType,
+    setSpellType,
+    regente,
+    setRegente,
+    page,
+    setPage,
+    onChangeToggle,
+  } = props;
+
   function toggleRadioBtn(e) {
     const inputValue = e.target.value;
     setSpellType(inputValue);
   }
-
-  // function onChangeToggle(e) {
-  //   const isChecked = e.target.checked;
-  //   setRegente(isChecked);
-  // }
 
   return (
     <div className="page" data-page={page}>
@@ -38,6 +33,8 @@ export default function MageDataComponent(props) {
         <h1>Dados do Desperto</h1>
       </div>
       <div className={styles.mageData}>
+        <span className={styles.columnName}>Informação do Mago</span>
+        <span className={styles.columnName} >Nível</span>
         <InputGroup
           label="Gnose"
           id="gnose"
@@ -51,7 +48,7 @@ export default function MageDataComponent(props) {
           setValue={setNivelArcana}
         />
         <InputGroup
-          label="Nível Requerido"
+          label="Nível da Prática"
           id="nivelRequerido"
           value={nivelRequerido}
           setValue={setNivelRequerido}

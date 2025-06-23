@@ -11,7 +11,7 @@
   "theme_color": "#0c0e00",
   "icons": [
     {
-      "src": "/assets/skull-k5V50jRF.png",
+      "src": "src/assets/skull.png",
       "type": "image/png",
       "sizes": "512x512"
     },
@@ -29,7 +29,7 @@
   "shortcuts": [
     {
       "name": "Dado",
-      "url": "https://mt-a.vercel.app/#/dice",
+      "url": "/#/dice",
       "description": "Ir para Rolador de Dados"
     }
   ]
