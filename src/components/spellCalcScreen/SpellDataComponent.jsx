@@ -36,6 +36,8 @@ export default function SpellDataComponent(props) {
     setAlcanceElevado,
     tempoConjuracaoElevada,
     setTempoConjuracaoElevada,
+    extraElevacoes,
+    setExtraElevacoes,
   } = props;
 
   const setValue = React.useMemo(
@@ -53,6 +55,7 @@ export default function SpellDataComponent(props) {
       escalaElevada: setEscalaElevada,
       alcanceElevado: setAlcanceElevado,
       tempoConjuracaoElevada: setTempoConjuracaoElevada,
+      extraElevacoes: setExtraElevacoes,
     }),
     [
       setPotencia,
@@ -68,23 +71,23 @@ export default function SpellDataComponent(props) {
       setEscalaElevada,
       setAlcanceElevado,
       setTempoConjuracaoElevada,
+      setExtraElevacoes,
     ]
   );
 
   function calcularTotalElevacoes() {
-    const elevacoes = [potenciaElevada,duracaoElevada,escalaElevada, alcanceElevado,tempoConjuracaoElevada];
+    const elevacoes = [potenciaElevada,duracaoElevada,escalaElevada, alcanceElevado,
+      tempoConjuracaoElevada, extraElevacoes];
     // valores true são considerados 1, false são 0
     const total = elevacoes.reduce((acc, curr) => acc + curr, 0);
     setCustoElevacoes(total);
   }
 
   function toggleRadioBtnAlcance(e) {
-    const inputValue = e.target.checked;
     const inputName = e.target.id;
-    const prevAlcance = alcance;
     setAlcance(inputName);
     setAlcanceElevado(false);
-    if (inputName !== "toque") {setAlcanceElevado(inputValue)}
+    if (inputName !== "toque") {setAlcanceElevado(true)}
     if (inputName === "simpatico") {setCustoMana( prev => prev + 1);}
     if (inputName !== "simpatico") {setCustoMana(prev => Math.max(0, prev -1))}
   }
@@ -94,6 +97,8 @@ export default function SpellDataComponent(props) {
     const oldFP = currentFP;
     if (oldFP && setValue[oldFP]) { resetValueFromFP(oldFP);}
     if (setValue[newFP]) { setValue[newFP](nivelArcana);}
+    if (oldFP !== "escala" && newFP === "escala") { setExtraElevacoes( prev => prev + 1) }
+    if (oldFP === "escala" && newFP !== "escala") { setExtraElevacoes( prev => Math.max(0, prev - 1)) }
     setCurrentFP(newFP);
   }
 
@@ -118,7 +123,8 @@ export default function SpellDataComponent(props) {
 
   React.useEffect(() => {
     calcularTotalElevacoes();
-  },[potenciaElevada, duracaoElevada, escalaElevada, alcanceElevado,tempoConjuracaoElevada, setCustoElevacoes]);
+  },[potenciaElevada, duracaoElevada, escalaElevada, alcanceElevado,
+    tempoConjuracaoElevada, setCustoElevacoes, extraElevacoes]);
 
   return (
     <div className="page" data-page={page}>
@@ -246,7 +252,7 @@ export default function SpellDataComponent(props) {
               type="radio"
               id="toque"
               name="alcance"
-              value={alcanceElevado}
+              value="toque"
               checked={alcance === "toque"}
               onChange={toggleRadioBtnAlcance}
             />
@@ -258,8 +264,8 @@ export default function SpellDataComponent(props) {
               type="radio"
               id="sensorial"
               name="alcance"
+              value="sensorial"
               checked={alcance === "sensorial"}
-              value={alcanceElevado}
               onChange={toggleRadioBtnAlcance}
             />
             <label htmlFor="sensorial">Sensorial</label>
@@ -270,8 +276,8 @@ export default function SpellDataComponent(props) {
               type="radio"
               id="simpatico"
               name="alcance"
+              value="simpatico"
               checked={alcance === "simpatico"}
-              value={alcanceElevado}
               onChange={toggleRadioBtnAlcance}
             />
             <label htmlFor="simpatico">Simpático</label>

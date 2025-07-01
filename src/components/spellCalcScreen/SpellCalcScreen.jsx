@@ -3,6 +3,7 @@ import styles from "../../styles/spellcalc.module.css";
 import MageDataComponent from "./MageDataComponent";
 import SpellDataComponent from "./SpellDataComponent";
 import YantraDataComponent from "./YantraDataComponent";
+import ResumoMagia from "./ResumoMagia";
 
 export default function SpellCalcScreen() {
   const [gnose, setGnose] = React.useState(1);
@@ -11,8 +12,8 @@ export default function SpellCalcScreen() {
   const [magiasAtivas, setMagiasAtivas] = React.useState(0);
   const [spellType, setSpellType] = React.useState("improvisado");
   const [regente, setRegente] = React.useState(true);
-  const [page, setPage] = React.useState(1);
   const [yantras, setYantras] = React.useState(0);
+  const [page, setPage] = React.useState(1);
 
   const [potencia, setPotencia] = React.useState(1);
   const [duracao, setDuracao] = React.useState(1);
@@ -24,63 +25,30 @@ export default function SpellCalcScreen() {
   const [duracaoElevada, setDuracaoElevada] = React.useState(false);
   const [escalaElevada, setEscalaElevada] = React.useState(false);
   const [alcanceElevado, setAlcanceElevado] = React.useState(false);
-  const [tempoConjuracaoElevada, setTempoConjuracaoElevada] = React.useState(false);
+  const [tempoConjuracaoElevada, setTempoConjuracaoElevada] =
+    React.useState(false);
+  const [extraElevacoes, setExtraElevacoes] = React.useState(0);
 
   const [custoMana, setCustoMana] = React.useState(0);
   const [custoVontade, setCustoVontade] = React.useState(0);
   const [custoElevacoes, setCustoElevacoes] = React.useState(0);
 
-  const fatoresMagiaObj = {
-    potencia: { label: "Potência", value: potencia },
-    duracao: { label: "Duração", value: duracao },
-    escala: { label: "Escala", value: escala },
-    alcance: { label: "Alcance", value: alcance },
-    tempoConjuracao: { label: "Tempo de Conjuração", value: tempoConjuracao },
-    custoMana: { label: "Custo de Mana", value: custoMana },
-    custoVontade: { label: "Custo de Vontade", value: custoVontade },
-    custoElevacoes: { label: "Custo de Elevações", value: custoElevacoes },
+  const [paradaDados, setParadaDados] = React.useState(0);
+
+  const resumoMagiaProps = {
+    duracao,
+    escala,
+    escalaElevada,
+    duracaoElevada,
+    yantras,
+    custoMana,
+    custoVontade,
+    custoElevacoes,
+    calcularElevacoesGratis,
+    calcularElevacoesExcedentes,
+    calcularDadosParadoxo,
+    exibirElevacoes
   };
-
-  function calcularDadosPorFator(fator, nivelArcana) {
-    const nivelFatorContabil = 0;
-    const dadoPenalidade = fator.value * 2
-  }
-
-  function calcularElevacoesGratis() {
-    const elevacoesGratis = (nivelArcana - nivelRequerido) + 1;
-    return elevacoesGratis
-  }
-
-  function calcularElevacoesExcedentes() {
-    const elevacoesGratis = calcularElevacoesGratis();
-    return Math.max(0, custoElevacoes - elevacoesGratis);
-  }
-
-  function calcularDadosParadoxo(){
-    const dadosPorGnose = Math.ceil(gnose / 2);
-    const elevacoesExcedentes = calcularElevacoesExcedentes();
-    const dadosDeParadoxo = elevacoesExcedentes * dadosPorGnose;
-    return dadosDeParadoxo;
-  }
-
-  function ResumoMagia() {
-    return (
-      <div>
-        <center>
-          <h2>Resumo da Magia</h2>
-        </center>
-        <div className={styles.resumoMagia}>
-          <p>Dados de Yantras: {yantras}</p>
-          <p>Custo de Mana: {custoMana}</p>
-          <p>Custo de Vontade: {custoVontade}</p>
-          <p>Total de Elevações: {custoElevacoes}</p>
-          <p>Elevações Grátis: {calcularElevacoesGratis()}</p>
-          <p>Elevações Passando: {calcularElevacoesExcedentes()}</p>
-          <p>Dados de Paradoxo: {calcularDadosParadoxo()}</p>
-        </div>
-      </div>
-    );
-  }
 
   function onChangeToggle(e) {
     const inputValue = e.target.checked;
@@ -92,12 +60,53 @@ export default function SpellCalcScreen() {
     setRegente((prev) => !prev);
   }
 
+  function calcularElevacoesGratis() {
+    const elevacoesGratis = nivelArcana - nivelRequerido + 1;
+    return elevacoesGratis;
+  }
+
+  function calcularElevacoesExcedentes() {
+    const elevacoesGratis = calcularElevacoesGratis();
+    return Math.max(0, custoElevacoes - elevacoesGratis);
+  }
+  function exibirElevacoes() {
+    return calcularElevacoesGratis() - custoElevacoes
+  }
+
+  function calcularDadosParadoxo() {
+    const dadosPorGnose = Math.ceil(gnose / 2);
+    const elevacoesExcedentes = calcularElevacoesExcedentes();
+    const dadosDeParadoxo = elevacoesExcedentes * dadosPorGnose;
+    return dadosDeParadoxo;
+  }
+
+function calcularDadosPorFator() {
+  let penalidadePotencia = potencia === 1 ? 0 : (potencia - 1)* 2;
+  let penalidadeDuracao = duracao === 1 ? 0 : (duracao - 1) * 2;
+  let penalidadeEscala = escala === 1 ? 0 : (escala - 1) * 2;
+
+  switch (currentFP) {
+    case "potencia": penalidadePotencia = (potencia - nivelArcana) * 2; break;
+    case "duracao": penalidadeDuracao = (duracao - nivelArcana) * 2; break;
+    case "escala": penalidadeEscala = (escala - nivelArcana) * 2; break;
+  }
+  const dadoPenalidadeTotal = Math.max(0,penalidadePotencia) + Math.max(0,penalidadeDuracao) + Math.max(0,penalidadeEscala);
+  return dadoPenalidadeTotal;
+}
+
   React.useEffect(() => {
     if (nivelRequerido > nivelArcana) {
       alert("Nível da Prática não pode ser maior que o seu Nível na Arcana");
       setNivelRequerido(nivelArcana);
     }
   }, [nivelRequerido]);
+
+  React.useEffect(() => {
+    console.log(
+      "parada de dados:",
+      calcularDadosPorFator(potencia, nivelArcana)
+    );
+  }, [potencia, duracao, escala, nivelArcana]);
 
   return (
     <div className={`container `}>
@@ -160,6 +169,8 @@ export default function SpellCalcScreen() {
           setAlcanceElevado={setAlcanceElevado}
           tempoConjuracaoElevada={tempoConjuracaoElevada}
           setTempoConjuracaoElevada={setTempoConjuracaoElevada}
+          extraElevacoes={extraElevacoes}
+          setExtraElevacoes={setExtraElevacoes}
         />
       )}
 
@@ -189,11 +200,9 @@ export default function SpellCalcScreen() {
           setYantras={setYantras}
         />
       )}
-
-      
-
       <div className={styles.spellCalcFooter}>
-        <ResumoMagia />
+        <ResumoMagia {...resumoMagiaProps} />
+
         <button
           className={styles.button}
           onClick={() => {
@@ -227,7 +236,7 @@ export default function SpellCalcScreen() {
             setAlcanceElevado(false);
             setTempoConjuracaoElevada(false);
             setCurrentFP("potencia");
-
+            setExtraElevacoes(0);
           }}
         >
           Limpar

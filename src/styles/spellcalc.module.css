@@ -41,6 +41,9 @@
 }
 
 .spellCalcFooter {
+  position: fixed;
+  bottom: 0;
+  left: 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   justify-content: space-between;
