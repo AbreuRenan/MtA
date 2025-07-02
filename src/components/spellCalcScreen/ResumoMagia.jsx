@@ -3,6 +3,8 @@ import styles from "../../styles/spellcalc.module.css";
 
 export default function ResumoMagia(props) {
   const {
+    gnose,
+    nivelArcana,
     yantras,
     custoMana,
     custoVontade,
@@ -15,6 +17,7 @@ export default function ResumoMagia(props) {
     duracao,
     escalaElevada,
     duracaoElevada,
+    calcularDadosPorFator
   } = props;
   const textoDuracaoPadrao = [
     "1 Turno",
@@ -112,6 +115,13 @@ export default function ResumoMagia(props) {
   const tamanhos = exibirEscala().tamanhos;
   const area = exibirEscala().area;
 
+  function calcularParadaDeDados(){
+    const dadosIniciais = gnose + nivelArcana + yantras;
+    const penalidadePorFator = calcularDadosPorFator();
+    let totalDados = dadosIniciais - penalidadePorFator;
+    return Math.max(-5,totalDados);
+  }
+
   return (
     <>
       <div>
@@ -119,6 +129,7 @@ export default function ResumoMagia(props) {
           <h2>Resumo da Magia</h2>
         </center>
         <div className={styles.resumoMagia}>
+          <p>Parada de Dados: {calcularParadaDeDados()}</p>
           <p>Duração: {exibirDuracao()}</p>
           <p>Alvos: {alvos} | Tamanho Máx: {tamanhos}</p> 
           <p>Área: {area}</p>

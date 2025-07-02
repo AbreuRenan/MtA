@@ -81,18 +81,17 @@ export default function MageDataComponent(props) {
             />
             <label htmlFor="improvisado">Improvisado</label>
           </div>
-
-          <div>
+          {/* <div>
             <input
               type="radio"
               id="praxis"
               name="spellType"
               value="praxis"
               onChange={toggleRadioBtn}
+              disabled
             />
             <label htmlFor="praxis">Praxis</label>
-          </div>
-
+          </div> */}
           <div>
             <input
               type="radio"

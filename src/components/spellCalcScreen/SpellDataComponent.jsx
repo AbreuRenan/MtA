@@ -3,7 +3,6 @@ import styles from "../../styles/spellcalc.module.css";
 import InputGroup from "./inputGroup";
 
 export default function SpellDataComponent(props) {
-
   const {
     nivelArcana,
     potencia,
@@ -76,8 +75,7 @@ export default function SpellDataComponent(props) {
   );
 
   function calcularTotalElevacoes() {
-    const elevacoes = [potenciaElevada,duracaoElevada,escalaElevada, alcanceElevado,
-      tempoConjuracaoElevada, extraElevacoes];
+    const elevacoes = [potenciaElevada,duracaoElevada,escalaElevada,alcanceElevado,tempoConjuracaoElevada,extraElevacoes,];
     // valores true são considerados 1, false são 0
     const total = elevacoes.reduce((acc, curr) => acc + curr, 0);
     setCustoElevacoes(total);
@@ -87,27 +85,40 @@ export default function SpellDataComponent(props) {
     const inputName = e.target.id;
     setAlcance(inputName);
     setAlcanceElevado(false);
-    if (inputName !== "toque") {setAlcanceElevado(true)}
-    if (inputName === "simpatico") {setCustoMana( prev => prev + 1);}
-    if (inputName !== "simpatico") {setCustoMana(prev => Math.max(0, prev -1))}
+    if (inputName !== "toque") {
+      setAlcanceElevado(true);
+    }
+    if (inputName === "simpatico") {
+      setCustoMana((prev) => prev + 1);
+    }
+    if (inputName !== "simpatico") {
+      setCustoMana((prev) => Math.max(0, prev - 1));
+    }
   }
 
   function toggleFPradioBtn(e) {
     const newFP = e.target.value;
     const oldFP = currentFP;
-    if (oldFP && setValue[oldFP]) { resetValueFromFP(oldFP);}
-    if (setValue[newFP]) { setValue[newFP](nivelArcana);}
-    if (oldFP !== "escala" && newFP === "escala") { setExtraElevacoes( prev => prev + 1) }
-    if (oldFP === "escala" && newFP !== "escala") { setExtraElevacoes( prev => Math.max(0, prev - 1)) }
+    if (oldFP && setValue[oldFP]) {
+      resetValueFromFP(oldFP);
+    }
+    if (setValue[newFP]) {
+      setValue[newFP](nivelArcana);
+    }
+    if (oldFP !== "escala" && newFP === "escala") {
+      setExtraElevacoes((prev) => prev + 1);
+    }
+    if (oldFP === "escala" && newFP !== "escala") {
+      setExtraElevacoes((prev) => Math.max(0, prev - 1));
+    }
     setCurrentFP(newFP);
   }
 
-
   function toggleElevacaoCheckBox(e) {
     if (e.target.checked) {
-      setValue[e.target.id](e.target.checked)
+      setValue[e.target.id](e.target.checked);
     } else {
-      setValue[e.target.id](e.target.checked)
+      setValue[e.target.id](e.target.checked);
     }
   }
 
@@ -123,8 +134,7 @@ export default function SpellDataComponent(props) {
 
   React.useEffect(() => {
     calcularTotalElevacoes();
-  },[potenciaElevada, duracaoElevada, escalaElevada, alcanceElevado,
-    tempoConjuracaoElevada, setCustoElevacoes, extraElevacoes]);
+  }, [potenciaElevada,duracaoElevada,escalaElevada,alcanceElevado,tempoConjuracaoElevada,setCustoElevacoes,extraElevacoes,]);
 
   return (
     <div className="page" data-page={page}>
@@ -134,8 +144,15 @@ export default function SpellDataComponent(props) {
       <div className={`${styles.spellData}`}>
         <span className={styles.columnName}>FP?</span>
         <span className={styles.columnName}>Fatores de Magia</span>
-        <span className={styles.columnName} style={{transform:"translateX(-30%)"}}>Elevada?</span>
-        <span className={styles.columnName} style={{justifySelf:"center"}}>Nível</span>
+        <span
+          className={styles.columnName}
+          style={{ transform: "translateX(-30%)" }}
+        >
+          Elevada?
+        </span>
+        <span className={styles.columnName} style={{ justifySelf: "center" }}>
+          Nível
+        </span>
         <input
           id="potenciaFP"
           type="radio"
@@ -219,7 +236,6 @@ export default function SpellDataComponent(props) {
           type="radio"
           name="fatorPrimario"
           value="tempoConjuracao"
-          
           disabled
           className={styles.checkboxElevada}
           onChange={toggleFPradioBtn}
@@ -242,9 +258,6 @@ export default function SpellDataComponent(props) {
             max={100}
           />
         </InputGroup>
-
-      </div>
-      
         <fieldset className={`${styles.inputGroupSpellType} ${styles.options}`}>
           <legend>Alcance</legend>
           <div>
@@ -283,6 +296,7 @@ export default function SpellDataComponent(props) {
             <label htmlFor="simpatico">Simpático</label>
           </div>
         </fieldset>
+      </div>
     </div>
   );
 }

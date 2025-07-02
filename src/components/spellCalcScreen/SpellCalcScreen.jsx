@@ -25,21 +25,96 @@ export default function SpellCalcScreen() {
   const [duracaoElevada, setDuracaoElevada] = React.useState(false);
   const [escalaElevada, setEscalaElevada] = React.useState(false);
   const [alcanceElevado, setAlcanceElevado] = React.useState(false);
-  const [tempoConjuracaoElevada, setTempoConjuracaoElevada] =
-    React.useState(false);
+  const [tempoConjuracaoElevada, setTempoConjuracaoElevada] = React.useState(false);
   const [extraElevacoes, setExtraElevacoes] = React.useState(0);
 
   const [custoMana, setCustoMana] = React.useState(0);
   const [custoVontade, setCustoVontade] = React.useState(0);
   const [custoElevacoes, setCustoElevacoes] = React.useState(0);
 
-  const [paradaDados, setParadaDados] = React.useState(0);
-
+  const mageDataProps = {
+    gnose,
+    setGnose,
+    nivelArcana,
+    setNivelArcana,
+    nivelRequerido,
+    setNivelRequerido,
+    magiasAtivas,
+    setMagiasAtivas,
+    spellType,
+    setSpellType,
+    regente,
+    setRegente,
+    page,
+    setPage,
+    onChangeToggle,
+  };
+  const spellDataProps = {
+    nivelArcana,
+    potencia,
+    setPotencia,
+    duracao,
+    setDuracao,
+    escala,
+    setEscala,
+    alcance,
+    setAlcance,
+    tempoConjuracao,
+    setTempoConjuracao,
+    page,
+    setPage,
+    custoMana,
+    setCustoMana,
+    custoVontade,
+    setCustoVontade,
+    custoElevacoes,
+    currentFP,
+    setCurrentFP,
+    setCustoElevacoes,
+    potenciaElevada,
+    setPotenciaElevada,
+    duracaoElevada,
+    setDuracaoElevada,
+    escalaElevada,
+    setEscalaElevada,
+    alcanceElevado,
+    setAlcanceElevado,
+    tempoConjuracaoElevada,
+    setTempoConjuracaoElevada,
+    extraElevacoes,
+    setExtraElevacoes,
+  };
+  const yantraDataProps = {
+    gnose,
+    setGnose,
+    nivelArcana,
+    setNivelArcana,
+    nivelRequerido,
+    setNivelRequerido,
+    magiasAtivas,
+    setMagiasAtivas,
+    spellType,
+    setSpellType,
+    regente,
+    setRegente,
+    page,
+    setPage,
+    custoMana,
+    setCustoMana,
+    custoVontade,
+    setCustoVontade,
+    custoElevacoes,
+    setCustoElevacoes,
+    yantras,
+    setYantras,
+  };
   const resumoMagiaProps = {
     duracao,
     escala,
     escalaElevada,
     duracaoElevada,
+    gnose,
+    nivelArcana,
     yantras,
     custoMana,
     custoVontade,
@@ -47,7 +122,8 @@ export default function SpellCalcScreen() {
     calcularElevacoesGratis,
     calcularElevacoesExcedentes,
     calcularDadosParadoxo,
-    exibirElevacoes
+    exibirElevacoes,
+    calcularDadosPorFator
   };
 
   function onChangeToggle(e) {
@@ -70,7 +146,7 @@ export default function SpellCalcScreen() {
     return Math.max(0, custoElevacoes - elevacoesGratis);
   }
   function exibirElevacoes() {
-    return calcularElevacoesGratis() - custoElevacoes
+    return calcularElevacoesGratis() - custoElevacoes;
   }
 
   function calcularDadosParadoxo() {
@@ -80,19 +156,28 @@ export default function SpellCalcScreen() {
     return dadosDeParadoxo;
   }
 
-function calcularDadosPorFator() {
-  let penalidadePotencia = potencia === 1 ? 0 : (potencia - 1)* 2;
-  let penalidadeDuracao = duracao === 1 ? 0 : (duracao - 1) * 2;
-  let penalidadeEscala = escala === 1 ? 0 : (escala - 1) * 2;
+  function calcularDadosPorFator() {
+    let penalidadePotencia = potencia === 1 ? 0 : (potencia - 1) * 2;
+    let penalidadeDuracao = duracao === 1 ? 0 : (duracao - 1) * 2;
+    let penalidadeEscala = escala === 1 ? 0 : (escala - 1) * 2;
 
-  switch (currentFP) {
-    case "potencia": penalidadePotencia = (potencia - nivelArcana) * 2; break;
-    case "duracao": penalidadeDuracao = (duracao - nivelArcana) * 2; break;
-    case "escala": penalidadeEscala = (escala - nivelArcana) * 2; break;
+    switch (currentFP) {
+      case "potencia":
+        penalidadePotencia = (potencia - nivelArcana) * 2;
+        break;
+      case "duracao":
+        penalidadeDuracao = (duracao - nivelArcana) * 2;
+        break;
+      case "escala":
+        penalidadeEscala = (escala - nivelArcana) * 2;
+        break;
+    }
+    const dadoPenalidadeTotal =
+      Math.max(0, penalidadePotencia) +
+      Math.max(0, penalidadeDuracao) +
+      Math.max(0, penalidadeEscala);
+    return dadoPenalidadeTotal;
   }
-  const dadoPenalidadeTotal = Math.max(0,penalidadePotencia) + Math.max(0,penalidadeDuracao) + Math.max(0,penalidadeEscala);
-  return dadoPenalidadeTotal;
-}
 
   React.useEffect(() => {
     if (nivelRequerido > nivelArcana) {
@@ -101,105 +186,11 @@ function calcularDadosPorFator() {
     }
   }, [nivelRequerido]);
 
-  React.useEffect(() => {
-    console.log(
-      "parada de dados:",
-      calcularDadosPorFator(potencia, nivelArcana)
-    );
-  }, [potencia, duracao, escala, nivelArcana]);
-
   return (
     <div className={`container `}>
-      {page === 1 && (
-        <MageDataComponent
-          gnose={gnose}
-          setGnose={setGnose}
-          nivelArcana={nivelArcana}
-          setNivelArcana={setNivelArcana}
-          nivelRequerido={nivelRequerido}
-          setNivelRequerido={setNivelRequerido}
-          magiasAtivas={magiasAtivas}
-          setMagiasAtivas={setMagiasAtivas}
-          spellType={spellType}
-          setSpellType={setSpellType}
-          regente={regente}
-          setRegente={setRegente}
-          page={page}
-          setPage={setPage}
-          custoMana={custoMana}
-          setCustoMana={setCustoMana}
-          custoVontade={custoVontade}
-          setCustoVontade={setCustoVontade}
-          custoElevacoes={custoElevacoes}
-          setCustoElevacoes={setCustoElevacoes}
-          onChangeToggle={onChangeToggle}
-        />
-      )}
-
-      {page === 2 && (
-        <SpellDataComponent
-          nivelArcana={nivelArcana}
-          potencia={potencia}
-          setPotencia={setPotencia}
-          duracao={duracao}
-          setDuracao={setDuracao}
-          escala={escala}
-          setEscala={setEscala}
-          alcance={alcance}
-          setAlcance={setAlcance}
-          tempoConjuracao={tempoConjuracao}
-          setTempoConjuracao={setTempoConjuracao}
-          page={page}
-          setPage={setPage}
-          custoMana={custoMana}
-          setCustoMana={setCustoMana}
-          custoVontade={custoVontade}
-          setCustoVontade={setCustoVontade}
-          currentFP={currentFP}
-          setCurrentFP={setCurrentFP}
-          custoElevacoes={custoElevacoes}
-          setCustoElevacoes={setCustoElevacoes}
-          potenciaElevada={potenciaElevada}
-          setPotenciaElevada={setPotenciaElevada}
-          duracaoElevada={duracaoElevada}
-          setDuracaoElevada={setDuracaoElevada}
-          escalaElevada={escalaElevada}
-          setEscalaElevada={setEscalaElevada}
-          alcanceElevado={alcanceElevado}
-          setAlcanceElevado={setAlcanceElevado}
-          tempoConjuracaoElevada={tempoConjuracaoElevada}
-          setTempoConjuracaoElevada={setTempoConjuracaoElevada}
-          extraElevacoes={extraElevacoes}
-          setExtraElevacoes={setExtraElevacoes}
-        />
-      )}
-
-      {page === 3 && (
-        <YantraDataComponent
-          gnose={gnose}
-          setGnose={setGnose}
-          nivelArcana={nivelArcana}
-          setNivelArcana={setNivelArcana}
-          nivelRequerido={nivelRequerido}
-          setNivelRequerido={setNivelRequerido}
-          magiasAtivas={magiasAtivas}
-          setMagiasAtivas={setMagiasAtivas}
-          spellType={spellType}
-          setSpellType={setSpellType}
-          regente={regente}
-          setRegente={setRegente}
-          page={page}
-          setPage={setPage}
-          custoMana={custoMana}
-          setCustoMana={setCustoMana}
-          custoVontade={custoVontade}
-          setCustoVontade={setCustoVontade}
-          custoElevacoes={custoElevacoes}
-          setCustoElevacoes={setCustoElevacoes}
-          yantras={yantras}
-          setYantras={setYantras}
-        />
-      )}
+      <MageDataComponent {...mageDataProps} />
+      <YantraDataComponent {...yantraDataProps} />
+      <SpellDataComponent {...spellDataProps} />
       <div className={styles.spellCalcFooter}>
         <ResumoMagia {...resumoMagiaProps} />
 
