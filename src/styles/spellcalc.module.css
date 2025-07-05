@@ -38,8 +38,19 @@
 
 .resumoMagia {
   text-align: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
-
+.elevacaoDisponivel,
+.paradaDados,
+.dadosParadoxo {
+}
+.elevacao.verde {
+  color: rgb(0, 210, 0);
+}
+.elevacao.vermelho {
+  color: red;
+}
 .spellCalcFooter {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -61,7 +72,9 @@
   font-weight: 600;
   padding: 14px 38px;
   border-radius: 6px;
+  grid-column: 2/3;
 }
+.optionalsData,
 .spellData,
 .yantraData,
 .mageData {
@@ -72,9 +85,23 @@
   gap: 10px;
   padding-bottom: 30px;
 }
+.optionalsData,
 .spellData {
   grid-template-columns: 10% 40% 10% 40%;
   column-gap: 0;
+}
+
+.optionalsData > label {
+  grid-column: 1/3;
+}
+.optionalsData > input[type="checkbox"] {
+  grid-column: 3/3;
+}
+.optionalsData > div.inputGroupControl {
+  grid-column: 4/4;
+}
+.optionalsData > .mitigarDadosParadoxoContainer {
+  display: flex;
 }
 
 .columnName {
@@ -135,7 +162,7 @@ label.inputCheckbox {
   position: relative;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  width: calc(42px + 46px + 42px);
+  width: calc(42px + 52px + 42px);
   border: 2px solid var(--amarelo);
   border-bottom: 3px solid var(--amareloSombra);
   border-right: 3px solid var(--amareloSombra);
@@ -172,7 +199,7 @@ input.inputCheckbox:checked + label.inputCheckbox::before {
 
 label.inputCheckbox > div {
   width: 100%;
-  height: 42px;
+  height: 36px;
   color: transparent;
   display: flex;
   align-items: center;
@@ -198,7 +225,7 @@ input.inputCheckbox:checked + label.inputCheckbox > div:last-of-type {
   display: none !important;
   appearance: none;
 }
-
+fieldset.inputGroupSpellExtras,
 fieldset.inputGroupSpellType {
   display: flex;
   width: 100%;
@@ -224,6 +251,13 @@ fieldset.inputGroupSpellType {
   justify-content: center;
   gap: 10px;
 }
+.inputGroupSpellExtras {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 input[type="radio"].checkboxElevada,
 input[type="checkbox"].checkboxElevada,
 .options input[type="radio"] {

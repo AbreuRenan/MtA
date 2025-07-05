@@ -16,12 +16,7 @@ export default function SpellDataComponent(props) {
     tempoConjuracao,
     setTempoConjuracao,
     page,
-    setPage,
-    custoMana,
-    setCustoMana,
-    custoVontade,
     setCustoVontade,
-    custoElevacoes,
     currentFP,
     setCurrentFP,
     setCustoElevacoes,
@@ -46,7 +41,6 @@ export default function SpellDataComponent(props) {
       escala: setEscala,
       alcance: setAlcance,
       tempoConjuracao: setTempoConjuracao,
-      custoMana: setCustoMana,
       custoVontade: setCustoVontade,
       custoElevacoes: setCustoElevacoes,
       potenciaElevada: setPotenciaElevada,
@@ -62,7 +56,6 @@ export default function SpellDataComponent(props) {
       setEscala,
       setTempoConjuracao,
       setAlcance,
-      setCustoMana,
       setCustoVontade,
       setCustoElevacoes,
       setPotenciaElevada,
@@ -75,7 +68,14 @@ export default function SpellDataComponent(props) {
   );
 
   function calcularTotalElevacoes() {
-    const elevacoes = [potenciaElevada,duracaoElevada,escalaElevada,alcanceElevado,tempoConjuracaoElevada,extraElevacoes,];
+    const elevacoes = [
+      potenciaElevada,
+      duracaoElevada,
+      escalaElevada,
+      alcanceElevado,
+      tempoConjuracaoElevada,
+      extraElevacoes,
+    ];
     // valores true são considerados 1, false são 0
     const total = elevacoes.reduce((acc, curr) => acc + curr, 0);
     setCustoElevacoes(total);
@@ -85,32 +85,17 @@ export default function SpellDataComponent(props) {
     const inputName = e.target.id;
     setAlcance(inputName);
     setAlcanceElevado(false);
-    if (inputName !== "toque") {
-      setAlcanceElevado(true);
-    }
-    if (inputName === "simpatico") {
-      setCustoMana((prev) => prev + 1);
-    }
-    if (inputName !== "simpatico") {
-      setCustoMana((prev) => Math.max(0, prev - 1));
-    }
+    if (inputName !== "toque")     { setAlcanceElevado(true); }
+
   }
 
   function toggleFPradioBtn(e) {
     const newFP = e.target.value;
     const oldFP = currentFP;
-    if (oldFP && setValue[oldFP]) {
-      resetValueFromFP(oldFP);
-    }
-    if (setValue[newFP]) {
-      setValue[newFP](nivelArcana);
-    }
-    if (oldFP !== "escala" && newFP === "escala") {
-      setExtraElevacoes((prev) => prev + 1);
-    }
-    if (oldFP === "escala" && newFP !== "escala") {
-      setExtraElevacoes((prev) => Math.max(0, prev - 1));
-    }
+    if (oldFP && setValue[oldFP]) { resetValueFromFP(oldFP); }
+    if (setValue[newFP]) { setValue[newFP](nivelArcana); }
+    if (oldFP !== "escala" && newFP === "escala") { setExtraElevacoes((prev) => prev + 1); }
+    if (oldFP === "escala" && newFP !== "escala") { setExtraElevacoes((prev) => Math.max(0, prev - 1));}
     setCurrentFP(newFP);
   }
 
@@ -134,7 +119,15 @@ export default function SpellDataComponent(props) {
 
   React.useEffect(() => {
     calcularTotalElevacoes();
-  }, [potenciaElevada,duracaoElevada,escalaElevada,alcanceElevado,tempoConjuracaoElevada,setCustoElevacoes,extraElevacoes,]);
+  }, [
+    potenciaElevada,
+    duracaoElevada,
+    escalaElevada,
+    alcanceElevado,
+    tempoConjuracaoElevada,
+    setCustoElevacoes,
+    extraElevacoes,
+  ]);
 
   return (
     <div className="page" data-page={page}>
@@ -162,8 +155,7 @@ export default function SpellDataComponent(props) {
           className={styles.checkboxElevada}
           onChange={toggleFPradioBtn}
         />
-        <InputGroup
-          label="Potência"
+        <InputGroup label="Potência"
           id="potencia"
           value={potencia}
           setValue={setPotencia}
@@ -179,17 +171,15 @@ export default function SpellDataComponent(props) {
             className={styles.checkboxElevada}
           />
         </InputGroup>
-        <input
-          id="duracaoFP"
+        <input id="duracaoFP"
           type="radio"
           name="fatorPrimario"
           value="duracao"
           checked={currentFP === "duracao"}
           className={styles.checkboxElevada}
           onChange={toggleFPradioBtn}
-        />
-        <InputGroup
-          label="Duração"
+        ></input>
+        <InputGroup label="Duração"
           id="duracao"
           value={duracao}
           setValue={setDuracao}
@@ -205,17 +195,15 @@ export default function SpellDataComponent(props) {
             onChange={toggleElevacaoCheckBox}
           />
         </InputGroup>
-        <input
-          id="escalaFP"
+        <input id="escalaFP"
           type="radio"
           name="fatorPrimario"
           value="escala"
           checked={currentFP === "escala"}
           className={styles.checkboxElevada}
           onChange={toggleFPradioBtn}
-        />
-        <InputGroup
-          label="Escala"
+        ></input>
+        <InputGroup label="Escala"
           id="escala"
           value={escala}
           setValue={setEscala}
@@ -231,17 +219,15 @@ export default function SpellDataComponent(props) {
             onChange={toggleElevacaoCheckBox}
           />
         </InputGroup>
-        <input
-          id="tempoConjuracaoFP"
+        <input id="tempoConjuracaoFP"
           type="radio"
           name="fatorPrimario"
           value="tempoConjuracao"
           disabled
           className={styles.checkboxElevada}
           onChange={toggleFPradioBtn}
-        />
-        <InputGroup
-          label="Tempo de Conjuração"
+        ></input>
+        <InputGroup label="Tempo de Conjuração"
           id="tempoConjuracao"
           value={tempoConjuracao}
           setValue={setTempoConjuracao}
@@ -258,6 +244,7 @@ export default function SpellDataComponent(props) {
             max={100}
           />
         </InputGroup>
+        
         <fieldset className={`${styles.inputGroupSpellType} ${styles.options}`}>
           <legend>Alcance</legend>
           <div>

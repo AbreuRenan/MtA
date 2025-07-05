@@ -3,21 +3,17 @@ import styles from "../../styles/spellcalc.module.css";
 
 export default function ResumoMagia(props) {
   const {
-    gnose,
-    nivelArcana,
-    yantras,
+    potencia,
     custoMana,
-    custoVontade,
-    custoElevacoes,
-    calcularElevacoesGratis,
     calcularElevacoesExcedentes,
     calcularDadosParadoxo,
-    exibirElevacoes,
+    calcularElevacoesTotais,
     escala,
     duracao,
     escalaElevada,
     duracaoElevada,
-    calcularDadosPorFator
+    paradaDeDados,
+    totalDadosParadoxo
   } = props;
   const textoDuracaoPadrao = [
     "1 Turno",
@@ -111,16 +107,12 @@ export default function ResumoMagia(props) {
       return texto;
     }
   }
+  function exibirElevacoes() {
+    return calcularElevacoesTotais();
+  }
   const alvos = exibirEscala().alvos;
   const tamanhos = exibirEscala().tamanhos;
   const area = exibirEscala().area;
-
-  function calcularParadaDeDados(){
-    const dadosIniciais = gnose + nivelArcana + yantras;
-    const penalidadePorFator = calcularDadosPorFator();
-    let totalDados = dadosIniciais - penalidadePorFator;
-    return Math.max(-5,totalDados);
-  }
 
   return (
     <>
@@ -129,14 +121,32 @@ export default function ResumoMagia(props) {
           <h2>Resumo da Magia</h2>
         </center>
         <div className={styles.resumoMagia}>
-          <p>Parada de Dados: {calcularParadaDeDados()}</p>
-          <p>Duração: {exibirDuracao()}</p>
-          <p>Alvos: {alvos} | Tamanho Máx: {tamanhos}</p> 
-          <p>Área: {area}</p>
-          <hr/>
-          {exibirElevacoes() >= 0 && <p>Elevações Pra Gastar: {exibirElevacoes()}</p>}
-          {exibirElevacoes() < 0 && <p>Elevações Passando: {calcularElevacoesExcedentes()}</p>} 
-          {calcularDadosParadoxo() > 0 && <p>Dados de Paradoxo: {calcularDadosParadoxo()}</p>} 
+          <p className={styles.paradaDados}>Parada de Dados: {paradaDeDados}</p>
+          <p className={styles.potencia}>Potência: {potencia}</p>
+          <div className={styles.escadaGrid}>
+            <p>Escala</p>
+            <p className={styles.duracao}>Duração: {exibirDuracao()}</p>
+            <p className={styles.alvos}>Alvos: {alvos}</p>
+            <p className={styles.tamanho}>Tamanho Máx: {tamanhos}</p>
+            <p className={styles.area}>Área: {area}</p>
+          </div>
+
+          <p className={styles.custoMana}>Custo de Mana: {custoMana}</p>
+
+          {exibirElevacoes() >= 0 && (
+            <p className={`${styles.elevacao} ${styles.verde}`}>
+              Elevações Pra Gastar: {exibirElevacoes()}
+            </p>
+          )}
+          {exibirElevacoes() < 0 && (
+            <p className={`${styles.elevacao} ${styles.vermelho}`}>
+              Elevações Passando: {calcularElevacoesExcedentes()}
+            </p>
+          )}
+
+          <p className={styles.dadosParadoxo}>
+            Dados de Paradoxo: {totalDadosParadoxo}
+          </p>
         </div>
       </div>
     </>

@@ -13,16 +13,14 @@ export default function MageDataComponent(props) {
     setNivelRequerido,
     magiasAtivas,
     setMagiasAtivas,
-    spellType,
     setSpellType,
     regente,
     setRegente,
     page,
-    setPage,
-    onChangeToggle,
+    toggleRegente,
   } = props;
 
-  function toggleRadioBtn(e) {
+  function toggleRadioBtnSpellType(e) {
     const inputValue = e.target.value;
     setSpellType(inputValue);
   }
@@ -64,7 +62,7 @@ export default function MageDataComponent(props) {
           label="Arcana é Regente?"
           id="regente"
           defaultChecked={regente}
-          onChange={onChangeToggle}
+          onChange={toggleRegente}
           setValue={setRegente}
           value={regente}
         />
@@ -77,7 +75,7 @@ export default function MageDataComponent(props) {
               name="spellType"
               value="improvisado"
               defaultChecked
-              onChange={toggleRadioBtn}
+              onChange={toggleRadioBtnSpellType}
             />
             <label htmlFor="improvisado">Improvisado</label>
           </div>
@@ -87,7 +85,7 @@ export default function MageDataComponent(props) {
               id="praxis"
               name="spellType"
               value="praxis"
-              onChange={toggleRadioBtn}
+              onChange={toggleRadioBtnSpellType}
               disabled
             />
             <label htmlFor="praxis">Praxis</label>
@@ -98,7 +96,7 @@ export default function MageDataComponent(props) {
               id="rote"
               name="spellType"
               value="rote"
-              onChange={toggleRadioBtn}
+              onChange={toggleRadioBtnSpellType}
             />
             <label htmlFor="rote">Clássico</label>
           </div>
