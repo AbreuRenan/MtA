@@ -25,8 +25,7 @@ export default function SpellCalcScreen() {
   const [duracaoElevada, setDuracaoElevada] = React.useState(false);
   const [escalaElevada, setEscalaElevada] = React.useState(false);
   const [alcanceElevado, setAlcanceElevado] = React.useState(false);
-  const [tempoConjuracaoElevada, setTempoConjuracaoElevada] =
-    React.useState(false);
+  const [tempoConjuracaoElevada, setTempoConjuracaoElevada] = React.useState(false);
   const [extraElevacoes, setExtraElevacoes] = React.useState(0);
   const [isCombinado, setIsCombinado] = React.useState(0);
   const [yantras, setYantras] = React.useState(0);
@@ -138,6 +137,7 @@ export default function SpellCalcScreen() {
     setManaOpcional,
     mitigarTodoParadoxoMana,
     setMitigarTodoParadoxoMana,
+    calcularDadosParadoxo
   };
   const resumoMagiaProps = {
     potencia,
@@ -158,7 +158,7 @@ export default function SpellCalcScreen() {
     calcularDadosPorFator,
     paradaDeDados,
     setParadaDeDados,
-    totalDadosParadoxo,
+    totalDadosParadoxo
   };
   function toggleRegente(e) {
     setRegente(e.target.checked);
@@ -289,7 +289,7 @@ export default function SpellCalcScreen() {
     }, [mitigarTodoParadoxoMana]);
 
   React.useEffect(() => {
-    const totalDadosParadoxoValue = calcularTotalDadosParadoxo();
+    const totalDadosParadoxoValue = Math.max(0, calcularTotalDadosParadoxo());
     setTotalDadosParadoxo(totalDadosParadoxoValue);
   }, [mitigarDadosParadoxoMana, calcularDadosParadoxo, mitigarTodoParadoxoMana ]);
 
@@ -299,8 +299,8 @@ export default function SpellCalcScreen() {
       <YantraDataComponent {...yantraDataProps} />
       <SpellDataComponent {...spellDataProps} />
       <ExtraOptionsComponent {...extraOptionDataProps} />
+      <ResumoMagia {...resumoMagiaProps} />
       <div className={styles.spellCalcFooter}>
-        <ResumoMagia {...resumoMagiaProps} />
 
         <button
           className={styles.button}

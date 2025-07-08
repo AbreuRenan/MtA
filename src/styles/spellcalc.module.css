@@ -39,12 +39,21 @@
 .resumoMagia {
   text-align: center;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px
 }
-.elevacaoDisponivel,
-.paradaDados,
-.dadosParadoxo {
+
+.fatoresCol,
+.dadosCol {
+  display: flex;
+  flex-direction: column;
 }
+.fatoresCol p,
+.dadosCol p {
+  text-align: left;
+}
+
+
 .elevacao.verde {
   color: rgb(0, 210, 0);
 }
@@ -60,7 +69,7 @@
   width: 100%;
   padding: 0 20px;
 }
-.spellCalcFooter :first-child {
+.spellCalcFooter>div {
   grid-column: span 3;
 }
 .spellCalcFooter > button {

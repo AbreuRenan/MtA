@@ -17,6 +17,7 @@ export default function ExtraOptionsComponent(props) {
     setManaOpcional,
     mitigarTodoParadoxoMana,
     setMitigarTodoParadoxoMana,
+    calcularDadosParadoxo
   } = props;
 
   function toggleMitigarTodoParadoxoCheckBox(e) {
@@ -55,6 +56,7 @@ export default function ExtraOptionsComponent(props) {
           value={mitigarDadosParadoxoMana}
           setValue={handleMitigarDadosParadoxoChange}
           min={0}
+          max={calcularDadosParadoxo()}
         >
           <input
             type="checkbox"
