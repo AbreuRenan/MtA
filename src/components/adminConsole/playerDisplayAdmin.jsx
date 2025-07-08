@@ -1,54 +1,82 @@
 import React from "react";
 import styles from "./adminStyles.module.css";
 
-function PlayerDisplayAdmin({ player }) {
-  const [expState, setExpState] = React.useState(0)
-  const [expAState, setExpAState] = React.useState(0)
+import InputGroup from "../helpers/inputGroup";
 
-  React.useEffect( ()=> {
-    setExpState(player?.exp)
-    setExpAState(player?.expA)
-  }, [player])
-
-
-  function handleClick(type, value) {
-    if (type === 'exp') setExpState( (prev) => prev+value)
-    if (type === 'expA') setExpAState( (prev) => prev+value)
-
-  }
-
+export default function PlayerDisplayAdmin({ player, onUpdatePlayer }) {
   return (
     <div className={styles.divContainerStyle}>
       <h1>{player?.nome ? player.nome : "Jogador Não Selecionado"}</h1>
       <div className={styles.expContainer}>
         <div>
-          <span>FV Max: {player?.fv?.max}</span>
+          <InputGroup
+            max={100}
+            label="FdV Max"
+            id={`fdvMax-${player.id}`}
+            value={player?.fv.max || 0}
+            setValue={(newValue) =>
+              onUpdatePlayer(player.id, "fv/max", newValue)
+            }
+          />
         </div>
         <div>
-          <span>FV Gasto: {player?.fv?.usado}</span>
+          <InputGroup
+            max={100}
+            label="FV Gasto"
+            id={`fvUsado-${player.id}`}
+            value={player?.fv?.usado || 0}
+            setValue={(newValue) =>
+              onUpdatePlayer(player.id, "fv/usado", newValue)
+            }
+          />
         </div>
       </div>
       <div className={styles.manaContainer}>
         <div>
-          <span>Mana Max: {player?.mana?.max}</span>
+          <InputGroup
+            max={100}
+            label="Mana Max"
+            id={`manaMax-${player.id}`}
+            value={player?.mana?.max || 0}
+            setValue={(newValue) =>
+              onUpdatePlayer(player.id, "mana/max", newValue)
+            }
+          />
         </div>
         <div>
-          <span>Mana Gasto: {player?.mana?.usado}</span>
+          <InputGroup
+            max={100}
+            label="Mana Gasto"
+            id={`manaUsado-${player.id}`}
+            value={player?.mana?.usado || 0}
+            setValue={(newValue) =>
+              onUpdatePlayer(player.id, "mana/usado", newValue)
+            }
+          />
         </div>
       </div>
       <hr />
       <div className={styles.dmgTxtContainer}>
-      
         {player &&
           Object.keys(player?.vitalidade?.dano).map((key) => (
-            <div key={key} className={styles.dmgItem}>{key}: {player?.vitalidade?.dano[key]} </div>
+            <div key={key} className={styles.dmgItem}>
+              {key}: {player?.vitalidade?.dano[key]}{" "}
+            </div>
           ))}{" "}
-         <div>
-            Vitalidade max: {player?.vitalidade?.max}
-         </div>
+        <div>
+          <div>
+            <InputGroup
+              max={100}
+              label="Vitalidade max"
+              id={`vitalidadeMax-${player.id}`}
+              value={player?.vitalidade?.max || 0}
+              setValue={(newValue) =>
+                onUpdatePlayer(player.id, "vitalidade/max", newValue)
+              }
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-
-export default PlayerDisplayAdmin;

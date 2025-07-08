@@ -1,5 +1,5 @@
 import React from "react";
-import InputGroup from "./inputGroup";
+import InputGroup from "../helpers/inputGroup";
 import styles from "../../styles/spellcalc.module.css";
 
 export default function YantraDataComponent(props) {

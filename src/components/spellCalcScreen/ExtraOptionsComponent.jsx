@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../../styles/spellcalc.module.css";
-import InputGroup from "./inputGroup";
-import InputCheckBox from "./inputCheckBox";
+import InputGroup from "../helpers/inputGroup";
+import InputCheckBox from "../helpers/inputCheckBox";
 
 export default function ExtraOptionsComponent(props) {
   const {

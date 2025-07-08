@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "../../styles/spellcalc.module.css";
-import InputGroup from "./inputGroup";
+import InputGroup from "../helpers/inputGroup";
 
 export default function SpellDataComponent(props) {
   const {

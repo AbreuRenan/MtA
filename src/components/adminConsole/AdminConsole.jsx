@@ -1,41 +1,57 @@
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 import { AppContext } from "../../AppContext";
 import { useNavigate } from "react-router-dom";
-import { get, ref, remove, set, update } from "firebase/database";
+import { get, ref, remove, set, update, onValue } from "firebase/database";
 import PlayerDisplayAdmin from "./playerDisplayAdmin";
 
-import styles from './adminStyles.module.css'
+import styles from "./adminStyles.module.css";
 import RollHistory from "../diceScreenComponents/RollHistory";
 
 export default function AdminConsole() {
   const navigate = useNavigate();
-  const { userData, database, gameOpen, setGameOpen } = useContext(AppContext);
-  const [playersData, setPlayersData] = useState([]);
-  // const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const { userData, database, gameOpen, setGameOpen } = React.useContext(AppContext);
+  const [playersData, setPlayersData] = React.useState([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (userData.role !== "narrador") {
       navigate("/home");
     }
-    async function fetchPlayersData() {
-      const playersRef = ref(database, "users");
-      const playerSnapshot = await get(playersRef);
-      const playersList = playerSnapshot.val();
-      if (playerSnapshot.exists()) {
-        const data = Object.values(playersList).filter(
-          (user) => user.role !== "narrador"
-        ).sort( (a, b) => {
-          let fa = a.nome.toLowerCase();
-          let fb = b.nome.toLowerCase();
-          return fa < fb ? -1 : fa > fb ? 1 : 0;
-        }) 
+    const usersRef = ref(database, "users");
+
+    const unsubscribe = onValue(usersRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const playersList = snapshot.val();
+        const data = Object.values(playersList)
+          .filter((user) => user.role !== "narrador")
+          .sort((a, b) => {
+            let fa = a.nome.toLowerCase();
+            let fb = b.nome.toLowerCase();
+            return fa < fb ? -1 : fa > fb ? 1 : 0;
+          });
         setPlayersData(data);
+      } else {
+        setPlayersData([]); // Limpa se não houver dados
       }
-    }
-    fetchPlayersData();
+    });
+
+    return () => unsubscribe();
   }, [userData, database, navigate]);
 
-  useEffect(() => {
+  async function handlePlayerUpdate(userId, path, newValue) {
+    try {
+      const playerPathRef = ref(database, `users/${userId}/${path}`);
+
+      let valueToSave = newValue;
+      if (typeof newValue === "string" && !isNaN(Number(newValue))) {
+        valueToSave = Number(newValue);
+      }
+      await set(playerPathRef, valueToSave);
+    } catch (error) {
+      console.error("Erro ao atualizar dados do jogador:", error);
+    }
+  }
+
+  React.useEffect(() => {
     const gameRef = ref(database, "gameStatus");
     const newGameStatus = { gameStatus: gameOpen };
     update(gameRef, newGameStatus);
@@ -50,31 +66,29 @@ export default function AdminConsole() {
       });
   };
 
-  const handleOptionSelect = (event) => {
-    const selectedIndex = event.target.value;
-    const selectPlayerData = playersData[selectedIndex];
-    setSelectedPlayer(selectPlayerData);
-  };
-
   function handleOpenGame() {
     setGameOpen(!gameOpen);
   }
   return (
     <div className={`${styles.adminConsoleContainer}`}>
-      <RollHistory single={true}/>
+      <RollHistory single={true} />
       <div className={styles.btnContainer}>
-        <button className={`btn ${styles.deletar}`} onClick={handleDeleteHistory}>
+        <button className={`btn ${styles.deletar}`}onClick={handleDeleteHistory}>
           Apagar RollsHistory
         </button>
-        <button
-          className={`btn ${!gameOpen ? `${styles.openGame}` : `${styles.closeGame}`}`}
-          onClick={handleOpenGame}
-        >
+        <button className={`btn ${!gameOpen ? `${styles.openGame}` : `${styles.closeGame}`}`}
+          onClick={handleOpenGame}>
           {!gameOpen ? "Abrir Jogo" : "Fechar Jogo"}
         </button>
       </div>
-            {playersData.map((selectedPlayer, index) => {
-        return <PlayerDisplayAdmin player={selectedPlayer} key={index}/>;
+      {playersData.map((selectedPlayer, index) => {
+        return (
+          <PlayerDisplayAdmin
+            player={selectedPlayer}
+            key={selectedPlayer.id}
+            onUpdatePlayer={handlePlayerUpdate}
+          />
+        );
       })}
     </div>
   );
