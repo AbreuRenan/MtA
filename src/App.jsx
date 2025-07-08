@@ -1,18 +1,15 @@
 import React from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
+import { AppContextComponent } from "./AppContext";
 
 import "./App.css";
 import Header from "./components/Header";
 import LoginScreen from "./components/auth/LoginScreen";
 import Home from "./components/Home";
 import DiceRollerComponent from "./components/DiceRollerComponent";
-import ReportScreen from "./components/reportScreen/reportScreen";
-import DiceRoller from "./components/diceScreenComponents/DiceRoller";
-import { AppContextComponent } from "./AppContext";
 import RouterGuard from "./components/helpers/RouterGuard";
 import Logout from "./components/auth/Logout";
-import AdminConsole from "./components/adminConsole/AdminConsole";
-import Event from "./components/eventScreen/Event";
+import AdminScreen from "./components/adminScreenComponent/AdminConsole";
 import SpellCalcScreen from "./components/spellCalcScreen/SpellCalcScreen";
 
 function App() {
@@ -26,11 +23,9 @@ function App() {
           <Route path="/logout" element={<Logout />} />
           <Route path="/home" element={<RouterGuard><Home /></RouterGuard>} />
           <Route path="/spellCalc" element={<RouterGuard><SpellCalcScreen /></RouterGuard>} />
-          <Route path="/event" element={<RouterGuard><Event /></RouterGuard>} />
           <Route path="/dice" element={<RouterGuard><DiceRollerComponent/></RouterGuard>} />
           {/* <Route path="/dice" element={<RouterGuard><DiceRoller/></RouterGuard>} /> */}
-          <Route path="/reports/*" element={<RouterGuard><ReportScreen /></RouterGuard>} />
-          <Route path="/admin" element={<RouterGuard><AdminConsole /></RouterGuard>} />
+          <Route path="/admin" element={<RouterGuard><AdminScreen /></RouterGuard>} />
         </Routes>
       </AppContextComponent>
     </HashRouter>

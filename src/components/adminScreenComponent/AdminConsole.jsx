@@ -7,7 +7,7 @@ import PlayerDisplayAdmin from "./playerDisplayAdmin";
 import styles from "./adminStyles.module.css";
 import RollHistory from "../diceScreenComponents/RollHistory";
 
-export default function AdminConsole() {
+export default function AdminScreen() {
   const navigate = useNavigate();
   const { userData, database, gameOpen, setGameOpen } = React.useContext(AppContext);
   const [playersData, setPlayersData] = React.useState([]);

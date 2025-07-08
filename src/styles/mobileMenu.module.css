@@ -20,6 +20,7 @@
     display: none;
     animation: enterLeft .4s forwards;
     background-color: var(--bg1);
+    z-index: 9999;
 }
 
 .isOpen {

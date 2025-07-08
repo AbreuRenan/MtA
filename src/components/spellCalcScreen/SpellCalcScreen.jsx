@@ -287,7 +287,7 @@ export default function SpellCalcScreen() {
 
   function goToDice() {
     const valorFinalParada = calcularParadaDeDados();
-     navigate(`/dice?paradaDeDados=${valorFinalParada}`);
+    navigate(`/dice?paradaDeDados=${valorFinalParada}`);
   }
   // effect verificar se nivel requerido é maior que o nivel possuido na arcana
   React.useEffect(() => {
@@ -346,14 +346,22 @@ export default function SpellCalcScreen() {
 
   return (
     <div className={`container`}>
-      <MageDataComponent {...mageDataProps} />
-      <YantraDataComponent {...yantraDataProps} />
-      <SpellDataComponent {...spellDataProps} />
-      <ExtraOptionsComponent {...extraOptionDataProps} />
-      <ResumoMagia {...resumoMagiaProps} />
-      <div className={styles.spellCalcFooter}>
-        <button className={styles.button} onClick={resetCalculadora}>Limpar</button>
-        <button className={styles.button} onClick={goToDice}>Ir para Dado</button>
+      <div className={styles.scrollableData}>
+        <MageDataComponent {...mageDataProps} />
+        <YantraDataComponent {...yantraDataProps} />
+        <SpellDataComponent {...spellDataProps} />
+        <ExtraOptionsComponent {...extraOptionDataProps} />
+      </div>
+      <div className={styles.notScrollableData}>
+        <ResumoMagia {...resumoMagiaProps} />
+        <div className={styles.spellCalcFooter}>
+          <button className={styles.button} onClick={resetCalculadora}>
+            Limpar
+          </button>
+          <button className={styles.button} onClick={goToDice}>
+            Ir para Dado
+          </button>
+        </div>
       </div>
     </div>
   );

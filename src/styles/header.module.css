@@ -6,8 +6,10 @@ header {
   /* background: url("../assets/bg.jpg") no-repeat top;
   background-size: cover; */
   z-index: 10;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(2px);
+  background-color: black;
+  box-shadow: 0 5px 20px 10px black, 0 5px 40px 10px black;
+  margin-bottom: 25px;
+  z-index: 9999;
 }
 
 .headerNav {
