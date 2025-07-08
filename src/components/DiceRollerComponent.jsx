@@ -7,6 +7,7 @@ import audioURL from "../assets/audio/diceRollRedux.mp3";
 import { set, onValue, ref, push } from "firebase/database";
 import RollHistory from "./diceScreenComponents/RollHistory";
 import { AppContext } from "../AppContext";
+import { useSearchParams } from "react-router-dom";
 
 function DiceRollerComponent() {
   const { firestore, userData, gameOpen } = React.useContext(AppContext);
@@ -16,6 +17,10 @@ function DiceRollerComponent() {
 
   const [firestoreData, setFirestoreData] = React.useState([]);
   const rollHistoryDBRef = ref(firestore, "rollsHistory/");
+
+  const [searchParams] = useSearchParams();
+  const paradaDeDados = searchParams.get('paradaDeDados');
+  const paradaDeDadosNumero = parseInt(paradaDeDados, 10);
 
   React.useEffect(() => {
     if (userData.role === "narrador") {
@@ -64,6 +69,10 @@ function DiceRollerComponent() {
     };
   }, []);
 
+  React.useEffect( ()=> {
+    if (paradaDeDadosNumero) setTotalOfDices(paradaDeDadosNumero) 
+  }, [paradaDeDadosNumero])
+
   function stopDiceSound() {
     setDisableRoll(false);
     const viewArea = document.querySelector("div.container");
@@ -100,6 +109,8 @@ function DiceRollerComponent() {
     setDisableRoll(true);
     setRollReturn(rollReturn);
   }
+
+
   return (
     <div className={`${styles.bg} container`}>
       <div className={`${styles.grid}`}>

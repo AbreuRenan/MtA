@@ -1,5 +1,6 @@
 .boxContainer {
     display: flex;
+    flex-wrap: wrap;
 }
 .BoxStyle {
     height: 30px;

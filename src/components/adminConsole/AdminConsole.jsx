@@ -74,7 +74,6 @@ export default function AdminConsole() {
         </button>
       </div>
             {playersData.map((selectedPlayer, index) => {
-        const { exp, expA, fv, mana, nome, vitalidade } = selectedPlayer;
         return <PlayerDisplayAdmin player={selectedPlayer} key={index}/>;
       })}
     </div>

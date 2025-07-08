@@ -19,7 +19,7 @@ function Home() {
         ) : (
           <div className="closeGame">Jogo Fechado</div>
         )}
-        {/* <PlayerCompanion /> */}
+        <PlayerCompanion />
         <span>Ultimas Rolagens</span>
         <RollHistory />
       </div>

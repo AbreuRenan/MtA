@@ -40,7 +40,7 @@ export default function MageDataComponent(props) {
           setValue={setGnose}
         />
         <InputGroup
-          label="Nivel Arcana"
+          label="Nível da Arcana"
           id="nivelArcana"
           value={nivelArcana}
           setValue={setNivelArcana}

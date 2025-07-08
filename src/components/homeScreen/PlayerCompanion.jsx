@@ -145,6 +145,7 @@ function PlayerCompanion() {
   }
 
   React.useEffect(() => {
+    console.log(userData)
 
     if (userData.vitalidade.dano) {
 
@@ -187,10 +188,13 @@ function PlayerCompanion() {
         type={"Mana"}
         clickHandler={(e) => handleBoxClick(e, manaBox, setManaBox, 1, "mana")}
       />
-      <div className={styles.expContainer}>
+      <br/>
+      <hr/>
+      <br/>
+      {/* <div className={styles.expContainer}>
         <div>Exp: {userData.exp ? userData.exp : 0}</div>
         <div>Exp Arcana: {userData.expA ? userData.expA : 0}</div>
-      </div>
+      </div> */}
     </div>
   );
 }

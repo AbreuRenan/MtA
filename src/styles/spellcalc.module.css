@@ -61,27 +61,26 @@
   color: red;
 }
 .spellCalcFooter {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 0 20px;
+  padding: 30px 20px;
 }
 .spellCalcFooter>div {
   grid-column: span 3;
 }
 .spellCalcFooter > button {
   display: flex;
+  width: 100%;
   justify-content: center;
   align-items: center;
   background: var(--amarelo);
   box-shadow: 0 4px 0 0 #837e2e;
   font-weight: 600;
-  padding: 14px 38px;
+  padding: 14px 28px;
   border-radius: 6px;
-  grid-column: 2/3;
 }
 .optionalsData,
 .spellData,

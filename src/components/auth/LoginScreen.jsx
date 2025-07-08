@@ -108,7 +108,7 @@ document.getElementById("installButton").addEventListener("click", () => {
   }, [])
  
   return (
-    <div className="container">
+    <div className="container h-100">
       <BackgroundImage src={mtaLoginBg}>
         <form className={styles.inputGroupContainer} onSubmit={handleSubmit}>
           <input

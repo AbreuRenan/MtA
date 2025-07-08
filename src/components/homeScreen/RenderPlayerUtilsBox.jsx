@@ -2,12 +2,11 @@ import React from "react";
 import styles from "../../styles/playerCompanion.module.css";
 import { AppContext } from "../../AppContext";
 import { ref } from "firebase/database";
+
 function RenderPlayerUtilsBox({ boxToRender, type, clickHandler }) {
-  const { database } = React.useContext(AppContext)
+  const { database } = React.useContext(AppContext);
   const [state, setState] = React.useState([0]);
-  React.useEffect( () => {
-    setState(boxToRender)
-  }, [boxToRender]) 
+  React.useEffect( () => {setState(boxToRender)}, [boxToRender]);
   
 
 

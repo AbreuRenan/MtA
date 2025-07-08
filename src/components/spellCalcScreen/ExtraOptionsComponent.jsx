@@ -17,7 +17,9 @@ export default function ExtraOptionsComponent(props) {
     setManaOpcional,
     mitigarTodoParadoxoMana,
     setMitigarTodoParadoxoMana,
-    calcularDadosParadoxo
+    calcularDadosParadoxo,
+    dadosExtras,
+    setDadosExtras
   } = props;
 
   function toggleMitigarTodoParadoxoCheckBox(e) {
@@ -35,6 +37,14 @@ export default function ExtraOptionsComponent(props) {
         <h1>Opcionais de Magia</h1>
       </div>
       <div className={styles.optionalsData}>
+        
+        <InputGroup
+          label="Dados Extras"
+          id="dadosExtras"
+          value={dadosExtras}
+          setValue={setDadosExtras}
+          min={0}
+        />
         <InputGroup
           label="Fetiços Combinados"
           id="combinado"
@@ -51,7 +61,7 @@ export default function ExtraOptionsComponent(props) {
           min={0}
         />
         <InputGroup
-          label="Mana mitigar paradoxo"
+          label="Mana Mitigar Paradoxo"
           id="mitigarDadosParadoxo"
           value={mitigarDadosParadoxoMana}
           setValue={handleMitigarDadosParadoxoChange}
@@ -70,7 +80,7 @@ export default function ExtraOptionsComponent(props) {
         </InputGroup>
 
         <InputGroup
-          label="Custo Mana Extra"
+          label="Custo de Mana Extra"
           id="manaOpcional"
           value={manaOpcional}
           setValue={setManaOpcional}

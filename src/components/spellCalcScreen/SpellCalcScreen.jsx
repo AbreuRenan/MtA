@@ -5,8 +5,10 @@ import SpellDataComponent from "./SpellDataComponent";
 import YantraDataComponent from "./YantraDataComponent";
 import ExtraOptionsComponent from "./ExtraOptionsComponent";
 import ResumoMagia from "./ResumoMagia";
+import { useNavigate } from "react-router-dom";
 
 export default function SpellCalcScreen() {
+  const navigate = useNavigate();
   const [page, setPage] = React.useState(1);
   const [gnose, setGnose] = React.useState(1);
   const [nivelArcana, setNivelArcana] = React.useState(1);
@@ -25,7 +27,8 @@ export default function SpellCalcScreen() {
   const [duracaoElevada, setDuracaoElevada] = React.useState(false);
   const [escalaElevada, setEscalaElevada] = React.useState(false);
   const [alcanceElevado, setAlcanceElevado] = React.useState(false);
-  const [tempoConjuracaoElevada, setTempoConjuracaoElevada] = React.useState(false);
+  const [tempoConjuracaoElevada, setTempoConjuracaoElevada] =
+    React.useState(false);
   const [extraElevacoes, setExtraElevacoes] = React.useState(0);
   const [isCombinado, setIsCombinado] = React.useState(0);
   const [yantras, setYantras] = React.useState(0);
@@ -41,6 +44,7 @@ export default function SpellCalcScreen() {
   const [custoElevacoes, setCustoElevacoes] = React.useState(0);
 
   const [paradaDeDados, setParadaDeDados] = React.useState(0);
+  const [dadosExtras, setDadosExtras] = React.useState(0);
   const [totalDadosParadoxo, setTotalDadosParadoxo] = React.useState(0);
 
   const mageDataProps = {
@@ -137,7 +141,9 @@ export default function SpellCalcScreen() {
     setManaOpcional,
     mitigarTodoParadoxoMana,
     setMitigarTodoParadoxoMana,
-    calcularDadosParadoxo
+    calcularDadosParadoxo,
+    dadosExtras,
+    setDadosExtras,
   };
   const resumoMagiaProps = {
     potencia,
@@ -158,7 +164,7 @@ export default function SpellCalcScreen() {
     calcularDadosPorFator,
     paradaDeDados,
     setParadaDeDados,
-    totalDadosParadoxo
+    totalDadosParadoxo,
   };
   function toggleRegente(e) {
     setRegente(e.target.checked);
@@ -166,9 +172,9 @@ export default function SpellCalcScreen() {
   function toggleUsouFdV(e) {
     setUsouFdv(e);
   }
-  
   function calcularElevacoesGratis() {
-    const elevacoesGratis = nivelArcana - nivelRequerido + 1;
+    const nivelArcanaEfetivo = spellType === "rote" ? 5 : nivelArcana;
+    const elevacoesGratis = nivelArcanaEfetivo - nivelRequerido + 1;
     return elevacoesGratis;
   }
   function calcularElevacoesExcedentes() {
@@ -178,7 +184,6 @@ export default function SpellCalcScreen() {
   function calcularElevacoesTotais() {
     return calcularElevacoesGratis() - custoElevacoes;
   }
-
   function calcularGastoMana() {
     let totalMana = 0;
     if (alcance === "simpatico") {
@@ -200,7 +205,6 @@ export default function SpellCalcScreen() {
     totalMana += manaParaParadoxo;
     return totalMana;
   }
-
   function calcularDadosParadoxo() {
     const dadosPorGnose = Math.ceil(gnose / 2);
     const elevacoesExcedentes = calcularElevacoesExcedentes();
@@ -235,21 +239,63 @@ export default function SpellCalcScreen() {
     return dadoPenalidadeTotal;
   }
   function calcularParadaDeDados() {
-    const dadosIniciais = gnose + nivelArcana + yantras;
+    const dadosIniciais = gnose + nivelArcana + yantras + dadosExtras;
     const penalidadePorFator = calcularDadosPorFator();
     const combinado = isCombinado * 2;
     let totalDados = dadosIniciais - penalidadePorFator - combinado;
     if (usouFdV) totalDados += 3;
+    if (!tempoConjuracaoElevada && currentFP !== "tempoConjuracao")
+      totalDados = totalDados + Math.min(5, tempoConjuracao - 1);
+    if (!tempoConjuracaoElevada && currentFP === "tempoConjuracao")
+      totalDados = totalDados + Math.max(0, tempoConjuracao - 1);
     setParadaDeDados(totalDados);
     return totalDados;
   }
 
+  function resetCalculadora() {
+    setPage(1);
+    setGnose(1);
+    setNivelArcana(1);
+    setNivelRequerido(1);
+    setMagiasAtivas(0);
+    setSpellType("improvisado");
+    setRegente(true);
+    setPotencia(1);
+    setDuracao(1);
+    setEscala(1);
+    setAlcance("toque");
+    setTempoConjuracao(1);
+    setCurrentFP("potencia");
+    setPotenciaElevada(false);
+    setDuracaoElevada(false);
+    setEscalaElevada(false);
+    setAlcanceElevado(false);
+    setTempoConjuracaoElevada(false);
+    setExtraElevacoes(0);
+    setIsCombinado(0);
+    setYantras(0);
+    setUsouFdv(false);
+    setMitigarDadosParadoxoMana(0);
+    setMitigarTodoParadoxoMana(false);
+    setManaOpcional(0);
+    setCustoMana(0);
+    setCustoVontade(0);
+    setCustoElevacoes(0);
+    setParadaDeDados(0);
+    setTotalDadosParadoxo(0);
+  }
+
+  function goToDice() {
+    const valorFinalParada = calcularParadaDeDados();
+     navigate(`/dice?paradaDeDados=${valorFinalParada}`);
+  }
+  // effect verificar se nivel requerido é maior que o nivel possuido na arcana
   React.useEffect(() => {
     if (nivelRequerido > nivelArcana) {
       alert("Nível da Prática não pode ser maior que o seu Nível na Arcana");
       setNivelRequerido(nivelArcana);
     }
-  }, [nivelRequerido]);
+  }, [nivelRequerido, nivelArcana]);
 
   // effect Calcular Parada de Dados
   React.useEffect(() => {
@@ -267,6 +313,7 @@ export default function SpellCalcScreen() {
     mitigarDadosParadoxoMana,
     paradaDeDados,
     totalDadosParadoxo,
+    dadosExtras,
   ]);
 
   // effect para controle do gasto de FdV
@@ -280,18 +327,22 @@ export default function SpellCalcScreen() {
     setCustoMana(Math.max(0, manaValue));
   }, [setCustoMana, calcularGastoMana]);
 
-    React.useEffect(() => { 
-      if(mitigarTodoParadoxoMana) {
-        const paradoxoDados = calcularDadosParadoxo()
-        setMitigarDadosParadoxoMana(paradoxoDados)
-      }
+  React.useEffect(() => {
+    if (mitigarTodoParadoxoMana) {
+      const paradoxoDados = calcularDadosParadoxo();
+      setMitigarDadosParadoxoMana(paradoxoDados);
+    }
+  }, [mitigarTodoParadoxoMana]);
 
-    }, [mitigarTodoParadoxoMana]);
-
+  // effect para calcular total de dados de paradoxo
   React.useEffect(() => {
     const totalDadosParadoxoValue = Math.max(0, calcularTotalDadosParadoxo());
     setTotalDadosParadoxo(totalDadosParadoxoValue);
-  }, [mitigarDadosParadoxoMana, calcularDadosParadoxo, mitigarTodoParadoxoMana ]);
+  }, [
+    mitigarDadosParadoxoMana,
+    calcularDadosParadoxo,
+    mitigarTodoParadoxoMana,
+  ]);
 
   return (
     <div className={`container`}>
@@ -301,41 +352,8 @@ export default function SpellCalcScreen() {
       <ExtraOptionsComponent {...extraOptionDataProps} />
       <ResumoMagia {...resumoMagiaProps} />
       <div className={styles.spellCalcFooter}>
-
-        <button
-          className={styles.button}
-          onClick={() => {
-            setGnose(1);
-            setNivelArcana(1);
-            setNivelRequerido(1);
-            setMagiasAtivas(0);
-            setSpellType("improvisado");
-            setRegente(true);
-            setPage(1);
-            setPotencia(1);
-            setDuracao(1);
-            setEscala(1);
-            setAlcance("toque");
-            setCurrentFP("potencia");
-            setTempoConjuracao(1);
-            setCustoMana(0);
-            setCustoVontade(0);
-            setCustoElevacoes(0);
-            setMitigarDadosParadoxoMana(0);
-            setYantras(0);
-            setIsCombinado(0);
-            setExtraElevacoes(0);
-            setParadaDeDados(0);
-            setUsouFdv(false);
-            setPotenciaElevada(false);
-            setDuracaoElevada(false);
-            setEscalaElevada(false);
-            setAlcanceElevado(false);
-            setTempoConjuracaoElevada(false);
-          }}
-        >
-          Limpar
-        </button>
+        <button className={styles.button} onClick={resetCalculadora}>Limpar</button>
+        <button className={styles.button} onClick={goToDice}>Ir para Dado</button>
       </div>
     </div>
   );

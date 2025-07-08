@@ -111,22 +111,22 @@ export default function ResumoMagia(props) {
         </center>
         <div className={styles.resumoMagia}>
           <div className={styles.fatoresCol}>
-            <p className={styles.potencia}>Potência: {potencia}</p>
-            <p className={styles.duracao}>Duração: {exibirDuracao()}</p>
-            <p className={styles.alvos}>Alvos: {alvos}</p>
-            <p className={styles.area}>Área: {area}</p>
-            <p className={styles.tamanho}>Tamanho: {tamanhos}</p>
+            <p className={styles.potencia}>Potência:<b> {potencia}</b></p>
+            <p className={styles.duracao}>Duração:<b> {exibirDuracao()}</b></p>
+            <p className={styles.alvos}>Alvos:<b> {alvos}</b></p>
+            <p className={styles.area}>Área:<b> {area}</b></p>
+            <p className={styles.tamanho}>Tamanho:<b> {tamanhos}</b></p>
           </div>
           <div className={styles.dadosCol}>
-            <p className={styles.paradaDados}>Parada de Dados: {paradaDeDados}</p>
-            <p className={styles.custoMana}>Custo de Mana: {custoMana}</p>
+            <p className={styles.paradaDados}>Parada de Dados:<b> {paradaDeDados}</b></p>
+            <p className={styles.custoMana}>Custo de Mana:<b> {custoMana}</b></p>
             {exibirElevacoes() >= 0 && (<p className={`${styles.elevacao} ${styles.verde}`}>
-                Elevações Pra Gastar: {exibirElevacoes()}
-              </p>
+                Elevações Pra Gastar:<b> {exibirElevacoes()}
+              </b></p>
             )}
-            {exibirElevacoes() < 0 && (<p className={`${styles.elevacao} ${styles.vermelho}`}>Elevações Passando: {calcularElevacoesExcedentes()}</p>
+            {exibirElevacoes() < 0 && (<p className={`${styles.elevacao} ${styles.vermelho}`}>Elevações Passando:<b> {calcularElevacoesExcedentes()}</b></p>
             )}
-            <p className={styles.dadosParadoxo}>Dados de Paradoxo: {totalDadosParadoxo}</p>
+            <p className={styles.dadosParadoxo}>Dados de Paradoxo:<b> {totalDadosParadoxo}</b></p>
           </div>
         </div>
       </div>

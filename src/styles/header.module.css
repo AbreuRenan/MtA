@@ -1,13 +1,15 @@
 header {
   position: sticky;
-  top: 1px;
+  top: 0vh;
+  left: 0vw;
+  width: 100%;
   /* background: url("../assets/bg.jpg") no-repeat top;
   background-size: cover; */
   z-index: 10;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(2px);
-
 }
+
 .headerNav {
   height: 50px;
   position: relative;
