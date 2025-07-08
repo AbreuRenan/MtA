@@ -3,6 +3,7 @@ import React from "react";
 import RollHistory from "./diceScreenComponents/RollHistory";
 import PlayerCompanion from "./homeScreen/PlayerCompanion";
 import { AppContext } from "../AppContext";
+import Loading from "./helpers/Loading";
 
 function Home() {
   const { gameOpen, loading, userData } = React.useContext(AppContext);
@@ -12,7 +13,7 @@ function Home() {
   }, []);
   return (
     <>
-      <div className={`loadingScreen ${loading && 'isLoading'}`}>Carregando...</div>
+      <Loading/>
       <div className="container">
         {!loading && gameOpen ? (
           <div className="openGame">Jogo Aberto</div>

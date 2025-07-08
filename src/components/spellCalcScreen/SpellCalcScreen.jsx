@@ -182,7 +182,7 @@ export default function SpellCalcScreen() {
     return Math.max(0, custoElevacoes - elevacoesGratis);
   }
   function calcularElevacoesTotais() {
-    return calcularElevacoesGratis() - custoElevacoes;
+    return calcularElevacoesGratis() - (custoElevacoes + magiasAtivas);
   }
   function calcularGastoMana() {
     let totalMana = 0;

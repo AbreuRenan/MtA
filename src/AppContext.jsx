@@ -4,6 +4,7 @@ import { initializeApp } from "firebase/app";
 import { get, getDatabase, onValue, ref } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import Loading from "./components/helpers/Loading";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBza5P8Nn30uu3WrT8HaEJfl3IiGeg1fbs",
@@ -25,12 +26,15 @@ export function AppContextComponent({ children }) {
   const [errorContextState, setErrorContextState] = React.useState(false);
   const [gameOpen, setGameOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
+  const [minimumLoadTimeReached, setMinimumLoadTimeReached] = React.useState(false);
+  const [dataLoadFinished, setDataLoadFinished] = React.useState(false);
 
   const app = React.useMemo(() => initializeApp(firebaseConfig), []);
   const database = React.useMemo(() => getDatabase(app), [app]);
   const auth = React.useMemo(() => getAuth(app), [app]);
 
   const navigate = useNavigate();
+  const loadingTime = 100
 
   const saveLocalData = React.useCallback((data) => {
     const json = JSON.stringify(data);
@@ -47,6 +51,15 @@ export function AppContextComponent({ children }) {
     [saveLocalData, navigate]
   );
 
+
+    React.useEffect(() => {
+    setMinimumLoadTimeReached(false);
+    const timer = setTimeout(() => {
+      setMinimumLoadTimeReached(true);
+    }, loadingTime);
+
+    return () => clearTimeout(timer);
+  }, [loading]);
   React.useEffect(() => {
     setLoading(true); 
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
@@ -74,14 +87,14 @@ export function AppContextComponent({ children }) {
                     setLoggedIn(false);
                     console.warn(`Dados para o usuário numérico ${userIdNum} não encontrados em /users.`);
                   }
-                  setLoading(false);
+                  setDataLoadFinished(true)
                 },
                 (error) => {
                   console.error("Erro ao ler dados do usuário em tempo real:", error);
                   setUserData(null);
                   localStorage.clear();
                   setLoggedIn(false);
-                  setLoading(false);
+                  setDataLoadFinished(true)
                 }
               );
 
@@ -91,7 +104,7 @@ export function AppContextComponent({ children }) {
               setUserData(null);
               localStorage.clear();
               setLoggedIn(false);
-              setLoading(false);
+              setDataLoadFinished(true)
               navigate("/");
             }
           })
@@ -100,19 +113,25 @@ export function AppContextComponent({ children }) {
             setUserData(null);
             localStorage.clear();
             setLoggedIn(false);
-            setLoading(false);
+            setDataLoadFinished(true)
             navigate("/");
           });
       } else {
         localStorage.clear();
         setUserData(null);
         setLoggedIn(false);
-        setLoading(false);
+        setDataLoadFinished(true)
         navigate("/"); 
       }
     });
     return () => unsubscribeAuth();
   }, [auth, database, navigate, saveLocalData]);
+
+    React.useEffect(() => {
+    if (dataLoadFinished && minimumLoadTimeReached) {
+      setLoading(false);
+    }
+  }, [dataLoadFinished, minimumLoadTimeReached]);
 
 
   React.useEffect(() => {
@@ -141,8 +160,12 @@ export function AppContextComponent({ children }) {
     return () => unsubscribeEvent();
   }, [database]);
 
+
   return (
-    <AppContext.Provider
+    <>
+    {loading && (<Loading loading={loading}/>)}
+    {!loading && (
+      <AppContext.Provider
       value={{
         hasEvent,
         setEvent,
@@ -165,5 +188,7 @@ export function AppContextComponent({ children }) {
     >
       {children}
     </AppContext.Provider>
+    ) }
+    </>
   );
 }
