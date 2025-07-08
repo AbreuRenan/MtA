@@ -5,7 +5,7 @@ import PlayerCompanion from "./homeScreen/PlayerCompanion";
 import { AppContext } from "../AppContext";
 
 function Home() {
-  const { gameOpen, loading } = React.useContext(AppContext);
+  const { gameOpen, loading, userData } = React.useContext(AppContext);
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -19,7 +19,7 @@ function Home() {
         ) : (
           <div className="closeGame">Jogo Fechado</div>
         )}
-        <PlayerCompanion />
+       {userData && userData?.role !== "narrador" ? (<PlayerCompanion />) : null}
         <span>Ultimas Rolagens</span>
         <RollHistory />
       </div>

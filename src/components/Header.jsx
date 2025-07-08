@@ -6,18 +6,22 @@ import mtashare from '../assets/mtashare.png'
 import { AppContext } from "../AppContext";
 import { useNavigate } from "react-router-dom";
 
-
-
-function Header() {
+export default function Header() {
   const navigate = useNavigate();
-  const context = React.useContext(AppContext);
-  const {isLoggedIn} = context;
-  const [mobileMenuIsOpen, setMenuMobileIsOpen] = React.useState(false);
+  const { isLoggedIn, loading } = React.useContext(AppContext);
+  const [ mobileMenuIsOpen, setMenuMobileIsOpen ] = React.useState(false);
 
-  function toggleMenu() {
+ function toggleMenu() {
     setMenuMobileIsOpen(!mobileMenuIsOpen);
   }
-  if (!isLoggedIn) return null
+
+  if (loading) {
+    return null; 
+  }
+  if (!isLoggedIn) {
+      return null;
+  }
+
   return (
     <header>
       <nav className={`${styles.headerNav} `} >
@@ -31,5 +35,3 @@ function Header() {
     </header>
   );
 }
-
-export default Header;
