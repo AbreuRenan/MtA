@@ -6,8 +6,13 @@ import YantraDataComponent from "./YantraDataComponent";
 import ExtraOptionsComponent from "./ExtraOptionsComponent";
 import ResumoMagia from "./ResumoMagia";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../AppContext";
 
 export default function SpellCalcScreen() {
+  const { userData } = React.useContext(AppContext)
+  console.log(userData)
+
+
   const navigate = useNavigate();
   const [page, setPage] = React.useState(1);
   const [gnose, setGnose] = React.useState(1);
@@ -27,16 +32,13 @@ export default function SpellCalcScreen() {
   const [duracaoElevada, setDuracaoElevada] = React.useState(false);
   const [escalaElevada, setEscalaElevada] = React.useState(false);
   const [alcanceElevado, setAlcanceElevado] = React.useState(false);
-  const [tempoConjuracaoElevada, setTempoConjuracaoElevada] =
-    React.useState(false);
+  const [tempoConjuracaoElevada, setTempoConjuracaoElevada] = React.useState(false);
   const [extraElevacoes, setExtraElevacoes] = React.useState(0);
   const [isCombinado, setIsCombinado] = React.useState(0);
   const [yantras, setYantras] = React.useState(0);
-  const [usouFdV, setUsouFdv] = React.useState(false);
-  const [mitigarDadosParadoxoMana, setMitigarDadosParadoxoMana] =
-    React.useState(0);
-  const [mitigarTodoParadoxoMana, setMitigarTodoParadoxoMana] =
-    React.useState(false);
+  const [usouFV, setUsouFV] = React.useState(false);
+  const [mitigarDadosParadoxoMana, setMitigarDadosParadoxoMana] = React.useState(0);
+  const [mitigarTodoParadoxoMana, setMitigarTodoParadoxoMana] = React.useState(false);
   const [manaOpcional, setManaOpcional] = React.useState(0);
 
   const [custoMana, setCustoMana] = React.useState(0);
@@ -132,9 +134,9 @@ export default function SpellCalcScreen() {
     setCustoVontade,
     extraElevacoes,
     setExtraElevacoes,
-    usouFdV,
-    setUsouFdv,
-    toggleUsouFdV,
+    usouFV,
+    setUsouFV,
+    toggleUsouFV,
     mitigarDadosParadoxoMana,
     setMitigarDadosParadoxoMana,
     manaOpcional,
@@ -146,17 +148,20 @@ export default function SpellCalcScreen() {
     setDadosExtras,
   };
   const resumoMagiaProps = {
+    gnose,
     potencia,
     duracao,
     escala,
     escalaElevada,
     duracaoElevada,
-    gnose,
     nivelArcana,
     yantras,
     custoMana,
     custoVontade,
     custoElevacoes,
+    tempoConjuracao,
+    tempoConjuracaoElevada,
+    currentFP,
     calcularElevacoesGratis,
     calcularElevacoesExcedentes,
     calcularDadosParadoxo,
@@ -169,8 +174,8 @@ export default function SpellCalcScreen() {
   function toggleRegente(e) {
     setRegente(e.target.checked);
   }
-  function toggleUsouFdV(e) {
-    setUsouFdv(e);
+  function toggleUsouFV(e) {
+    setUsouFV(e);
   }
   function calcularElevacoesGratis() {
     const nivelArcanaEfetivo = spellType === "rote" ? 5 : nivelArcana;
@@ -243,7 +248,7 @@ export default function SpellCalcScreen() {
     const penalidadePorFator = calcularDadosPorFator();
     const combinado = isCombinado * 2;
     let totalDados = dadosIniciais - penalidadePorFator - combinado;
-    if (usouFdV) totalDados += 3;
+    if (usouFV) totalDados += 3;
     if (!tempoConjuracaoElevada && currentFP !== "tempoConjuracao")
       totalDados = totalDados + Math.min(5, tempoConjuracao - 1);
     if (!tempoConjuracaoElevada && currentFP === "tempoConjuracao")
@@ -274,7 +279,7 @@ export default function SpellCalcScreen() {
     setExtraElevacoes(0);
     setIsCombinado(0);
     setYantras(0);
-    setUsouFdv(false);
+    setUsouFV(false);
     setMitigarDadosParadoxoMana(0);
     setMitigarTodoParadoxoMana(false);
     setManaOpcional(0);
@@ -309,17 +314,18 @@ export default function SpellCalcScreen() {
     duracao,
     escala,
     tempoConjuracao,
-    usouFdV,
+    tempoConjuracaoElevada,
+    usouFV,
     mitigarDadosParadoxoMana,
     paradaDeDados,
     totalDadosParadoxo,
     dadosExtras,
   ]);
 
-  // effect para controle do gasto de FdV
+  // effect para controle do gasto de FV
   React.useEffect(() => {
-    setCustoVontade((prev) => (usouFdV ? 1 : 0));
-  }, [usouFdV, setCustoVontade]);
+    setCustoVontade((prev) => (usouFV ? 1 : 0));
+  }, [usouFV, setCustoVontade]);
 
   // effect Calcular custo de mana
   React.useEffect(() => {

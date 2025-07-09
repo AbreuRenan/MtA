@@ -34,7 +34,7 @@ export function AppContextComponent({ children }) {
   const auth = React.useMemo(() => getAuth(app), [app]);
 
   const navigate = useNavigate();
-  const loadingTime = 100
+  const loadingTime = 0
 
   const saveLocalData = React.useCallback((data) => {
     const json = JSON.stringify(data);

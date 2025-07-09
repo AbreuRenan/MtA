@@ -37,6 +37,7 @@
 }
 .scrollableData {
   overflow-y: scroll;
+  padding-bottom: 20px;
 }
 .notScrollableData {
   display: flex;
@@ -60,7 +61,7 @@
 .resumoMagia {
   text-align: center;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 45% 55%;
   gap: 10px
 }
 

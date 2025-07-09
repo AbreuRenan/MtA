@@ -3,16 +3,19 @@ import styles from "../../styles/spellcalc.module.css";
 
 export default function ResumoMagia(props) {
   const {
+    gnose,
     potencia,
     custoMana,
     calcularElevacoesExcedentes,
-    calcularDadosParadoxo,
+    currentFP,
     calcularElevacoesTotais,
     escala,
     duracao,
     escalaElevada,
     duracaoElevada,
     paradaDeDados,
+    tempoConjuracao,
+    tempoConjuracaoElevada,
     totalDadosParadoxo,
   } = props;
   function calcularDuracaoPadrao(duracao) {
@@ -23,7 +26,7 @@ export default function ResumoMagia(props) {
     if (duracao === 5) return 10;
     if (duracao >= 6) return (duracao - 4) * 10;
   }
-
+  const fatoresDeTempoConjuracaoPorGnose = [180,60,30,10,1]
   const textoDuracaoPadrao = calcularDuracaoPadrao(duracao);
   const textoDuracaoElevada = [
     "1 Cena/Hora",
@@ -99,9 +102,19 @@ export default function ResumoMagia(props) {
   function exibirElevacoes() {
     return calcularElevacoesTotais();
   }
-  const alvos = exibirEscala().alvos;
-  const tamanhos = exibirEscala().tamanhos;
-  const area = exibirEscala().area;
+  function exibirTempoConjuracao(){
+    const tempoPorGnose = Math.ceil(gnose/2) -1;
+    const maxNivelTempoConjuracao = currentFP === "tempoConjuracao" ? 100 : 6;
+    if (tempoConjuracaoElevada) return "AGORA!";
+    const fatorDeTempoDoMago = fatoresDeTempoConjuracaoPorGnose[tempoPorGnose];
+    const tempoTotal = fatorDeTempoDoMago * Math.min(maxNivelTempoConjuracao,tempoConjuracao);
+    const horas = Math.floor(tempoTotal / 60);
+    const minutosRestantes = tempoTotal % 60;
+    const textoHoras = horas > 0 ? `${horas}h`: "";
+    const textoMin = minutosRestantes > 0 ? `${minutosRestantes}min`: "";
+    return `${textoHoras}${textoMin}`
+
+  }
 
   return (
     <>
@@ -113,12 +126,13 @@ export default function ResumoMagia(props) {
           <div className={styles.fatoresCol}>
             <p className={styles.potencia}>Potência:<b> {potencia}</b></p>
             <p className={styles.duracao}>Duração:<b> {exibirDuracao()}</b></p>
-            <p className={styles.alvos}>Alvos:<b> {alvos}</b></p>
-            <p className={styles.area}>Área:<b> {area}</b></p>
-            <p className={styles.tamanho}>Tamanho:<b> {tamanhos}</b></p>
+            <p className={styles.alvos}>Alvos:<b> {exibirEscala().alvos}</b></p>
+            <p className={styles.area}>Área:<b> {exibirEscala().area}</b></p>
+            <p className={styles.tamanho}>Tamanho:<b> {exibirEscala().tamanhos}</b></p>
           </div>
           <div className={styles.dadosCol}>
             <p className={styles.paradaDados}>Parada de Dados:<b> {paradaDeDados}</b></p>
+            <p className={styles.tempoConjuracao}>Tempo Conjuração:<b> {exibirTempoConjuracao()}</b></p>
             <p className={styles.custoMana}>Custo de Mana:<b> {custoMana}</b></p>
             {exibirElevacoes() >= 0 && (<p className={`${styles.elevacao} ${styles.verde}`}>
                 Elevações Pra Gastar:<b> {exibirElevacoes()}

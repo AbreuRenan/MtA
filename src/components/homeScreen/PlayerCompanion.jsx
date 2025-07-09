@@ -111,7 +111,6 @@ export default function PlayerCompanion() {
       const userRefInDB = ref(database, `users/${userData?.id}`);
       const updates = {
         "mana/usado": newManaUsado,
-        // 'mana/max': userData?.mana.max, // Inclua se precisar atualizar também o max aqui
       };
       if (gameOpen || userData?.role === "narrador") {
         try {
