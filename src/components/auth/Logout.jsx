@@ -4,20 +4,19 @@ import { AppContext } from '../../AppContext'; // Importe o AppContext
 
 function Logout() {
     const navigate = useNavigate();
-    const { auth } = React.useContext(AppContext); // Obtenha 'auth' do contexto
+    const { auth, setLoggedIn } = React.useContext(AppContext); // Obtenha 'auth' do contexto
 
     React.useEffect(() => {
         const performFirebaseLogout = async () => {
             try {
                 if (auth) { 
                     await auth.signOut(); 
-                    console.log("Usuário deslogado do Firebase Auth.");
                 }
                 localStorage.clear(); 
-                console.log("LocalStorage limpo.");
+                setLoggedIn(false)
                 navigate('/'); 
             } catch (error) {
-                console.error("Erro ao deslogar do Firebase:", error);
+                setLoggedIn(false)
                 localStorage.clear();
                 navigate('/');
             }

@@ -46,7 +46,6 @@ export function AppContextComponent({ children }) {
   const performLoginApp = React.useCallback(
     (data, fromLocal = false) => {
       setUserData(data); 
-      setLoggedIn(true);
       if (!fromLocal) saveLocalData(data); 
       navigate("/home"); 
     },
@@ -87,12 +86,10 @@ export function AppContextComponent({ children }) {
                     setUserData(null);
                     localStorage.clear();
                     setLoggedIn(false);
-                    console.warn(`Dados para o usuário numérico ${userIdNum} não encontrados em /users.`);
                   }
                   setDataLoadFinished(true)
                 },
                 (error) => {
-                  console.error("Erro ao ler dados do usuário em tempo real:", error);
                   setUserData(null);
                   localStorage.clear();
                   setLoggedIn(false);
@@ -102,7 +99,6 @@ export function AppContextComponent({ children }) {
 
               return () => unsubscribeUser();
             } else {
-              console.warn(`Mapeamento UID para ID não encontrado para ${uid} em /usersToId.`);
               setUserData(null);
               localStorage.clear();
               setLoggedIn(false);
@@ -111,7 +107,6 @@ export function AppContextComponent({ children }) {
             }
           })
           .catch((error) => {
-            console.error("Erro ao buscar o ID numérico:", error);
             setUserData(null);
             localStorage.clear();
             setLoggedIn(false);

@@ -10,8 +10,6 @@ import { AppContext } from "../../AppContext";
 import { useNavigate } from "react-router-dom";
 import ErrorComponent from "../helpers/ErrorComponent";
 
-
-
 export default function LoginScreen() {
   const {
     firestore,
@@ -37,7 +35,6 @@ export default function LoginScreen() {
         })
         .catch((err) => {
           console.log(err);
-          setLoggedIn(false);
           setErrorContextState(err);
         });
     } else {
@@ -45,25 +42,23 @@ export default function LoginScreen() {
     }
   }
 
-  React.useEffect(() => {
-    async function fetchFirebase() {
-      const idRefs = ref(firestore, `usersToId/${userData?.uid}`);
-      const IDSnapshot = await get(idRefs);
+  async function fetchFirebase() {
+    const idRefs = ref(firestore, `usersToId/${userData?.uid}`);
+    const IDSnapshot = await get(idRefs);
+    if (IDSnapshot.exists() && isLoggedIn) {
+      console.log(isLoggedIn);
+      const userID = IDSnapshot.val();
+      const userRef = ref(firestore, `users/${userID}`);
+      const userSnapshot = await get(userRef);
 
-      if (IDSnapshot.exists()) {
-        const userID = IDSnapshot.val();
-        const userRef = ref(firestore, `users/${userID}`);
-        const userSnapshot = await get(userRef);
-
-        if (userSnapshot.exists()) {
-          performLoginApp(userSnapshot.val());
-        }
+      if (userSnapshot.exists()) {
+        performLoginApp(userSnapshot.val());
       }
     }
-    fetchFirebase()
-
-    
-  }, [userData]);
+  }
+  React.useEffect(() => {
+    fetchFirebase();
+  }, [userData, isLoggedIn]);
 
   function handleInputChange({ target }, inputName) {
     if (inputName === "email") setEmail(target.value);
@@ -78,35 +73,34 @@ export default function LoginScreen() {
     }
   }
 
-  React.useEffect( () => {
+  React.useEffect(() => {
     let deferredPrompt;
 
-window.addEventListener("beforeinstallprompt", (event) => {
-  // Guardar o evento para ser usado posteriormente
-  deferredPrompt = event;
-  // Exibir o botão de instalação
-  document.getElementById("installButton").style.display = "block";
+    window.addEventListener("beforeinstallprompt", (event) => {
+      // Guardar o evento para ser usado posteriormente
+      deferredPrompt = event;
+      // Exibir o botão de instalação
+      document.getElementById("installButton").style.display = "block";
 
-  // Prevenir o comportamento padrão do evento
-  event.preventDefault();
-});
-
-document.getElementById("installButton").addEventListener("click", () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === "accepted") {
-        console.log("Usuário aceitou a instalação");
-      } else {
-        console.log("Usuário recusou a instalação");
-      }
-      deferredPrompt = null;
+      // Prevenir o comportamento padrão do evento
+      event.preventDefault();
     });
-  }
-});
 
-  }, [])
- 
+    document.getElementById("installButton").addEventListener("click", () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === "accepted") {
+            console.log("Usuário aceitou a instalação");
+          } else {
+            console.log("Usuário recusou a instalação");
+          }
+          deferredPrompt = null;
+        });
+      }
+    });
+  }, []);
+
   return (
     <div className="container h-100">
       <BackgroundImage src={mtaLoginBg}>
@@ -145,7 +139,7 @@ document.getElementById("installButton").addEventListener("click", () => {
           </button>
         </form>
 
-        <div id="installButton" className={`installStyle`} ></div>
+        <div id="installButton" className={`installStyle`}></div>
         {errorContextState && (
           <ErrorComponent
             state={errorContextState}
