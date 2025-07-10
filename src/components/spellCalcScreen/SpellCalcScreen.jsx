@@ -47,6 +47,8 @@ export default function SpellCalcScreen() {
   const [dadosExtras, setDadosExtras] = React.useState(0);
   const [totalDadosParadoxo, setTotalDadosParadoxo] = React.useState(0);
 
+
+
   const mageDataProps = {
     gnose,
     setGnose,

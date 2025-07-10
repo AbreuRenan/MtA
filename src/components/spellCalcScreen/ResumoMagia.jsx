@@ -1,7 +1,9 @@
 import React from "react";
 import styles from "../../styles/spellcalc.module.css";
+import { AppContext } from "../../AppContext";
 
 export default function ResumoMagia(props) {
+  const {userData} = React.useContext(AppContext)
   const {
     gnose,
     potencia,
@@ -119,6 +121,7 @@ export default function ResumoMagia(props) {
   return (
     <>
       <div>
+        <div>Mana atual: {userData.mana.max - userData.mana.usado}</div>
         <center>
           <h2>Resumo da Magia</h2>
         </center>

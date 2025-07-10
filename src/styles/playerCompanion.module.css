@@ -1,3 +1,17 @@
+.playerTitle {
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+.playerStats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5%;
+
+}
+.playerStats > p {
+    font-size: .75rem;
+}
 .boxContainer {
     display: flex;
     flex-wrap: wrap;

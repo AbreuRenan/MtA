@@ -7,9 +7,9 @@ import { ref, set, update } from "firebase/database";
 export default function PlayerCompanion() {
   const { userData, gameOpen, database } =
     React.useContext(AppContext);
-  const [vitalidadeBox, setVitalidadeBox] = React.useState([0]);
-  const [manaBox, setManaBox] = React.useState([0]);
-  const [fvBox, setFvBox] = React.useState([0]);
+  const [vitalidadeBoxes, setVitalidadeBoxes] = React.useState([0]);
+  const [manaBoxes, setManaBoxes] = React.useState([0]);
+  const [fvBoxes, setFvBoxes] = React.useState([0]);
 
   // const firebasePlayerDataScheema = {
   //   nome: userData.nome,
@@ -62,11 +62,9 @@ export default function PlayerCompanion() {
 
   React.useEffect(() => {
     if (userData && userData.vitalidade && userData.mana && userData.fv) {
-      setVitalidadeBox(
-        renderVitalityBoxes(userData.vitalidade, userData.vitalidade.max)
-      );
-      setManaBox(renderSimpleBoxes(userData.mana.usado, userData.mana.max));
-      setFvBox(renderSimpleBoxes(userData.fv.usado, userData.fv.max));
+      setVitalidadeBoxes(renderVitalityBoxes(userData.vitalidade, userData.vitalidade.max));
+      setManaBoxes(renderSimpleBoxes(userData.mana.usado, userData.mana.max));
+      setFvBoxes(renderSimpleBoxes(userData.fv.usado, userData.fv.max));
     }
   }, [userData, renderVitalityBoxes, renderSimpleBoxes]);
 
@@ -123,54 +121,60 @@ export default function PlayerCompanion() {
     [database, userData?.id, userData?.role, gameOpen]
   );
 
-  function handleBoxClick(e, boxStateToChange, setterOfTheBox, maxOfMark, boxType) {
+  function handleBoxClick(e, boxesArrayToChange, setterOfTheBoxArray, maxOfMarks, boxType) {
     const boxIndex = Number(e.target.getAttribute("index"));
-    const newBoxToChangeState = boxStateToChange.map((box, index) => {
+    const newBoxToChangeState = boxesArrayToChange.map((box, index) => {
       if (index === boxIndex) {
-        if (box >= maxOfMark) return 0;
+        if (box >= maxOfMarks) return 0;
         return box + 1;
       }
       return box;
     });
-    setterOfTheBox(newBoxToChangeState);
+    
+    setterOfTheBoxArray(newBoxToChangeState);
+
     if (boxType === "vitalidade") {
       const newDanoObj = {
         contusivo: newBoxToChangeState.filter((item) => item === 1).length,
-        letal: newBoxToChangeState.filter((item) => item === 2).length,
-        agravado: newBoxToChangeState.filter((item) => item === 3).length,
+        letal: newBoxToChangeState    .filter((item) => item === 2).length,
+        agravado: newBoxToChangeState .filter((item) => item === 3).length,
       };
       updateVitalidadeOnDB(newDanoObj);
+
     } else if (boxType === "fv") {
-      const newFvUsado = newBoxToChangeState.filter(
-        (item) => item === 1
-      ).length;
+      const newFvUsado = newBoxToChangeState.filter((item) => item === 1).length;
       updateFvOnDB(newFvUsado);
+
     } else if (boxType === "mana") {
-      const newManaUsado = newBoxToChangeState.filter(
-        (item) => item === 1
-      ).length;
+      const newManaUsado = newBoxToChangeState.filter((item) => item === 1).length;
       updateManaOnDB(newManaUsado);
     }
   }
 
   return (
     <div>
+       <h2 className={styles.playerTitle}>Olá {userData.nome}</h2>
+       <div className={styles.playerStats}>
+        <p>Vitalidade: {userData.vitalidade.max}</p>
+        <p>Vontade: {userData.fv.usado}/{userData.fv.max}</p>
+        <p>Mana: {userData.mana.usado}/{userData.mana.max}</p>
+       </div>
       <RenderPlayerUtilsBox
-        boxToRender={vitalidadeBox}
+        boxToRender={vitalidadeBoxes}
         type={"Vitalidade"}
         clickHandler={(e) =>
-          handleBoxClick(e, vitalidadeBox, setVitalidadeBox, 3, "vitalidade")
+          handleBoxClick(e, vitalidadeBoxes, setVitalidadeBoxes, 3, "vitalidade")
         }
       />
       <RenderPlayerUtilsBox
-        boxToRender={fvBox}
+        boxToRender={fvBoxes}
         type={"Força de Vontade"}
-        clickHandler={(e) => handleBoxClick(e, fvBox, setFvBox, 1, "fv")}
+        clickHandler={(e) => handleBoxClick(e, fvBoxes, setFvBoxes, 1, "fv")}
       />
       <RenderPlayerUtilsBox
-        boxToRender={manaBox}
+        boxToRender={manaBoxes}
         type={"Mana"}
-        clickHandler={(e) => handleBoxClick(e, manaBox, setManaBox, 1, "mana")}
+        clickHandler={(e) => handleBoxClick(e, manaBoxes, setManaBoxes, 1, "mana")}
       />
       <br />
       <hr />

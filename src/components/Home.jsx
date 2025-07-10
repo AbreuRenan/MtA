@@ -20,7 +20,8 @@ function Home() {
         ) : (
           <div className="closeGame">Jogo Fechado</div>
         )}
-       {userData && userData?.role !== "narrador" ? (<PlayerCompanion />) : null}
+       {/* {userData && userData?.role !== "narrador" ? (<PlayerCompanion />) : null} */}
+       {userData ? (<PlayerCompanion />) : null}
         <span>Ultimas Rolagens</span>
         <RollHistory />
       </div>
