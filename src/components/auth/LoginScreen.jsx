@@ -32,13 +32,18 @@ export default function LoginScreen() {
         .then((userCredential) => {
           const user = userCredential.user;
           setUserData(user);
+          setLoggedIn(true);
+
         })
         .catch((err) => {
           console.log(err);
           setErrorContextState(err);
+          setLoggedIn(false);
         });
+        
     } else {
       console.log("not signed in with Email");
+      setLoggedIn(false);
     }
   }
 
@@ -46,7 +51,6 @@ export default function LoginScreen() {
     const idRefs = ref(firestore, `usersToId/${userData?.uid}`);
     const IDSnapshot = await get(idRefs);
     if (IDSnapshot.exists() && isLoggedIn) {
-      console.log(isLoggedIn);
       const userID = IDSnapshot.val();
       const userRef = ref(firestore, `users/${userID}`);
       const userSnapshot = await get(userRef);

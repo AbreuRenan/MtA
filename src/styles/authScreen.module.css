@@ -19,7 +19,7 @@
     font-weight: bolder;
     font-size: 10px;
     text-align: center;
-    width: 200px;
+    width: 250px;
     height: 44px;
 }
 
@@ -38,7 +38,7 @@
 }
 
 button.loginBtn {
-    width: 200px;
+    width: 250px;
     font-family: var(--magoFont);
     font-weight: bold;
     font-size: 12px;
