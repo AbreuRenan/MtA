@@ -6,15 +6,17 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import Loading from "./components/helpers/Loading";
 
+
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBza5P8Nn30uu3WrT8HaEJfl3IiGeg1fbs",
-  authDomain: "mtacompanion.firebaseapp.com",
-  projectId: "mtacompanion",
-  storageBucket: "mtacompanion.appspot.com",
-  messagingSenderId: "1031241767832",
-  appId: "1:1031241767832:web:dc92c4a878039663d7e9ed",
-  measurementId: "G-F00XEFYJEJ",
-  dataBaseURL: "https://mtacompanion-default-rtdb.firebaseio.com/",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY, // <-- Altere aqui
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN, // <-- E aqui
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID, // <-- E aqui, etc.
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+  dataBaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL, // Verifique se esta é a chave correta, geralmente é DATABASE_URL
 };
 
 export const AppContext = React.createContext();

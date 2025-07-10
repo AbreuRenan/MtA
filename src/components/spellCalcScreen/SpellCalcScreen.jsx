@@ -10,8 +10,6 @@ import { AppContext } from "../../AppContext";
 
 export default function SpellCalcScreen() {
   const { userData } = React.useContext(AppContext)
-  console.log(userData)
-
 
   const navigate = useNavigate();
   const [page, setPage] = React.useState(1);
