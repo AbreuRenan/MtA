@@ -47,6 +47,9 @@ export default function SpellCalcScreen() {
   const [dadosExtras, setDadosExtras] = React.useState(0);
   const [totalDadosParadoxo, setTotalDadosParadoxo] = React.useState(0);
 
+  
+
+
 
 
   const mageDataProps = {
@@ -146,6 +149,7 @@ export default function SpellCalcScreen() {
     calcularDadosParadoxo,
     dadosExtras,
     setDadosExtras,
+    
   };
   const resumoMagiaProps = {
     gnose,
@@ -170,6 +174,7 @@ export default function SpellCalcScreen() {
     paradaDeDados,
     setParadaDeDados,
     totalDadosParadoxo,
+    
   };
   function toggleRegente(e) {
     setRegente(e.target.checked);
@@ -324,8 +329,9 @@ export default function SpellCalcScreen() {
 
   // effect para controle do gasto de FV
   React.useEffect(() => {
-    setCustoVontade((prev) => (usouFV ? 1 : 0));
-  }, [usouFV, setCustoVontade]);
+    const gastoFV = usouFV ? 1 : 0
+    setCustoVontade(gastoFV);
+  }, [usouFV, regente]);
 
   // effect Calcular custo de mana
   React.useEffect(() => {
@@ -365,7 +371,7 @@ export default function SpellCalcScreen() {
             Limpar
           </button>
           <button className={styles.button} onClick={goToDice}>
-            Ir para Dado
+            Ir para Rolagem
           </button>
         </div>
       </div>

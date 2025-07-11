@@ -40,7 +40,7 @@ export function AppContextComponent({ children }) {
 
   const saveLocalData = React.useCallback((data) => {
     const json = JSON.stringify(data);
-    localStorage.setItem("userdata", json);
+    localStorage.setItem("userData", json);
   }, []); 
 
   const performLoginApp = React.useCallback(
@@ -81,6 +81,7 @@ export function AppContextComponent({ children }) {
                     const finalUserData = { ...fetchedUserData, id: userIdNum, uid: uid };
                     setUserData(finalUserData);
                     saveLocalData(finalUserData); 
+                     setLoggedIn(true);
                   } else {
 
                     setUserData(null);
@@ -180,6 +181,7 @@ export function AppContextComponent({ children }) {
         setGameOpen,
         loading,
         setLoading,
+        
       }}
     >
       {children}

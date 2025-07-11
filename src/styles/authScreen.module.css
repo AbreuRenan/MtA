@@ -19,7 +19,7 @@
     font-weight: bolder;
     font-size: 10px;
     text-align: center;
-    width: 250px;
+    width: 280px;
     height: 44px;
 }
 
@@ -38,13 +38,13 @@
 }
 
 button.loginBtn {
-    width: 250px;
+    width: 280px;
     font-family: var(--magoFont);
     font-weight: bold;
     font-size: 12px;
     transition: .1s all ease;
     box-shadow: 0 6px 0 0 #837e2e;
-    margin: 10px auto;
+    margin: 5px auto;
 }
 button.loginBtn:hover {
     filter: brightness(1.1);

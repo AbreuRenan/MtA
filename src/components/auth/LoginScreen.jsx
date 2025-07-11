@@ -12,16 +12,16 @@ import ErrorComponent from "../helpers/ErrorComponent";
 
 export default function LoginScreen() {
   const {
-    firestore,
     auth,
-    performLoginApp,
     userData,
-    setUserData,
     isLoggedIn,
-    setLoggedIn,
+    setLoggedIn, // Pode remover se não for usar aqui
     errorContextState,
     setErrorContextState,
   } = React.useContext(AppContext);
+
+
+
   const [emailState, setEmail] = React.useState("");
   const [passwordState, setPassword] = React.useState("");
   const navigate = useNavigate();
@@ -30,15 +30,12 @@ export default function LoginScreen() {
     if (auth && emailState && passwordState) {
       signInWithEmailAndPassword(auth, emailState, passwordState)
         .then((userCredential) => {
-          const user = userCredential.user;
-          setUserData(user);
-          setLoggedIn(true);
+          console.log(userCredential)
 
         })
         .catch((err) => {
           console.log(err);
           setErrorContextState(err);
-          setLoggedIn(false);
         });
         
     } else {
@@ -47,22 +44,14 @@ export default function LoginScreen() {
     }
   }
 
-  async function fetchFirebase() {
-    const idRefs = ref(firestore, `usersToId/${userData?.uid}`);
-    const IDSnapshot = await get(idRefs);
-    if (IDSnapshot.exists() && isLoggedIn) {
-      const userID = IDSnapshot.val();
-      const userRef = ref(firestore, `users/${userID}`);
-      const userSnapshot = await get(userRef);
 
-      if (userSnapshot.exists()) {
-        performLoginApp(userSnapshot.val());
-      }
-    }
-  }
+
   React.useEffect(() => {
-    fetchFirebase();
-  }, [userData, isLoggedIn]);
+    if (isLoggedIn && userData) {
+      navigate("/home");
+    }
+
+  }, [isLoggedIn, userData, navigate]);
 
   function handleInputChange({ target }, inputName) {
     if (inputName === "email") setEmail(target.value);
@@ -103,6 +92,7 @@ export default function LoginScreen() {
         });
       }
     });
+
   }, []);
 
   return (

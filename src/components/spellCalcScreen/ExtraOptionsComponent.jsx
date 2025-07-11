@@ -10,7 +10,7 @@ export default function ExtraOptionsComponent(props) {
     extraElevacoes,
     setExtraElevacoes,
     usouFdV,
-    toggleUsouFdV,
+    toggleUsouFV,
     mitigarDadosParadoxoMana,
     setMitigarDadosParadoxoMana,
     manaOpcional,
@@ -92,7 +92,7 @@ export default function ExtraOptionsComponent(props) {
           id="gastouVontade"
           defaultChecked={usouFdV}
           value={usouFdV}
-          setValue={toggleUsouFdV}
+          setValue={toggleUsouFV}
         />
       </div>
     </div>
