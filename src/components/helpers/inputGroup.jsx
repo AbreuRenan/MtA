@@ -3,7 +3,7 @@ import styles from "../../styles/spellcalc.module.css";
 
 export default function InputGroup({
   label,
-  value,
+  value: estateValue,
   setValue,
   min = 1,
   max = 10,
@@ -14,13 +14,14 @@ export default function InputGroup({
 }) {
   const handleBtnAddOrRemove = (e) => {
     const btnValue = parseInt(e.currentTarget.value, 10);
-    let newValue = value + btnValue;
+    let newValue = estateValue + btnValue;
     if (newValue > max) return setValue(max);
     if (newValue < min) return setValue(min);
     setValue(newValue);
   };
 
   function handleInputChange(e) {
+    
     let inputValue = parseInt(e.target.value, 10);
     if (e.target.value === "") return setValue("");
 
@@ -48,6 +49,7 @@ export default function InputGroup({
               data-inputname={props.id}
               value={-1}
               onClick={handleBtnAddOrRemove}
+              disabled={ estateValue <= min}
             >
               -1
             </button>
@@ -56,7 +58,7 @@ export default function InputGroup({
               id={props.id}
               data-inputname={props.id}
               className={styles.inputNumber}
-              value={value}
+              value={estateValue}
               onChange={handleInputChange}
               onBlur={handleBlur}
             />
@@ -64,6 +66,7 @@ export default function InputGroup({
               data-inputname={props.id}
               value={1}
               onClick={handleBtnAddOrRemove}
+              disabled={ estateValue >= max}
             >
               +1
             </button>
@@ -78,6 +81,8 @@ export default function InputGroup({
               data-inputname={props.id}
               value={-1}
               onClick={handleBtnAddOrRemove}
+              disabled={ estateValue <= min}
+
             >
               -1
             </button>
@@ -86,7 +91,7 @@ export default function InputGroup({
               id={props.id}
               data-inputname={props.id}
               className={styles.inputNumber}
-              value={value}
+              value={estateValue}
               onChange={handleInputChange}
               onBlur={handleBlur}
             />
@@ -94,6 +99,8 @@ export default function InputGroup({
               data-inputname={props.id}
               value={1}
               onClick={handleBtnAddOrRemove}
+              disabled={ estateValue >= max}
+
             >
               +1
             </button>

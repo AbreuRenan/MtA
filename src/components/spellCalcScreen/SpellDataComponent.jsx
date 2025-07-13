@@ -105,6 +105,7 @@ export default function SpellDataComponent(props) {
     } else {
       setValue[e.target.id](e.target.checked);
     }
+    if(e.target.id === "tempoConjuracaoElevada") setTempoConjuracao(1)
   }
 
   function resetValueFromFP(state) {
@@ -207,7 +208,8 @@ export default function SpellDataComponent(props) {
           id="escala"
           value={escala}
           setValue={setEscala}
-          max={100}
+          max={escalaElevada ? 100 : 6}
+
         >
           <input
             type="checkbox"
@@ -230,7 +232,7 @@ export default function SpellDataComponent(props) {
           id="tempoConjuracao"
           value={tempoConjuracao}
           setValue={setTempoConjuracao}
-          max={100}
+          max={tempoConjuracaoElevada ? 1 : 100}
         >
           <input
             type="checkbox"
