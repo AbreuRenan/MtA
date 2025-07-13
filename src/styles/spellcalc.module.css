@@ -51,18 +51,24 @@
   width: 100%;
   box-shadow: 0 -15px 20px 10px black, 0 -15px 40px 10px black;
   z-index: 99;
-  gap: 10px ;
+  gap: 10px;
   padding-top: 10px;
-
 }
 .notScrollableData * {
-  font-size: .95rem;
+  font-size: 0.85rem;
+}
+.resumoDisponivel {
+  display: flex;
+  justify-content: space-between;
+}
+.resumoDisponivel * {
+  font-size: .7rem;
 }
 .resumoMagia {
   text-align: center;
   display: grid;
-  grid-template-columns: 45% 55%;
-  gap: 10px
+  grid-template-columns: 55% 45%;
+  gap: 10px;
 }
 
 .fatoresCol,
@@ -74,7 +80,6 @@
 .dadosCol p {
   text-align: left;
 }
-
 
 .elevacao.verde {
   color: rgb(0, 210, 0);
@@ -90,7 +95,7 @@
   width: 100%;
   padding-bottom: 8%;
 }
-.spellCalcFooter>div {
+.spellCalcFooter > div {
   grid-column: span 3;
 }
 .spellCalcFooter > button {

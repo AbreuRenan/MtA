@@ -32,7 +32,7 @@ export default function MageDataComponent(props) {
       </div>
       <div className={styles.mageData}>
         <span className={styles.columnName}>Informação do Mago</span>
-        <span className={styles.columnName} >Nível</span>
+        <span className={styles.columnName}>Nível</span>
         <InputGroup
           label="Gnose"
           id="gnose"
@@ -60,11 +60,9 @@ export default function MageDataComponent(props) {
         />
         <InputCheckBox
           label="Arcana é Regente?"
-          id="regente"
-          defaultChecked={regente}
-          onChange={toggleRegente}
-          setValue={setRegente}
-          value={regente}
+          id="regente" 
+          checked={regente} 
+          setValue={setRegente} 
         />
         <fieldset className={`${styles.inputGroupSpellType} ${styles.options}`}>
           <legend>Tipo de Feitiço</legend>

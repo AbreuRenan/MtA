@@ -10,7 +10,7 @@ export default function ExtraOptionsComponent(props) {
     extraElevacoes,
     setExtraElevacoes,
     usouFdV,
-    toggleUsouFV,
+    setUsouFdV,
     mitigarDadosParadoxoMana,
     setMitigarDadosParadoxoMana,
     manaOpcional,
@@ -19,13 +19,13 @@ export default function ExtraOptionsComponent(props) {
     setMitigarTodoParadoxoMana,
     calcularDadosParadoxo,
     dadosExtras,
-    setDadosExtras
+    setDadosExtras,
   } = props;
 
   function toggleMitigarTodoParadoxoCheckBox(e) {
     setMitigarTodoParadoxoMana(e.target.checked);
   }
-   function handleMitigarDadosParadoxoChange(newValue) {
+  function handleMitigarDadosParadoxoChange(newValue) {
     setMitigarDadosParadoxoMana(newValue);
     if (mitigarTodoParadoxoMana) {
       setMitigarTodoParadoxoMana(false);
@@ -37,7 +37,6 @@ export default function ExtraOptionsComponent(props) {
         <h1>Opcionais de Magia</h1>
       </div>
       <div className={styles.optionalsData}>
-        
         <InputGroup
           label="Dados Extras"
           id="dadosExtras"
@@ -90,9 +89,8 @@ export default function ExtraOptionsComponent(props) {
         <InputCheckBox
           label="Força de Vontade?"
           id="gastouVontade"
-          defaultChecked={usouFdV}
-          value={usouFdV}
-          setValue={toggleUsouFV}
+          checked={usouFdV}
+          setValue={setUsouFdV} 
         />
       </div>
     </div>
