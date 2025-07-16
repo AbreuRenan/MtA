@@ -7,7 +7,7 @@ export default function useResumoMagiaCalcs(
   custoMana,
   custoVontade,
   currentFP,
-  calcularElevacoesTotais, // Esta função virá do useSpellCalculator
+  calcularElevacoesTotais,
   escala,
   duracao,
   escalaElevada,
@@ -218,7 +218,7 @@ export default function useResumoMagiaCalcs(
     const indexDeTempoConjuracaoBaseadoNaGnose = Math.max(
       0,
       Math.ceil(gnose / 2) - 1
-    ); // Ajustado para índice
+    ); 
     const maxNivelTempoConjuracao = currentFP === "tempoConjuracao" ? 100 : 6;
     if (tempoConjuracaoElevada) return "AGORA!";
 

@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import useSpellCalculator from "../hooks/useSpellCalculator";
 import useResumoMagiaCalcs from "../hooks/useResumoMagiaCalcs";
+import SalvarMagiaModal from "./SalvarMagiaModal";
 
 export default function SpellCalcScreen() {
   const { userData } = React.useContext(AppContext);
@@ -93,6 +94,9 @@ export default function SpellCalcScreen() {
     calcularElevacoesTotais,
     calcularDadosParadoxo,
     calcularDadosPorFator,
+
+    saveSpellData,
+    loadSpellData,
   } = useSpellCalculator(userData);
 
   const {
@@ -238,6 +242,19 @@ export default function SpellCalcScreen() {
     navigate(`/dice?paradaDeDados=${paradaDeDados}`);
   }
 
+   const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const handleOpenSaveModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleCloseSaveModal = () => {
+    setIsModalOpen(false);
+  };
+  const handleSaveSpellWithModal = (spellName) => {
+    saveSpellData(spellName);
+    setIsModalOpen(false); 
+  };
+
   return (
     <div className={`container`}>
       <div className={styles.scrollableData}>
@@ -252,11 +269,20 @@ export default function SpellCalcScreen() {
           <button className={styles.button} onClick={resetCalculadora}>
             Limpar
           </button>
-          <button className={styles.button} onClick={goToDice}>
-            Ir para Rolagem
+          {/* <button className={styles.button} onClick={goToDice}>Ir para Rolagem</button> */}
+          <button className={styles.button} onClick={handleOpenSaveModal}>
+            Salvar!
+          </button>
+          <button className={styles.button} onClick={loadSpellData}>
+            Carregar
           </button>
         </div>
       </div>
+      <SalvarMagiaModal
+        isOpen={isModalOpen}
+        onClose={handleCloseSaveModal}
+        onSave={handleSaveSpellWithModal}
+      />
     </div>
   );
 }

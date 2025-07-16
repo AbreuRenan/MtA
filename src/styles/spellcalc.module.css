@@ -159,8 +159,8 @@
   width: 100%;
 }
 
-.inputGroupControl > button:active,
-.spellCalcFooter > button:active {
+.inputGroupControl > button:active:not(:disabled),
+.spellCalcFooter > button:active:not(:disabled) {
   box-shadow: 0 2px 0 0 #837e2e;
   transform: translateY(2px);
   transition: all 0.05s ease-in-out;
