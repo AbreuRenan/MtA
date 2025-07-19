@@ -241,21 +241,13 @@ export default function SpellCalcScreen() {
   function goToDice() {
     navigate(`/dice?paradaDeDados=${paradaDeDados}`);
   }
+    const handleOpenSaveModal = () => {
+      return true
+    };
 
-   const [isModalOpen, setIsModalOpen] = React.useState(false);
-
-  const handleOpenSaveModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleCloseSaveModal = () => {
-    setIsModalOpen(false);
-  };
-  const handleSaveSpellWithModal = (spellName) => {
-    saveSpellData(spellName);
-    setIsModalOpen(false); 
-  };
 
   return (
+    <>
     <div className={`container`}>
       <div className={styles.scrollableData}>
         <MageDataComponent {...mageDataProps} />
@@ -278,11 +270,13 @@ export default function SpellCalcScreen() {
           </button>
         </div>
       </div>
-      <SalvarMagiaModal
-        isOpen={isModalOpen}
-        onClose={handleCloseSaveModal}
-        onSave={handleSaveSpellWithModal}
-      />
+
     </div>
+        <SalvarMagiaModal
+          isOpen={handleOpenSaveModal}
+          // onClose={handleCloseSaveModal}
+          // onSave={handleSaveSpellWithModal}
+      />
+      </>
   );
 }
