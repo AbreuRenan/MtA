@@ -261,22 +261,20 @@ export default function SpellCalcScreen() {
           <button className={styles.button} onClick={resetCalculadora}>
             Limpar
           </button>
-          {/* <button className={styles.button} onClick={goToDice}>Ir para Rolagem</button> */}
+          <button className={styles.button} onClick={goToDice}>Ir para Rolagem</button>
           <button className={styles.button} onClick={handleOpenSaveModal}>
             Salvar!
           </button>
-          <button className={styles.button} onClick={loadSpellData}>
-            Carregar
-          </button>
+          {/* <button className={styles.button} onClick={loadSpellData}>Carregar</button> */}
         </div>
       </div>
 
     </div>
-        <SalvarMagiaModal
+        {/* <SalvarMagiaModal
           isOpen={handleOpenSaveModal}
           // onClose={handleCloseSaveModal}
           // onSave={handleSaveSpellWithModal}
-      />
+      /> */}
       </>
   );
 }
