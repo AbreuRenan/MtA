@@ -258,13 +258,9 @@ export default function SpellCalcScreen() {
       <div className={styles.notScrollableData}>
         <ResumoMagia {...resumoMagiaProps} />
         <div className={styles.spellCalcFooter}>
-          <button className={styles.button} onClick={resetCalculadora}>
-            Limpar
-          </button>
+          <button className={styles.button} onClick={resetCalculadora}>Limpar</button>
           <button className={styles.button} onClick={goToDice}>Ir para Rolagem</button>
-          <button className={styles.button} onClick={handleOpenSaveModal}>
-            Salvar!
-          </button>
+          {/* <button className={styles.button} onClick={handleOpenSaveModal}>Salvar!</button> */}
           {/* <button className={styles.button} onClick={loadSpellData}>Carregar</button> */}
         </div>
       </div>
