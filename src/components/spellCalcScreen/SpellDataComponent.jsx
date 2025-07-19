@@ -208,8 +208,7 @@ export default function SpellDataComponent(props) {
           id="escala"
           value={escala}
           setValue={setEscala}
-          max={escalaElevada ? 100 : 6}
-
+          max={escalaElevada ? 100 : 5}
         >
           <input
             type="checkbox"
@@ -242,7 +241,6 @@ export default function SpellDataComponent(props) {
             checked={tempoConjuracaoElevada}
             onChange={toggleElevacaoCheckBox}
             className={styles.checkboxElevada}
-            max={100}
           />
         </InputGroup>
         

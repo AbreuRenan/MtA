@@ -89,16 +89,16 @@ export default function useSpellCalculator() {
     let penalidadeDuracao = duracao === 1 ? 0 : (duracao - 1) * 2;
     let penalidadeEscala = escala === 1 ? 0 : (escala - 1) * 2;
 
-    if (currentFP === "potencia" && potencia > nivelArcana) { penalidadePotencia = (potencia - nivelArcana) * 2;}
-    if (currentFP === "duracao" && duracao > nivelArcana) {penalidadeDuracao = (duracao - nivelArcana) * 2;} 
-    if (currentFP === "escala" && escala > nivelArcana) {penalidadeEscala = (escala - nivelArcana) * 2;}
+    if (currentFP === "potencia" ) penalidadePotencia = potencia <= nivelArcana ? 0 : (potencia - nivelArcana) * 2;
+    if (currentFP === "duracao" ) penalidadeDuracao = duracao <= nivelArcana ? 0 : (duracao - nivelArcana) * 2;
+    if (currentFP === "escala") penalidadeEscala = escala <= nivelArcana ? 0 : (escala - nivelArcana) * 2;
 
     const dadoPenalidadeTotal =
       Math.max(0, penalidadePotencia) +
       Math.max(0, penalidadeDuracao) +
       Math.max(0, penalidadeEscala);
     return dadoPenalidadeTotal;
-  }, [potencia,duracao,escala,currentFP,nivelArcana,]);
+  }, [potencia,duracao,escala,currentFP,nivelArcana]);
 
   const calcularParadaDeDados = React.useCallback(() => {
     let dadosIniciais = gnose + nivelArcana + yantras + dadosExtras;
@@ -161,6 +161,70 @@ export default function useSpellCalculator() {
   const MagoData = React.useMemo( () => ({gnose, nivelArcana, nivelRequerido}), [gnose, nivelArcana, nivelRequerido])
   const Fatores = React.useMemo( () => ({potencia, duracao, escala, alcance, tempoConjuracao}), [potencia, duracao, escala, alcance, tempoConjuracao]) 
   const ModificamElevacao = React.useMemo(() =>( {magiasAtivas, potenciaElevada, duracaoElevada, escalaElevada, tempoConjuracaoElevada, extraElevacoes, calcularElevacoesGratis,custoElevacoes}), [magiasAtivas, potenciaElevada, duracaoElevada, escalaElevada, tempoConjuracaoElevada, extraElevacoes, calcularElevacoesGratis,custoElevacoes]) 
+
+
+const saveSpellData = React.useCallback(() => {
+    const spellDataObj = {
+      page, gnose, nivelArcana, nivelRequerido, magiasAtivas, spellType, regente,
+      potencia, duracao, escala, alcance, tempoConjuracao, currentFP,
+      potenciaElevada, duracaoElevada, escalaElevada, alcanceElevado, tempoConjuracaoElevada,
+      extraElevacoes, isCombinado, yantras, usouFV,
+      mitigarDadosParadoxoMana, mitigarTodoParadoxoMana, manaOpcional,
+    };
+   try {
+
+      const KEY = `spellCalculator_${spellName}`; 
+      localStorage.setItem(KEY, JSON.stringify(spellDataObj));
+      console.log(`Dados da magia "${spellName}" salvos com sucesso!`);
+    } catch (error) {
+      console.error('Erro ao salvar dados da magia no localStorage:', error);
+    }
+  }, [
+    page, gnose, nivelArcana, nivelRequerido, magiasAtivas, spellType, regente,
+    potencia, duracao, escala, alcance, tempoConjuracao, currentFP,
+    potenciaElevada, duracaoElevada, escalaElevada, alcanceElevado, tempoConjuracaoElevada,
+    extraElevacoes, isCombinado, yantras, usouFV,
+    mitigarDadosParadoxoMana, mitigarTodoParadoxoMana, manaOpcional
+  ]);
+
+  const loadSpellData = React.useCallback(() => {
+    try {
+      const savedData = localStorage.getItem('spellCalculatorData');
+      if (savedData) {
+        const spellDataObj = JSON.parse(savedData);
+        setPage(spellDataObj.page || 1); 
+        setGnose(spellDataObj.gnose || 1);
+        setNivelArcana(spellDataObj.nivelArcana || 1);
+        setNivelRequerido(spellDataObj.nivelRequerido || 1);
+        setMagiasAtivas(spellDataObj.magiasAtivas || 0);
+        setSpellType(spellDataObj.spellType || "improvisado");
+        setRegente(spellDataObj.regente !== undefined ? spellDataObj.regente : true); 
+        setPotencia(spellDataObj.potencia || 1);
+        setDuracao(spellDataObj.duracao || 1);
+        setEscala(spellDataObj.escala || 1);
+        setAlcance(spellDataObj.alcance || "toque");
+        setTempoConjuracao(spellDataObj.tempoConjuracao || 1);
+        setCurrentFP(spellDataObj.currentFP || "potencia");
+        setPotenciaElevada(spellDataObj.potenciaElevada !== undefined ? spellDataObj.potenciaElevada : false);
+        setDuracaoElevada(spellDataObj.duracaoElevada !== undefined ? spellDataObj.duracaoElevada : false);
+        setEscalaElevada(spellDataObj.escalaElevada !== undefined ? spellDataObj.escalaElevada : false);
+        setAlcanceElevado(spellDataObj.alcanceElevado !== undefined ? spellDataObj.alcanceElevado : false);
+        setTempoConjuracaoElevada(spellDataObj.tempoConjuracaoElevada !== undefined ? spellDataObj.tempoConjuracaoElevada : false);
+        setExtraElevacoes(spellDataObj.extraElevacoes || 0);
+        setIsCombinado(spellDataObj.isCombinado || 0);
+        setYantras(spellDataObj.yantras || 0);
+        setUsouFdV(spellDataObj.usouFV !== undefined ? spellDataObj.usouFV : false);
+        setMitigarDadosParadoxoMana(spellDataObj.mitigarDadosParadoxoMana || 0);
+        setMitigarTodoParadoxoMana(spellDataObj.mitigarTodoParadoxoMana !== undefined ? spellDataObj.mitigarTodoParadoxoMana : false);
+        setManaOpcional(spellDataObj.manaOpcional || 0);
+
+        console.log('Dados da magia carregados com sucesso!');
+      }
+    } catch (error) {
+      console.error('Erro ao carregar dados da magia do localStorage:', error);
+      // Opcional: chamar resetCalculadora() aqui se o carregamento falhar
+    }
+  }, []);
 
 
   const resetCalculadora = React.useCallback(() => {
@@ -347,5 +411,7 @@ React.useEffect(() => {
     calcularGastoMana, 
     calcularTotalDadosParadoxo, 
     calcularParadaDeDados: calcularParadaDeDados,
+    saveSpellData,
+    loadSpellData
   };
 }
