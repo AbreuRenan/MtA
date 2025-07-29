@@ -196,6 +196,30 @@ export default function SpellDataComponent(props) {
             onChange={toggleElevacaoCheckBox}
           />
         </InputGroup>
+
+        <input id="tempoConjuracaoFP"
+          type="radio"
+          name="fatorPrimario"
+          value="tempoConjuracao"
+          className={styles.checkboxElevada}
+          onChange={toggleFPradioBtn}
+        ></input>
+        <InputGroup label="Tempo de Conjuração"
+          id="tempoConjuracao"
+          value={tempoConjuracao}
+          setValue={setTempoConjuracao}
+          max={tempoConjuracaoElevada ? 1 : 100}
+        >
+          <input
+            type="checkbox"
+            id="tempoConjuracaoElevada"
+            name="tempoConjuracaoElevada"
+            value="tempoConjuracaoElevada"
+            checked={tempoConjuracaoElevada}
+            onChange={toggleElevacaoCheckBox}
+            className={styles.checkboxElevada}
+          />
+        </InputGroup>
         <input id="escalaFP"
           type="radio"
           name="fatorPrimario"
@@ -220,29 +244,8 @@ export default function SpellDataComponent(props) {
             onChange={toggleElevacaoCheckBox}
           />
         </InputGroup>
-        <input id="tempoConjuracaoFP"
-          type="radio"
-          name="fatorPrimario"
-          value="tempoConjuracao"
-          className={styles.checkboxElevada}
-          onChange={toggleFPradioBtn}
-        ></input>
-        <InputGroup label="Tempo de Conjuração"
-          id="tempoConjuracao"
-          value={tempoConjuracao}
-          setValue={setTempoConjuracao}
-          max={tempoConjuracaoElevada ? 1 : 100}
-        >
-          <input
-            type="checkbox"
-            id="tempoConjuracaoElevada"
-            name="tempoConjuracaoElevada"
-            value="tempoConjuracaoElevada"
-            checked={tempoConjuracaoElevada}
-            onChange={toggleElevacaoCheckBox}
-            className={styles.checkboxElevada}
-          />
-        </InputGroup>
+
+
         
         <fieldset className={`${styles.inputGroupSpellType} ${styles.options}`}>
           <legend>Alcance</legend>

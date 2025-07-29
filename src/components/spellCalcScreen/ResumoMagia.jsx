@@ -12,10 +12,16 @@ export default function ResumoMagia(props) {
     manaDisponivel,
     FVDisponivel,
 
+    potenciaElevada,
+    duracaoElevada,
+    escalaElevada,
+    tempoConjuracaoElevada,
+
     paradaDeDados,
     custoMana,
     custoVontade,
     calcularElevacoesExcedentes,
+    custoElevacoes,
     totalDadosParadoxo,
   } = props;
 
@@ -30,7 +36,6 @@ export default function ResumoMagia(props) {
     return string;
   }
 
-  
   return (
     <>
       <div>
@@ -40,24 +45,31 @@ export default function ResumoMagia(props) {
         </center>
         <div className={styles.resumoMagia}>
           <div className={styles.fatoresCol}>
-            <p className={styles.potencia}>
+            <p className={potenciaElevada ? styles.elevada : styles.notelevada}>
               Potência:<b> {exibirPotencia}</b>
             </p>
-            <p className={styles.duracao}>
+            <p className={duracaoElevada ? styles.elevada : styles.notelevada}>
               Duração:<b> {exibirDuracao}</b>
             </p>
-            <p className={styles.alvos}>
-              Alvos:<b> {exibirEscala.alvos}</b>
-            </p>
-            <p className={styles.area}>
-              Área:<b> {exibirEscala.area}</b>
-            </p>
-            <p className={styles.tamanho}>
-              Tamanho:<b> {exibirEscala.tamanhos}</b>
-              <span className={styles.tooltip}> {exibirTextoPorTamanho}</span>
-            </p>
-            <p className={styles.tempoConjuracao}>
+            <p
+              className={
+                tempoConjuracaoElevada ? styles.elevada : styles.notelevada
+              }
+            >
               Tempo Conjuração:<b> {exibirTempoConjuracao}</b>
+            </p>
+            <p className={escalaElevada ? styles.elevada : styles.notelevada}>
+              Escala ↴
+            </p>
+            <p>
+              - Alvos:<b> {exibirEscala.alvos}</b>
+            </p>
+            <p>
+              - Área:<b> {exibirEscala.area}</b>
+            </p>
+            <p>
+              - Tamanho:<b> {exibirEscala.tamanhos}</b>
+              <span className={styles.tooltip}> {exibirTextoPorTamanho}</span>
             </p>
           </div>
           <div className={styles.dadosCol}>
@@ -74,20 +86,22 @@ export default function ResumoMagia(props) {
             <p className={styles.fvDisponivel}>
               FV Disponível:<b> {FVDisponivel}</b>
             </p>
+            <p>Elevações gastas:<b> {custoElevacoes}</b></p>
             {exibirElevacoes >= 0 && (
               <p className={`${styles.elevacao} ${styles.verde}`}>
                 Elevações Pra Gastar:<b> {exibirElevacoes}</b>
               </p>
             )}
             {exibirElevacoes < 0 && (
-              <p className={`${styles.elevacao} ${styles.vermelho}`}>
-                Elevações Passando:<b> {calcularElevacoesExcedentes()}</b>
+              <p className={`${styles.elevacao} ${styles.vermelho}`}>Elevações Passando:<b> {calcularElevacoesExcedentes()}</b>
               </p>
             )}
             <p className={styles.dadosParadoxo}>
               Dados de Paradoxo:<b> {totalDadosParadoxo}d</b>
             </p>
+            
           </div>
+          
         </div>
       </div>
     </>

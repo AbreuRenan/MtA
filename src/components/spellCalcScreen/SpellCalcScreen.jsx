@@ -231,10 +231,16 @@ export default function SpellCalcScreen() {
     manaDisponivel,
     FVDisponivel,
 
+    potenciaElevada,
+    escalaElevada,
+    duracaoElevada,
+    tempoConjuracaoElevada,
+
     paradaDeDados,
     custoMana,
     custoVontade,
     calcularElevacoesExcedentes,
+    custoElevacoes,
     totalDadosParadoxo,
   };
 

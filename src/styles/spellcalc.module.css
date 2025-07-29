@@ -71,6 +71,16 @@
   gap: 10px;
 }
 
+.resumoMagia .notelevada::before {
+  content: " ◌ ";
+  color: var(--amarelo)
+}
+.resumoMagia .elevada::before {
+  content: " ● ";
+  color: var(--amarelo);
+}
+
+
 .fatoresCol,
 .dadosCol {
   display: flex;
