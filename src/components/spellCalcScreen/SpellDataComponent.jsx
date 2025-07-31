@@ -184,7 +184,7 @@ export default function SpellDataComponent(props) {
           id="duracao"
           value={duracao}
           setValue={setDuracao}
-          max={100}
+          max={duracaoElevada ? 6 : 100}
         >
           <input
             type="checkbox"

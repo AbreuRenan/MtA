@@ -230,6 +230,7 @@ export default function SpellCalcScreen() {
     exibirTextoPorTamanho,
     manaDisponivel,
     FVDisponivel,
+    alcance,
 
     potenciaElevada,
     escalaElevada,

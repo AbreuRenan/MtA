@@ -11,6 +11,7 @@ export default function ResumoMagia(props) {
     exibirTextoPorTamanho,
     manaDisponivel,
     FVDisponivel,
+    alcance,
 
     potenciaElevada,
     duracaoElevada,
@@ -71,6 +72,7 @@ export default function ResumoMagia(props) {
               - Tamanho:<b> {exibirEscala.tamanhos}</b>
               <span className={styles.tooltip}> {exibirTextoPorTamanho}</span>
             </p>
+            {/* <p className={alcance !== "toque" ? styles.elevada : styles.notelevada}>Alcance: <b> {alcance}</b></p> */}
           </div>
           <div className={styles.dadosCol}>
             <p className={styles.paradaDados}>

@@ -137,6 +137,9 @@ export default function useSpellCalculator() {
     if (!regente) {
       totalMana += 1;
     }
+    if(duracaoElevada && duracao >= 6) {
+      totalMana += 1
+    }
     totalMana += manaOpcional;
 
     const dadosParadoxoGerados = calcularDadosParadoxo();

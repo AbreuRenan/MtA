@@ -79,6 +79,9 @@
   content: " ● ";
   color: var(--amarelo);
 }
+b {
+  text-transform: capitalize;
+}
 
 
 .fatoresCol,

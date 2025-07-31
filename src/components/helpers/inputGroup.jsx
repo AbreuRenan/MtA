@@ -1,17 +1,9 @@
 import React from "react";
 import styles from "../../styles/spellcalc.module.css";
 
-export default function InputGroup({
-  label,
-  value: estateValue,
-  setValue,
-  min = 1,
-  max = 10,
-  childInputContainer = false,
-  childContainerClass,
-  children,
-  ...props
-}) {
+export default function InputGroup({label,value: estateValue,setValue,min = 1,max = 10,childInputContainer = false, 
+  childContainerClass,children, ...props})  {
+
   const handleBtnAddOrRemove = (e) => {
     const btnValue = parseInt(e.currentTarget.value, 10);
     let newValue = estateValue + btnValue;
@@ -109,6 +101,12 @@ export default function InputGroup({
       )}
     </>
   );
+
+
+  React.useEffect(() =>{
+    if (estateValue < min) { setValue(min) }
+    if (estateValue > max) { setValue(max)} 
+  }, [estateValue, min, max, setValue])
 
   return <>{inputContent}</>;
 }
