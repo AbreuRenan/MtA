@@ -12,6 +12,6 @@ export default function SpellProvider({ children }) {
   );
 }
 
-export const useSpellContext = () => {
+export const AppSpellContext = () => {
   return React.useContext(SpellContext);
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { AppContextComponent } from "./AppContext";
+import { AppSpellContext } from "./AppSpellContext";
 
 import "./App.css";
 import Header from "./components/Header";
@@ -18,18 +19,18 @@ function App() {
     <HashRouter initialEntries={['/']}>
       <AppContextComponent>
         <Header />
+        {/* <AppSpellContext> */}
         <Routes>
           <Route path="/" element={<LoginScreen />} />
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/home" element={<RouterGuard><Home /></RouterGuard>} />
-          <AppSpellContext>
-            <Route path="/dice" element={<RouterGuard><DiceRollerComponent/></RouterGuard>} />
-            <Route path="/spellCalc" element={<RouterGuard><SpellCalcScreen /></RouterGuard>} />
-            {/* <Route path="/spellBook" element={<RouterGuard><GrimorioScreen/></RouterGuard>} /> */}
-          </AppSpellContext>
+          <Route path="/dice" element={<RouterGuard><DiceRollerComponent/></RouterGuard>} />
+          <Route path="/spellCalc" element={<RouterGuard><SpellCalcScreen /></RouterGuard>} />
+          <Route path="/spellBook" element={<RouterGuard><GrimorioScreen/></RouterGuard>} />
           <Route path="/admin" element={<RouterGuard><AdminScreen /></RouterGuard>} />
         </Routes>
+        {/* </AppSpellContext> */}
       </AppContextComponent>
     </HashRouter>
   );

@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from "../../styles/grimorioScreen.module.css";
 import { useNavigate } from 'react-router-dom';
-import { useSpellContext } from '../../AppSpellContext';
+import { AppSpellContext } from '../../AppSpellContext';
 
 
 export default function GrimorioScreen() {
 
- const { loadSpell, getSavedSpells, deleteSpell } = useSpellContext();
+ const { loadSpell, getSavedSpells, deleteSpell } = AppSpellContext();
   const [spells, setSpells] = useState([]);
   const navigate = useNavigate();
 
