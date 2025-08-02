@@ -21,6 +21,7 @@ function MobileMenu({ isOpen, setMenuMobileIsOpen }) {
           {userData && userData.role === "narrador" && (
             <NavLink to="/admin" end onClick={() =>   setMenuMobileIsOpen(false)}>Admin</NavLink>
           )}
+          <NavLink to="/spellBook" end onClick={() => setMenuMobileIsOpen(false)}>Grimório</NavLink>
           <NavLink to="/spellCalc" end onClick={() => setMenuMobileIsOpen(false)}>Taumaturgia Creativa</NavLink>
           <NavLink to="/logout" end onClick={() =>    setMenuMobileIsOpen(false)}>Logout</NavLink>
         </nav>

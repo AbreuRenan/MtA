@@ -248,36 +248,53 @@ export default function SpellCalcScreen() {
   function goToDice() {
     navigate(`/dice?paradaDeDados=${paradaDeDados}`);
   }
-    const handleOpenSaveModal = () => {
-      return true
-    };
+
+ const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const handleOpenSaveModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleCloseSaveModal = () => {
+    setIsModalOpen(false);
+  };
+  function handleSaveSpellWithModal(spellName) {
+    saveSpellData(spellName);
+    setIsModalOpen(false);
+  };
 
 
   return (
     <>
-    <div className={`container`}>
-      <div className={styles.scrollableData}>
-        <MageDataComponent {...mageDataProps} />
-        <YantraDataComponent {...yantraDataProps} />
-        <SpellDataComponent {...spellDataProps} />
-        <ExtraOptionsComponent {...extraOptionDataProps} />
-      </div>
-      <div className={styles.notScrollableData}>
-        <ResumoMagia {...resumoMagiaProps} />
-        <div className={styles.spellCalcFooter}>
-          <button className={styles.button} onClick={resetCalculadora}>Limpar</button>
-          <button className={styles.button} onClick={goToDice}>Ir para Rolagem</button>
-          {/* <button className={styles.button} onClick={handleOpenSaveModal}>Salvar!</button> */}
-          {/* <button className={styles.button} onClick={loadSpellData}>Carregar</button> */}
+      <div className={`container`}>
+        <div className={styles.scrollableData}>
+          <MageDataComponent {...mageDataProps} />
+          <YantraDataComponent {...yantraDataProps} />
+          <SpellDataComponent {...spellDataProps} />
+          <ExtraOptionsComponent {...extraOptionDataProps} />
         </div>
-      </div>
+        <div className={styles.notScrollableData}>
+          <ResumoMagia {...resumoMagiaProps} />
+          <div className={styles.spellCalcFooter}>
+            <button className={styles.button} onClick={resetCalculadora}>
+              Limpar
+            </button>
+            <button className={styles.button} onClick={goToDice}>
+              Ir para Rolagem
+            </button>
+            {/* <button className={styles.button} onClick={handleOpenSaveModal}>
+              Salvar!
+            </button>
+            <button className={styles.button} onClick={loadSpellData}>
+              Carregar
+            </button> */}
+          </div>
+        </div>
 
-    </div>
-        {/* <SalvarMagiaModal
-          isOpen={handleOpenSaveModal}
-          // onClose={handleCloseSaveModal}
-          // onSave={handleSaveSpellWithModal}
-      /> */}
-      </>
+        <SalvarMagiaModal       
+        isOpen={isModalOpen}
+        onClose={handleCloseSaveModal}
+        onSave={handleSaveSpellWithModal}/>
+      </div>
+    </>
   );
 }

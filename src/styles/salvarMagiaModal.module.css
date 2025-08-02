@@ -23,9 +23,7 @@
   flex-direction: column;
   gap: 15px;
   position: relative;
-  top: 50vh;
-  left: 50vw;
-  transform: translate(-50%, -50%);
+
 }
 
 .modalContent h2 {

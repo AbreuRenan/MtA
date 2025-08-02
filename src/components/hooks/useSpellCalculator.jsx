@@ -166,7 +166,7 @@ export default function useSpellCalculator() {
   const ModificamElevacao = React.useMemo(() =>( {magiasAtivas, potenciaElevada, duracaoElevada, escalaElevada, tempoConjuracaoElevada, extraElevacoes, calcularElevacoesGratis,custoElevacoes}), [magiasAtivas, potenciaElevada, duracaoElevada, escalaElevada, tempoConjuracaoElevada, extraElevacoes, calcularElevacoesGratis,custoElevacoes]) 
 
 
-const saveSpellData = React.useCallback(() => {
+const saveSpellData = React.useCallback((spellName) => {
     const spellDataObj = {
       page, gnose, nivelArcana, nivelRequerido, magiasAtivas, spellType, regente,
       potencia, duracao, escala, alcance, tempoConjuracao, currentFP,

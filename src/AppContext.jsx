@@ -20,7 +20,7 @@ const firebaseConfig = {
 };
 
 export const AppContext = React.createContext();
-
+ 
 export function AppContextComponent({ children }) {
   const [hasEvent, setEvent] = React.useState(null);
   const [userData, setUserData] = React.useState(null);

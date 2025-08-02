@@ -1,39 +1,26 @@
 import React from 'react';
-import styles from '../../styles/salvarMagiaModal.module.css'; // Crie seu arquivo CSS para o modal
+import ReactDom from 'react-dom';
+import styles from '../../styles/salvarMagiaModal.module.css'; 
 
 
-export default function SalvarMagiaModal({ isOpen, onClose, onSave }) {
+function SalvarMagiaModal({ isOpen, onClose, onSave }) {
   const [spellName, setSpellName] = React.useState('');
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  
 
-    const handleCloseSaveModal = () => {
-      setIsModalOpen(false);
-    };
-    const handleSaveSpellWithModal = (spellName) => {
-      saveSpellData(spellName);
-      setIsModalOpen(false); 
-    };
-
-  if (!isModalOpen) return null; 
-
-
-  React.useEffect( () => {
-  }, [isOpen])
+  if (!isOpen) return null; 
 
   const handleSubmit = (e) => {
     e.preventDefault(); 
     if (spellName.trim()) { 
-      handleSaveSpellWithModal(spellName.trim()); 
+      onSave(spellName.trim()); 
       setSpellName(''); 
     } else {
       alert('Por favor, insira um nome para a magia.');
     }
   };
 
-  return (
-    <div className={styles.modalOverlay} onClick={handleCloseSaveModal}>
-      <div className={styles.modalContent} onClick={e => e.stopPropagation()}> {/* Impede que cliques dentro do modal fechem o overlay */}
+  return ReactDom.createPortal(
+    <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modalContent} onClick={e => e.stopPropagation()}> 
         <h2>Salvar Magia</h2>
         <form onSubmit={handleSubmit}>
           <label htmlFor="spellNameInput">Nome da Magia:</label>
@@ -46,11 +33,14 @@ export default function SalvarMagiaModal({ isOpen, onClose, onSave }) {
             required
           />
           <div className={styles.modalActions}>
-            <button type="button" onClick={handleCloseSaveModal}>Cancelar</button>
+            <button type="button" onClick={onClose}>Cancelar</button>
             <button type="submit">Salvar</button>
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.getElementById('modal-root')
   );
 }
+
+export default SalvarMagiaModal;
