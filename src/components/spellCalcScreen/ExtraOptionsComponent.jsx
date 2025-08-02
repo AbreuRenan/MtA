@@ -43,6 +43,8 @@ export default function ExtraOptionsComponent(props) {
           value={dadosExtras}
           setValue={setDadosExtras}
           min={0}
+          max={100}
+
         />
         <InputGroup
           label="Fetiços Combinados"
@@ -50,7 +52,7 @@ export default function ExtraOptionsComponent(props) {
           value={isCombinado}
           setValue={setIsCombinado}
           min={0}
-          max={4}
+          max={10}
         />
         <InputGroup
           label="Elevações Opcionais"
@@ -58,6 +60,7 @@ export default function ExtraOptionsComponent(props) {
           value={extraElevacoes}
           setValue={setExtraElevacoes}
           min={0}
+          max={100}
         />
         <InputGroup
           label="Mana Mitigar Paradoxo"
