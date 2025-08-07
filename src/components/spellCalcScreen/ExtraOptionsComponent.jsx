@@ -42,7 +42,7 @@ export default function ExtraOptionsComponent(props) {
           id="dadosExtras"
           value={dadosExtras}
           setValue={setDadosExtras}
-          min={0}
+          min={-100}
           max={100}
 
         />
@@ -59,7 +59,7 @@ export default function ExtraOptionsComponent(props) {
           id="elevacaoOpcional"
           value={extraElevacoes}
           setValue={setExtraElevacoes}
-          min={0}
+          min={-10}
           max={100}
         />
         <InputGroup
