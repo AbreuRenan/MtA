@@ -30,8 +30,10 @@ export default function RollHistory({ single = false }) {
   }
 
   React.useEffect(() => {
-    getRollsHistory();
+    getRollsHistory()
   }, []);
+
+
 
   return (
     <div className={styles.rollHistoryContainer}>

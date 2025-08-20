@@ -2,6 +2,7 @@ export default function roll() {
   const inputNumberOfDices = document.getElementById("numberDados");
   const resultadoRolagem = makeRoll(inputNumberOfDices.value);
   const dataRolagem = new Date();
+  const successThreshold = numberOfDices > 0 ? 8 : 10
 
   const resultado = {
     hash: "#" + Math.random().toString(16).slice(8),
@@ -19,7 +20,7 @@ export default function roll() {
         : dataRolagem.getSeconds()
     }`,
     rolagem: [...resultadoRolagem],
-    sucessos: [...resultadoRolagem].filter( roll => roll >= 8).length
+    sucessos: [...resultadoRolagem].filter( roll => roll >= successThreshold).length
   };
   clearDisplayArea();
   updateHistory(resultado, inputNumberOfDices.value);

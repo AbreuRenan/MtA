@@ -106,6 +106,7 @@ function DiceRollerComponent() {
   }
   function doRoll() {
     const rollReturn = roll();
+    console.log(rollReturn)
     setDisableRoll(true);
     setRollReturn(rollReturn);
   }
