@@ -27,11 +27,12 @@ export default function useDiceRoll() {
 
   const roll = (numberOfDices, explosionTarget) => {
     const rolagem = makeRoll(numberOfDices, explosionTarget);
+    const successThreshold = numberOfDices > 0 ? 8 : 10
     const resultado = {
       hash: "#" + Math.random().toString(16).slice(8),
       date: new Date().toLocaleTimeString(),
       rolagem,
-      sucessos: rolagem.filter((r) => r >= 8).length,
+      sucessos: rolagem.filter((r) => r >= successThreshold).length,
     };
     setResult(resultado);
     return resultado;
