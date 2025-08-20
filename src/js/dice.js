@@ -2,7 +2,7 @@ export default function roll() {
   const inputNumberOfDices = document.getElementById("numberDados");
   const resultadoRolagem = makeRoll(inputNumberOfDices.value);
   const dataRolagem = new Date();
-  const successThreshold = numberOfDices > 0 ? 8 : 10
+  const successThreshold = inputNumberOfDices > 0 ? 8 : 10
 
   const resultado = {
     hash: "#" + Math.random().toString(16).slice(8),
