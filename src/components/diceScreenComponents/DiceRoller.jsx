@@ -15,7 +15,7 @@ function DiceRoller() {
   const [explosionTarget, setExplosionTarget] = React.useState(10);
   const audioRef = React.useRef(null);
   const { roll, result } = useDiceRoll();
-
+ 
   React.useEffect(() => {
     if (result && firestore) {
       const rollHistoryDBRef = ref(firestore, "rollsHistory/");
