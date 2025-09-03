@@ -8,7 +8,7 @@ import RollHistory from "./RollHistory";
 import styles from "../../styles/diceRoller.module.css";
 import useDiceRoll from "../hooks/useDiceRoll";
 
-function DiceRoller() {
+export default function DiceRollScreen() {
   const { firestore, userData, gameOpen } = React.useContext(AppContext);
   const [totalOfDices, setTotalOfDices] = React.useState(1);
   const [isRollDisabled, setIsRollDisabled] = React.useState(false);
@@ -43,8 +43,7 @@ function DiceRoller() {
 
   function doRoll () {
     const rollResult = roll(totalOfDices, explosionTarget);
-    console.log(rollResult)
-    console.log("oi")
+
     setIsRollDisabled(true);
     audioRef.current?.play();
   };
@@ -120,6 +119,3 @@ function DiceRoller() {
 }
 
 // Componente para exibir os dados rolados
-
-
-export default DiceRoller;

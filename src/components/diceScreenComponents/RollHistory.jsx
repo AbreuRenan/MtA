@@ -41,7 +41,7 @@ export default function RollHistory({ single = false }) {
         <></>
       ) : (
         rollsHistoryData?.map((item, index) => {
-          const numOfOnes = item?.roll.filter((roll) => roll === 1).length;
+          const numOfOnes = item?.roll?.filter((roll) => roll === 1).length;
           let falhaMizeravi = false;
           if (item?.sucessos === 0 && numOfOnes === 0) {
             falhaMizeravi = "Nenhum Sucesso";
@@ -50,7 +50,7 @@ export default function RollHistory({ single = false }) {
             falhaMizeravi = "Falhou Mizeravi";
           }
 
-          const rollString = item?.roll.map((i, index) => {
+          const rollString = item?.roll?.map((i, index) => {
             if (index !== item?.roll.length - 1) return ` ${i}`;
             return ` ${i}`;
           });

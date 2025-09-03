@@ -6,11 +6,11 @@ export default function RollDisplay({ rolls }) {
   return (
     <div className={styles?.rollDisplayArea}>
       {rolls?.map((roll, index) => (    
+        <div key={index} >
+          <span  className={`${getDiceSpanStyle(roll, styles)}`}>{roll}</span>
+          <div  className={`${getDiceStyle(roll, styles)} `}></div>
+        </div>
 
-        <span key={index} className={`${getDiceStyle(roll, styles)}`}>
-          {roll}
-          {console.log(getDiceStyle(roll))}
-        </span>
       ))}
     </div>
   );
@@ -18,8 +18,14 @@ export default function RollDisplay({ rolls }) {
 
 // Estiliza os dados baseado no valor
 function getDiceStyle(value) {
-  if (value >= 10) return 'gd-dice dice';
-  if (value >= 8) return 'bd-dice dice';
-  if (value === 1) return 'rd-dice dice';
-  return 'yd-dice dice';
+  if (value >= 10) return 'gd-dice dice animateRoll';
+  if (value >= 8) return 'bd-dice dice animateRoll';
+  if (value === 1) return 'rd-dice dice animateRoll';
+  return 'yd-dice dice animateRoll';
+}
+function getDiceSpanStyle(value) {
+  if (value >= 10) return 'gd';
+  if (value >= 8) return 'bd';
+  if (value === 1) return 'rd';
+  return 'yd';
 }

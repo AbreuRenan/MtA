@@ -306,3 +306,15 @@ div:global(.qtdSucesso) > span:nth-child(1) {
   color: black;
   /* font-family: var(--magoFont); */
 }
+
+@keyframes animateRoll {
+  0% {
+    transform: rotate(-360deg)
+  }
+  100% {
+    transform: rotate(0deg)
+  }
+}
+:global(.animateRoll) {
+  animation: animateRoll 650ms ease-in-out 100ms forwards;
+}

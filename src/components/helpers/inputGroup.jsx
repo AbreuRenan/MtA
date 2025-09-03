@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../../styles/spellcalc.module.css";
 
-export default function InputGroup({label,value: estateValue,setValue,min = 1,max = 10,childInputContainer = false, 
+export default function InputGroup({label,value: estateValue,setValue,min = 0,max = 10,childInputContainer = false, 
   childContainerClass,children, ...props})  {
 
   const handleBtnAddOrRemove = (e) => {

@@ -8,9 +8,11 @@ export default function useDiceRoll() {
 
   const makeRoll = (numberOfDices, explosionTarget = 10) => {
     const rolls = [];
+    let dicesToRoll = Math.max(1, numberOfDices)
     let explosions = 0;
+    
 
-    for (let i = 0; i < numberOfDices; i++) {
+    for (let i = 0; i < dicesToRoll; i++) {
       const currentRoll = rollDice();
       rolls.push(currentRoll);
       if (currentRoll >= explosionTarget) explosions++;

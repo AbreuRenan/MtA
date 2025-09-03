@@ -3,7 +3,6 @@ export default function roll() {
   const resultadoRolagem = makeRoll(inputNumberOfDices.value);
   const dataRolagem = new Date();
   const successThreshold = inputNumberOfDices.value > 0 ? 8 : 10
-
   const resultado = {
     hash: "#" + Math.random().toString(16).slice(8),
     date: `${
@@ -22,18 +21,20 @@ export default function roll() {
     rolagem: [...resultadoRolagem],
     sucessos: [...resultadoRolagem].filter( roll => roll >= successThreshold).length
   };
+
   clearDisplayArea();
   updateHistory(resultado, inputNumberOfDices.value);
   playDiceSound();
   return resultado;
 }
-function rollDice(qtdOfSides = 10) {
+
+function rollDice(qtdOfSides = 10, bonus = 1) {
   const min = 1;
-  const max = qtdOfSides + 1;
+  const max = qtdOfSides + bonus;
   const roll = Math.floor(Math.random() * (max - min) + min);
   return roll > 10 ? 10 : roll;
 }
-function makeRoll(numberOfDices) {
+function makeRoll(numberOfDices, cheatBonus = 1) {
   const rolls = [];
   let numToExplod = getExplosionTargetNum();
   if (numberOfDices > 0) {
@@ -133,7 +134,7 @@ function fillDisplayRoll(diceRolled, successesTargetNum) {
     { transform: "rotate(0deg)" },
   ];
   const timer = {
-    duration: delay,
+    duration: delay, 
     fill: "forwards",
   };
 
