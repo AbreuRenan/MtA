@@ -68,7 +68,7 @@ export default function ResumoMagia(props) {
             <p>
               - Área:<b> {exibirEscala.area}</b>
             </p>
-            <p>
+            <p className={styles.tooltipParent}>
               - Tamanho:<b> {exibirEscala.tamanhos}</b>
               <span className={styles.tooltip}> {exibirTextoPorTamanho}</span>
             </p>

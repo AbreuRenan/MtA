@@ -72,7 +72,7 @@ export default function useResumoMagiaCalcs(
   );
   const textoEscalaElevada = React.useMemo(
     () => ({
-      alvos: 5 * Math.max(1,(2 ** Math.max(0, escala - 1))),
+      alvos: 5 * Math.max(1, 2 ** Math.max(0, escala - 1)),
       tamanhos: escala * 5,
       area: [
         "Edifício Pequeno",
@@ -99,8 +99,8 @@ export default function useResumoMagiaCalcs(
       12: "Tubarão, Carro de luxo",
       15: "SUV, Elefante",
       20: "Avião leve, Iate, Caminhão semirreboque",
-      25: "Caminhão basculante, Casa flutuante, Ônibus de turismo, Caminhão com carreta",
-      30: "Baleia",
+      25: "Caminhão basculante, Ônibus de turismo",
+      30: "Baleia, Caminhão com carreta",
       35: "Baleia Azul pequena, Trem de carga curto",
       40: "Baleia Azul adulta, Locomotiva",
       45: "Trem de carga longo, Avião de carga pequeno",
@@ -121,45 +121,13 @@ export default function useResumoMagiaCalcs(
 
   const exibirTextoPorTamanho = React.useMemo(() => {
     const { tamanhos } = escalaElevada ? textoEscalaElevada : textoEscalaPadrao;
-    let tamanhosEncontrados = {}
+    let tamanhosEncontrados = {};
 
     function lookupTamanho(tamanhos, tamanhoProcurado) {
-      if (tamanhos[tamanhoProcurado]) {
-        tamanhosEncontrados = {
-          valor: tamanhos[tamanhoProcurado],
-          anterior: null,
-          posterior: null,
-        };
-        return tamanhosEncontrados.valor
-      }
-      const chaves = Object.keys(tamanhos).map(Number).sort((a, b) => a - b);
-
-      let anterior = null;
-      let posterior = null;
-      for (let i = 0; i < chaves.length; i++) {
-        const chave = chaves[i];
-        if (chave < tamanhoProcurado) {
-          anterior = chave;
-        } else if (chave > tamanhoProcurado) {
-          posterior = chave;
-          break;
-        }
-      }
-
-      tamanhosEncontrados = {
-        valor: null,
-        anterior:
-          anterior !== null
-            ? { chave: anterior, valor: tamanhos[anterior] }
-            : null,
-        posterior:
-          posterior !== null
-            ? { chave: posterior, valor: tamanhos[posterior] }
-            : null,
-      };
-
-      return `Maior que:${tamanhosEncontrados.anterior.valor}  \nMenor que: ${tamanhosEncontrados.posterior.valor}`
+      if(tamanhos[tamanhoProcurado]) return tamanhos[tamanhoProcurado]
+      return "Fora de Escala"
     }
+    return lookupTamanho(textoParaTamanhos, tamanhos);
   }, [
     escalaElevada,
     textoEscalaElevada,
@@ -218,7 +186,7 @@ export default function useResumoMagiaCalcs(
     const indexDeTempoConjuracaoBaseadoNaGnose = Math.max(
       0,
       Math.ceil(gnose / 2) - 1
-    ); 
+    );
     const maxNivelTempoConjuracao = currentFP === "tempoConjuracao" ? 100 : 6;
     if (tempoConjuracaoElevada) return "AGORA!";
 

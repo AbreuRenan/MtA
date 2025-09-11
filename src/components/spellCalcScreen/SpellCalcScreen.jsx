@@ -120,7 +120,8 @@ export default function SpellCalcScreen() {
     escalaElevada,
     duracaoElevada,
     tempoConjuracao,
-    tempoConjuracaoElevada
+    tempoConjuracaoElevada,
+    
   );
 
   const mageDataProps = {

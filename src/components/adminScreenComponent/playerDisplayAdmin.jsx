@@ -4,7 +4,8 @@ import styles from "./adminStyles.module.css";
 import InputGroup from "../helpers/inputGroup";
 
 export default function PlayerDisplayAdmin({ player, onUpdatePlayer }) {
-  return (
+  if (player.active === false) null
+  if (player.active === true) return (
     <div className={styles.divContainerStyle}>
       <h1>{player?.nome ? player.nome : "Jogador Não Selecionado"}</h1>
       <div className={styles.expContainer}>

@@ -65,12 +65,26 @@
   font-size: .7rem;
 }
 .resumoMagia {
+  position: relative;
   text-align: center;
   display: grid;
   grid-template-columns: 55% 45%;
   gap: 10px;
 }
-
+.resumoMagia .tooltipParent .tooltip {
+  display: none;
+}
+.resumoMagia .tooltipParent:hover .tooltip {
+  display: flex;
+  position: absolute;
+  top: -50%;
+  left: 5%;
+  background-color: black;
+  padding: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--amarelo);
+  box-shadow: 0 0 10px 2px var(--amarelo)
+}
 .resumoMagia .notelevada::before {
   content: " ◌ ";
   color: var(--amarelo)
