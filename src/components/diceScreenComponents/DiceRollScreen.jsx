@@ -67,6 +67,7 @@ export default function DiceRollScreen() {
             value={totalOfDices}
             className={styles.inputVal}
             onChange={(e) => setTotalOfDices(Number(e.target.value))}
+            max={100}
           />
           <button className={styles.btnVal} onClick={() => modifyDiceVal(+1)}>
             +1
