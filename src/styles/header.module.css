@@ -64,5 +64,5 @@ header {
   left: 50%;
   transform: translateX(-50%);
   filter: brightness(1.2) saturate(2);
-  z-index: -100;
+  z-index: 1;
 }

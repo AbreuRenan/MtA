@@ -16,10 +16,8 @@ export default function SpellDataComponent(props) {
     tempoConjuracao,
     setTempoConjuracao,
     page,
-    setCustoVontade,
     currentFP,
     setCurrentFP,
-    setCustoElevacoes,
     potenciaElevada,
     setPotenciaElevada,
     duracaoElevada,
@@ -41,8 +39,6 @@ export default function SpellDataComponent(props) {
       escala: setEscala,
       alcance: setAlcance,
       tempoConjuracao: setTempoConjuracao,
-      custoVontade: setCustoVontade,
-      custoElevacoes: setCustoElevacoes,
       potenciaElevada: setPotenciaElevada,
       duracaoElevada: setDuracaoElevada,
       escalaElevada: setEscalaElevada,
@@ -56,8 +52,6 @@ export default function SpellDataComponent(props) {
       setEscala,
       setTempoConjuracao,
       setAlcance,
-      setCustoVontade,
-      setCustoElevacoes,
       setPotenciaElevada,
       setDuracaoElevada,
       setEscalaElevada,
@@ -66,20 +60,6 @@ export default function SpellDataComponent(props) {
       setExtraElevacoes,
     ]
   );
-
-  function calcularTotalElevacoes() {
-    const elevacoes = [
-      potenciaElevada,
-      duracaoElevada,
-      escalaElevada,
-      alcanceElevado,
-      tempoConjuracaoElevada,
-      extraElevacoes,
-    ];
-    // valores true são considerados 1, false são 0
-    const total = elevacoes.reduce((acc, curr) => acc + curr, 0);
-    setCustoElevacoes(total);
-  }
 
   function toggleRadioBtnAlcance(e) {
     const inputName = e.target.id;
@@ -117,18 +97,6 @@ export default function SpellDataComponent(props) {
       setValue[currentFP](nivelArcana);
     }
   }, [nivelArcana, currentFP, setValue]);
-
-  React.useEffect(() => {
-    calcularTotalElevacoes();
-  }, [
-    potenciaElevada,
-    duracaoElevada,
-    escalaElevada,
-    alcanceElevado,
-    tempoConjuracaoElevada,
-    setCustoElevacoes,
-    extraElevacoes,
-  ]);
 
   return (
     <div className="page" data-page={page}>

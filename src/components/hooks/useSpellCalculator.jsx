@@ -1,63 +1,80 @@
-// hooks/useSpellCalculator.js (Crie este arquivo)
 import React from "react";
+import * as spellLogic from "../../js/spellLogic";
+import * as spellReducer from "../../js/spellReducer";
 
 export default function useSpellCalculator() {
-  // === ESTADOS ===
-  // Estados relacionados a dados do Mago
-  const [page, setPage] = React.useState(1);
-  const [gnose, setGnose] = React.useState(1);
-  const [nivelArcana, setNivelArcana] = React.useState(1);
-  const [nivelRequerido, setNivelRequerido] = React.useState(1);
-  const [magiasAtivas, setMagiasAtivas] = React.useState(0);
-  const [spellType, setSpellType] = React.useState("improvisado");
-  const [regente, setRegente] = React.useState(true);
+  const [state, dispatch] = React.useReducer(spellReducer.spellReducer, spellReducer.initialState);
 
-  // Estados relacionados a dados do Feitiço
-  const [potencia, setPotencia] = React.useState(1);
-  const [duracao, setDuracao] = React.useState(1);
-  const [escala, setEscala] = React.useState(1);
-  const [alcance, setAlcance] = React.useState("toque");
-  const [tempoConjuracao, setTempoConjuracao] = React.useState(1);
-  const [currentFP, setCurrentFP] = React.useState("potencia"); // Foco Principal
-  const [potenciaElevada, setPotenciaElevada] = React.useState(false);
-  const [duracaoElevada, setDuracaoElevada] = React.useState(false);
-  const [escalaElevada, setEscalaElevada] = React.useState(false);
-  const [alcanceElevado, setAlcanceElevado] = React.useState(false);
-  const [tempoConjuracaoElevada, setTempoConjuracaoElevada] =
-    React.useState(false);
-  const [extraElevacoes, setExtraElevacoes] = React.useState(0);
-  const [isCombinado, setIsCombinado] = React.useState(0); // Assumo que 0 ou 1
-  const [yantras, setYantras] = React.useState(0);
-  const [usouFV, setUsouFdV] = React.useState(false);
-  const [mitigarDadosParadoxoMana, setMitigarDadosParadoxoMana] =
-    React.useState(0);
-  const [mitigarTodoParadoxoMana, setMitigarTodoParadoxoMana] =
-    React.useState(false);
-  const [manaOpcional, setManaOpcional] = React.useState(0);
+  // === WRAPPER SETTERS PARA MANTER A API IGUAL ===
+  const setPage = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'page', value: typeof value === 'function' ? value(state.page) : value } }), [state.page]);
+  const setGnose = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'gnose', value: typeof value === 'function' ? value(state.gnose) : value } }), [state.gnose]);
+  const setNivelArcana = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'nivelArcana', value: typeof value === 'function' ? value(state.nivelArcana) : value } }), [state.nivelArcana]);
+  const setNivelRequerido = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'nivelRequerido', value: typeof value === 'function' ? value(state.nivelRequerido) : value } }), [state.nivelRequerido]);
+  const setMagiasAtivas = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'magiasAtivas', value: typeof value === 'function' ? value(state.magiasAtivas) : value } }), [state.magiasAtivas]);
+  const setSpellType = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'spellType', value: typeof value === 'function' ? value(state.spellType) : value } }), [state.spellType]);
+  const setRegente = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'regente', value: typeof value === 'function' ? value(state.regente) : value } }), [state.regente]);
+  
+  const setPotencia = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'potencia', value: typeof value === 'function' ? value(state.potencia) : value } }), [state.potencia]);
+  const setDuracao = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'duracao', value: typeof value === 'function' ? value(state.duracao) : value } }), [state.duracao]);
+  const setEscala = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'escala', value: typeof value === 'function' ? value(state.escala) : value } }), [state.escala]);
+  const setAlcance = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'alcance', value: typeof value === 'function' ? value(state.alcance) : value } }), [state.alcance]);
+  const setTempoConjuracao = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'tempoConjuracao', value: typeof value === 'function' ? value(state.tempoConjuracao) : value } }), [state.tempoConjuracao]);
+  const setCurrentFP = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'currentFP', value: typeof value === 'function' ? value(state.currentFP) : value } }), [state.currentFP]);
+  
+  const setPotenciaElevada = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'potenciaElevada', value: typeof value === 'function' ? value(state.potenciaElevada) : value } }), [state.potenciaElevada]);
+  const setDuracaoElevada = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'duracaoElevada', value: typeof value === 'function' ? value(state.duracaoElevada) : value } }), [state.duracaoElevada]);
+  const setEscalaElevada = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'escalaElevada', value: typeof value === 'function' ? value(state.escalaElevada) : value } }), [state.escalaElevada]);
+  const setAlcanceElevado = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'alcanceElevado', value: typeof value === 'function' ? value(state.alcanceElevado) : value } }), [state.alcanceElevado]);
+  const setTempoConjuracaoElevada = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'tempoConjuracaoElevada', value: typeof value === 'function' ? value(state.tempoConjuracaoElevada) : value } }), [state.tempoConjuracaoElevada]);
+  
+  const setExtraElevacoes = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'extraElevacoes', value: typeof value === 'function' ? value(state.extraElevacoes) : value } }), [state.extraElevacoes]);
+  const setIsCombinado = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'isCombinado', value: typeof value === 'function' ? value(state.isCombinado) : value } }), [state.isCombinado]);
+  const setYantras = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'yantras', value: typeof value === 'function' ? value(state.yantras) : value } }), [state.yantras]);
+  const setUsouFdV = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'usouFV', value: typeof value === 'function' ? value(state.usouFV) : value } }), [state.usouFV]);
+  const setMitigarDadosParadoxoMana = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'mitigarDadosParadoxoMana', value: typeof value === 'function' ? value(state.mitigarDadosParadoxoMana) : value } }), [state.mitigarDadosParadoxoMana]);
+  const setMitigarTodoParadoxoMana = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'mitigarTodoParadoxoMana', value: typeof value === 'function' ? value(state.mitigarTodoParadoxoMana) : value } }), [state.mitigarTodoParadoxoMana]);
+  const setManaOpcional = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'manaOpcional', value: typeof value === 'function' ? value(state.manaOpcional) : value } }), [state.manaOpcional]);
+  const setDadosExtras = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'dadosExtras', value: typeof value === 'function' ? value(state.dadosExtras) : value } }), [state.dadosExtras]);
 
-  // Estados de Custo e Resultados
-  const [custoMana, setCustoMana] = React.useState(0);
-  const [custoVontade, setCustoVontade] = React.useState(0);
-  const [custoElevacoes, setCustoElevacoes] = React.useState(0); // Este custo precisa ser calculado
+  // Facilita o uso do state para os cálculos derivados abaixo
+  const {
+    gnose, nivelArcana, nivelRequerido, magiasAtivas, spellType, regente,
+    potencia, duracao, escala, alcance, tempoConjuracao, currentFP,
+    potenciaElevada, duracaoElevada, escalaElevada, alcanceElevado, tempoConjuracaoElevada,
+    extraElevacoes, isCombinado, yantras, usouFV, mitigarDadosParadoxoMana,
+    mitigarTodoParadoxoMana, manaOpcional, dadosExtras, page
+  } = state;
 
-  const [paradaDeDados, setParadaDeDados] = React.useState(0);
-  const [dadosExtras, setDadosExtras] = React.useState(0);
-  const [totalDadosParadoxo, setTotalDadosParadoxo] = React.useState(0);
+  // === CÁLCULOS DERIVADOS (MEMO) ===
+  const MagoData = React.useMemo(() => ({ gnose, nivelArcana, nivelRequerido }), [gnose, nivelArcana, nivelRequerido]);
+  const Fatores = React.useMemo(() => ({ potencia, duracao, escala, alcance, tempoConjuracao }), [potencia, duracao, escala, alcance, tempoConjuracao]);
 
-  // === FUNÇÕES DE CÁLCULO ===
+  const custoElevacoes = React.useMemo(() => {
+    const custoPorExcessomMagiasAtivas = magiasAtivas >= gnose ? ((1 + magiasAtivas) - gnose) : 0;
+    let totalElevacoesCalculadas = 0;
+    if (potenciaElevada) totalElevacoesCalculadas++;
+    if (duracaoElevada) totalElevacoesCalculadas++;
+    if (escalaElevada) totalElevacoesCalculadas++;
+    if (tempoConjuracaoElevada) totalElevacoesCalculadas++;
+    if (alcanceElevado) totalElevacoesCalculadas += 1;
+    totalElevacoesCalculadas += extraElevacoes;
+    totalElevacoesCalculadas += custoPorExcessomMagiasAtivas;
+    return totalElevacoesCalculadas;
+  }, [potenciaElevada, duracaoElevada, escalaElevada, tempoConjuracaoElevada, extraElevacoes, alcanceElevado, magiasAtivas, gnose]);
+
+  const custoVontade = usouFV ? 1 : 0;
+
+  // === FUNÇÕES DE CÁLCULO (CALLBACKS) ===
   const toggleRegente = React.useCallback((e) => {
     setRegente(e.target.checked);
   }, []);
 
   const toggleUsouFV = React.useCallback((e) => {
-    // 'e' aqui deve ser o valor booleano
     setUsouFdV(e);
   }, []);
 
   const calcularElevacoesGratis = React.useCallback(() => {
-    const nivelArcanaEfetivo = spellType === "rote" ? 5 : nivelArcana;
-    const elevacoesGratis = nivelArcanaEfetivo - nivelRequerido + 1;
-    return elevacoesGratis;
+    return spellLogic.calculateFreeReach(nivelArcana, nivelRequerido, spellType);
   }, [spellType, nivelArcana, nivelRequerido]);
 
   const calcularElevacoesExcedentes = React.useCallback(() => {
@@ -66,201 +83,91 @@ export default function useSpellCalculator() {
   }, [custoElevacoes, calcularElevacoesGratis]);
 
   const calcularElevacoesTotais = React.useCallback(() => {
-    return calcularElevacoesGratis() - custoElevacoes
+    return calcularElevacoesGratis() - custoElevacoes;
   }, [calcularElevacoesGratis, custoElevacoes]);
 
   const calcularDadosParadoxo = React.useCallback(() => {
-    const dadosPorGnose = Math.ceil(gnose / 2);
-    const elevacoesExcedentes = calcularElevacoesExcedentes();
-    let dadosDeParadoxo = elevacoesExcedentes * dadosPorGnose;
-    return Math.max(0, dadosDeParadoxo);
-  }, [gnose, calcularElevacoesExcedentes]);
+    return spellLogic.calculateParadoxDice(gnose, calcularElevacoesGratis(), custoElevacoes);
+  }, [gnose, calcularElevacoesGratis, custoElevacoes]);
 
   const calcularTotalDadosParadoxo = React.useCallback(() => {
     let dadosParadoxo = calcularDadosParadoxo();
     let dadosMitigacao = mitigarDadosParadoxoMana;
-    // Omiti mitigarTodoParadoxoMana aqui, pois o efeito para mitigarDadosParadoxoMana
-    // já cuida disso antes de chegar a essa função.
     return dadosParadoxo - dadosMitigacao;
   }, [mitigarDadosParadoxoMana, calcularDadosParadoxo]);
 
   const calcularDadosPorFator = React.useCallback(() => {
-    let penalidadePotencia = potencia === 1 ? 0 : (potencia - 1) * 2;
-    let penalidadeDuracao = duracao === 1 ? 0 : (duracao - 1) * 2;
-    let penalidadeEscala = escala === 1 ? 0 : (escala - 1) * 2;
-
-    if (currentFP === "potencia" ) penalidadePotencia = potencia <= nivelArcana ? 0 : (potencia - nivelArcana) * 2;
-    if (currentFP === "duracao" ) penalidadeDuracao = duracao <= nivelArcana ? 0 : (duracao - nivelArcana) * 2;
-    if (currentFP === "escala") penalidadeEscala = escala <= nivelArcana ? 0 : (escala - nivelArcana) * 2;
-
-    const dadoPenalidadeTotal =
-      Math.max(0, penalidadePotencia) +
-      Math.max(0, penalidadeDuracao) +
-      Math.max(0, penalidadeEscala);
-    return dadoPenalidadeTotal;
-  }, [potencia,duracao,escala,currentFP,nivelArcana]);
+    return spellLogic.calculateFactorPenalty({ potencia, duracao, escala, currentFP, nivelArcana });
+  }, [potencia, duracao, escala, currentFP, nivelArcana]);
 
   const calcularParadaDeDados = React.useCallback(() => {
-    let dadosIniciais = gnose + nivelArcana + yantras + dadosExtras;
-    const penalidadePorFator = calcularDadosPorFator();
-    const combinado = isCombinado * 2;
-    let totalDados = dadosIniciais - penalidadePorFator - combinado;
-    if (usouFV) totalDados += 3;
-
-    // Lógica do Tempo de Conjuracao
-    if (!tempoConjuracaoElevada && currentFP !== "tempoConjuracao") {
-      totalDados = totalDados + Math.min(5, tempoConjuracao - 1);
-    } else if (!tempoConjuracaoElevada && currentFP === "tempoConjuracao") {
-      totalDados = totalDados + Math.max(0, tempoConjuracao - 1);
-    }
-
-    // setParadaDeDados(totalDados); // Não setar estado aqui dentro de uma função de cálculo
-    return totalDados;
+    const factorPenalty = calcularDadosPorFator();
+    return spellLogic.calculateDicePool({
+      gnose, nivelArcana, yantras, dadosExtras, isCombinado, usouFV,
+      tempoConjuracao, tempoConjuracaoElevada, currentFP, factorPenalty
+    });
   }, [
-    gnose,
-    nivelArcana,
-    yantras,
-    dadosExtras,
-    calcularDadosPorFator,
-    isCombinado,
-    usouFV,
-    tempoConjuracao,
-    tempoConjuracaoElevada,
-    currentFP,
+    gnose, nivelArcana, yantras, dadosExtras, isCombinado, usouFV,
+    tempoConjuracao, tempoConjuracaoElevada, currentFP, calcularDadosPorFator
   ]);
 
   const calcularGastoMana = React.useCallback(() => {
-    let totalMana = 0;
-    if (alcance === "simpatico") {
-      totalMana += 1;
-    }
-    if (!regente) {
-      totalMana += 1;
-    }
-    if(duracaoElevada && duracao >= 6) {
-      totalMana += 1
-    }
-    totalMana += manaOpcional;
-
-    const dadosParadoxoGerados = calcularDadosParadoxo();
-    let manaParaParadoxo = 0;
-    if (mitigarTodoParadoxoMana) {
-      manaParaParadoxo = dadosParadoxoGerados;
-    } else {
-      manaParaParadoxo = Math.max(0, mitigarDadosParadoxoMana);
-    }
-
-    totalMana += manaParaParadoxo;
-    return totalMana;
+    const paradoxDice = calcularDadosParadoxo();
+    return spellLogic.calculateManaCost({
+      alcance, regente, duracao, duracaoElevada, manaOpcional,
+      paradoxDice, mitigarTodoParadoxo: mitigarTodoParadoxoMana,
+      mitigarDadosParadoxo: mitigarDadosParadoxoMana
+    });
   }, [
-    alcance,
-    regente,
-    manaOpcional,
-    calcularDadosParadoxo,
-    mitigarTodoParadoxoMana,
-    mitigarDadosParadoxoMana,
+    alcance, regente, duracao, duracaoElevada, manaOpcional,
+    calcularDadosParadoxo, mitigarTodoParadoxoMana, mitigarDadosParadoxoMana
   ]);
 
-  const MagoData = React.useMemo( () => ({gnose, nivelArcana, nivelRequerido}), [gnose, nivelArcana, nivelRequerido])
-  const Fatores = React.useMemo( () => ({potencia, duracao, escala, alcance, tempoConjuracao}), [potencia, duracao, escala, alcance, tempoConjuracao]) 
-  const ModificamElevacao = React.useMemo(() =>( {magiasAtivas, potenciaElevada, duracaoElevada, escalaElevada, tempoConjuracaoElevada, extraElevacoes, calcularElevacoesGratis,custoElevacoes}), [magiasAtivas, potenciaElevada, duracaoElevada, escalaElevada, tempoConjuracaoElevada, extraElevacoes, calcularElevacoesGratis,custoElevacoes]) 
+  // === VALORES FINAIS (MEMO) ===
+  const ModificamElevacao = React.useMemo(() => ({
+    magiasAtivas, potenciaElevada, duracaoElevada, escalaElevada,
+    tempoConjuracaoElevada, extraElevacoes, calcularElevacoesGratis, custoElevacoes
+  }), [magiasAtivas, potenciaElevada, duracaoElevada, escalaElevada, tempoConjuracaoElevada, extraElevacoes, calcularElevacoesGratis, custoElevacoes]);
+
+  const custoMana = React.useMemo(() => {
+    return Math.max(0, calcularGastoMana());
+  }, [calcularGastoMana]);
+
+  const totalDadosParadoxo = React.useMemo(() => {
+    return Math.max(0, calcularTotalDadosParadoxo());
+  }, [calcularTotalDadosParadoxo]);
+
+  const paradaDeDados = React.useMemo(() => {
+    return calcularParadaDeDados();
+  }, [calcularParadaDeDados]);
 
 
-const saveSpellData = React.useCallback((spellName) => {
-    const spellDataObj = {
-      page, gnose, nivelArcana, nivelRequerido, magiasAtivas, spellType, regente,
-      potencia, duracao, escala, alcance, tempoConjuracao, currentFP,
-      potenciaElevada, duracaoElevada, escalaElevada, alcanceElevado, tempoConjuracaoElevada,
-      extraElevacoes, isCombinado, yantras, usouFV,
-      mitigarDadosParadoxoMana, mitigarTodoParadoxoMana, manaOpcional,
-    };
-   try {
-
-      const KEY = `spellCalculator_${spellName}`; 
-      localStorage.setItem(KEY, JSON.stringify(spellDataObj));
+  const saveSpellData = React.useCallback((spellName) => {
+    try {
+      const KEY = `spellCalculator_${spellName}`;
+      localStorage.setItem(KEY, JSON.stringify(state));
       console.log(`Dados da magia "${spellName}" salvos com sucesso!`);
     } catch (error) {
       console.error('Erro ao salvar dados da magia no localStorage:', error);
     }
-  }, [
-    page, gnose, nivelArcana, nivelRequerido, magiasAtivas, spellType, regente,
-    potencia, duracao, escala, alcance, tempoConjuracao, currentFP,
-    potenciaElevada, duracaoElevada, escalaElevada, alcanceElevado, tempoConjuracaoElevada,
-    extraElevacoes, isCombinado, yantras, usouFV,
-    mitigarDadosParadoxoMana, mitigarTodoParadoxoMana, manaOpcional
-  ]);
+  }, [state]);
 
   const loadSpellData = React.useCallback(() => {
     try {
       const savedData = localStorage.getItem('spellCalculatorData');
       if (savedData) {
         const spellDataObj = JSON.parse(savedData);
-        setPage(spellDataObj.page || 1); 
-        setGnose(spellDataObj.gnose || 1);
-        setNivelArcana(spellDataObj.nivelArcana || 1);
-        setNivelRequerido(spellDataObj.nivelRequerido || 1);
-        setMagiasAtivas(spellDataObj.magiasAtivas || 0);
-        setSpellType(spellDataObj.spellType || "improvisado");
-        setRegente(spellDataObj.regente !== undefined ? spellDataObj.regente : true); 
-        setPotencia(spellDataObj.potencia || 1);
-        setDuracao(spellDataObj.duracao || 1);
-        setEscala(spellDataObj.escala || 1);
-        setAlcance(spellDataObj.alcance || "toque");
-        setTempoConjuracao(spellDataObj.tempoConjuracao || 1);
-        setCurrentFP(spellDataObj.currentFP || "potencia");
-        setPotenciaElevada(spellDataObj.potenciaElevada !== undefined ? spellDataObj.potenciaElevada : false);
-        setDuracaoElevada(spellDataObj.duracaoElevada !== undefined ? spellDataObj.duracaoElevada : false);
-        setEscalaElevada(spellDataObj.escalaElevada !== undefined ? spellDataObj.escalaElevada : false);
-        setAlcanceElevado(spellDataObj.alcanceElevado !== undefined ? spellDataObj.alcanceElevado : false);
-        setTempoConjuracaoElevada(spellDataObj.tempoConjuracaoElevada !== undefined ? spellDataObj.tempoConjuracaoElevada : false);
-        setExtraElevacoes(spellDataObj.extraElevacoes || 0);
-        setIsCombinado(spellDataObj.isCombinado || 0);
-        setYantras(spellDataObj.yantras || 0);
-        setUsouFdV(spellDataObj.usouFV !== undefined ? spellDataObj.usouFV : false);
-        setMitigarDadosParadoxoMana(spellDataObj.mitigarDadosParadoxoMana || 0);
-        setMitigarTodoParadoxoMana(spellDataObj.mitigarTodoParadoxoMana !== undefined ? spellDataObj.mitigarTodoParadoxoMana : false);
-        setManaOpcional(spellDataObj.manaOpcional || 0);
-
+        dispatch({ type: 'LOAD_STATE', payload: spellDataObj });
         console.log('Dados da magia carregados com sucesso!');
       }
     } catch (error) {
       console.error('Erro ao carregar dados da magia do localStorage:', error);
-      // Opcional: chamar resetCalculadora() aqui se o carregamento falhar
     }
   }, []);
 
 
   const resetCalculadora = React.useCallback(() => {
-    setPage(1);
-    setGnose(1);
-    setNivelArcana(1);
-    setNivelRequerido(1);
-    setMagiasAtivas(0);
-    setSpellType("improvisado");
-    setRegente(true);
-    setPotencia(1);
-    setDuracao(1);
-    setEscala(1);
-    setAlcance("toque");
-    setTempoConjuracao(1);
-    setCurrentFP("potencia");
-    setPotenciaElevada(false);
-    setDuracaoElevada(false);
-    setEscalaElevada(false);
-    setAlcanceElevado(false);
-    setTempoConjuracaoElevada(false);
-    setExtraElevacoes(0);
-    setIsCombinado(0);
-    setYantras(0);
-    setUsouFdV(false);
-    setMitigarDadosParadoxoMana(0);
-    setMitigarTodoParadoxoMana(false);
-    setManaOpcional(0);
-    setCustoMana(0);
-    setCustoVontade(0);
-    setCustoElevacoes(0);
-    setParadaDeDados(0);
-    setTotalDadosParadoxo(0);
+    dispatch({ type: 'RESET' });
   }, []);
 
   // === EFFECTS PARA RECALCULAR ESTADOS DERIVADOS ===
@@ -274,59 +181,15 @@ const saveSpellData = React.useCallback((spellName) => {
   }, [nivelRequerido, nivelArcana]);
 
   React.useEffect(() => {
-    // Efeito para Calcular Parada de Dados
-    setParadaDeDados(calcularParadaDeDados());
-  }, [
-    calcularParadaDeDados,
-    // Todas as dependências que calcularParadaDeDados *realmente* precisa
-    // já estão no seu useCallback, então basta a função em si.
-  ]);
-
-  React.useEffect(() => {
-    // Efeito para controle do gasto de FV
-    setCustoVontade(usouFV ? 1 : 0);
-  }, [usouFV]); // regente não afeta custoVontade aqui
-
-  React.useEffect(() => {
-    // Efeito para Calcular custo de mana
-    setCustoMana(Math.max(0, calcularGastoMana()));
-  }, [calcularGastoMana]); // setCustoMana não é uma dependência necessária aqui
-
-  React.useEffect(() => {
     // Efeito para mitigar todo o paradoxo com mana
     if (mitigarTodoParadoxoMana) {
       const paradoxoDados = calcularDadosParadoxo();
       setMitigarDadosParadoxoMana(paradoxoDados);
     } else {
-      // Se desmarcado, resetar a mitigação, a menos que haja um valor que o usuário queira manter
-      setMitigarDadosParadoxoMana(0); // Ou deixar o valor anterior se for o caso
+      // Se desmarcado, resetar a mitigação
+      setMitigarDadosParadoxoMana(0);
     }
   }, [mitigarTodoParadoxoMana, calcularDadosParadoxo]);
-
-  React.useEffect(() => {
-    // Efeito para calcular total de dados de paradoxo
-    setTotalDadosParadoxo(Math.max(0, calcularTotalDadosParadoxo()));
-  }, [calcularTotalDadosParadoxo]); // Dependências da função já no useCallback
-
-
-React.useEffect(() => {
-    // Efeito para calcular total de Elevações
-    const custoPorExcessomMagiasAtivas = magiasAtivas >= gnose ? ((1 + magiasAtivas) - gnose) : 0;
-    let totalElevacoesCalculadas = 0;
-    if (potenciaElevada) totalElevacoesCalculadas++;
-    if (duracaoElevada) totalElevacoesCalculadas++;
-    if (escalaElevada) totalElevacoesCalculadas++;
-    if (tempoConjuracaoElevada) totalElevacoesCalculadas++;
-    if (alcanceElevado) totalElevacoesCalculadas += 1;
-    totalElevacoesCalculadas += extraElevacoes; 
-    totalElevacoesCalculadas += custoPorExcessomMagiasAtivas; 
-    setCustoElevacoes(totalElevacoesCalculadas);
-
-}, [
-    potenciaElevada, duracaoElevada, escalaElevada,
-    tempoConjuracaoElevada, extraElevacoes,
-    alcanceElevado, magiasAtivas, gnose 
-]);
   // === RETORNO DO HOOK ===
   return {
     // Objetos condensados para facilitar passar as props para outros componentes
@@ -387,18 +250,13 @@ React.useEffect(() => {
     setManaOpcional,
 
     custoMana,
-    setCustoMana,
     custoVontade,
-    setCustoVontade,
     custoElevacoes,
-    setCustoElevacoes, 
 
     paradaDeDados,
-    setParadaDeDados,
     dadosExtras,
     setDadosExtras,
     totalDadosParadoxo,
-    setTotalDadosParadoxo,
 
     // Funções de toggle e reset
     toggleRegente,

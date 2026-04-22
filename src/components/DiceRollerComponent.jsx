@@ -1,10 +1,11 @@
 import React from "react";
 import roll from "../js/dice";
+import DiceResult from "./diceScreenComponents/DiceResult";
 
 import styles from "../styles/diceRoller.module.css";
 import audioURL from "../assets/audio/diceRollRedux.mp3";
 
-import { set, onValue, ref, push } from "firebase/database";
+import { set, ref, push } from "firebase/database";
 import RollHistory from "./diceScreenComponents/RollHistory";
 import { AppContext } from "../AppContext";
 import { useSearchParams } from "react-router-dom";
@@ -14,8 +15,13 @@ function DiceRollerComponent() {
   const [totalOfDices, setTotalOfDices] = React.useState(0);
   const [DisableRoll, setDisableRoll] = React.useState(gameOpen ? false : true);
   const [rollReturn, setRollReturn] = React.useState(null);
+  
+  const [explosion8, setExplosion8] = React.useState(false);
+  const [explosion9, setExplosion9] = React.useState(false);
 
-  const [firestoreData, setFirestoreData] = React.useState([]);
+  const audioRef = React.useRef(null);
+  const containerRef = React.useRef(null);
+
   const rollHistoryDBRef = ref(firestore, "rollsHistory/");
 
   const [searchParams] = useSearchParams();
@@ -23,10 +29,12 @@ function DiceRollerComponent() {
   const paradaDeDadosNumero = parseInt(paradaDeDados, 10);
 
   React.useEffect(() => {
-    if (userData.role === "narrador") {
-      setDisableRoll(false)
-    } 
-  }, [gameOpen]);
+    if (userData?.role === "narrador") {
+      setDisableRoll(false);
+    } else {
+      setDisableRoll(!gameOpen);
+    }
+  }, [gameOpen, userData]);
 
   React.useEffect(() => {
     function saveRollOnFirebase({ hash, date, rolagem, sucessos }) {
@@ -42,31 +50,13 @@ function DiceRollerComponent() {
   }, [rollReturn]);
 
   React.useEffect(() => {
-    async function fecthFireStore() {
-      onValue(rollHistoryDBRef, (snapshot) => {
-        const data = snapshot.val();
-        setFirestoreData(data);
-      });
+    const audio = audioRef.current;
+    if (audio) {
+      audio.addEventListener("ended", stopDiceSound);
+      return () => {
+        audio.removeEventListener("ended", stopDiceSound);
+      };
     }
-
-    fecthFireStore();
-  }, [firestore]);
-
-  React.useEffect(() => {
-    const audioElement = document.getElementById("diceSound");
-    audioElement.addEventListener("ended", stopDiceSound);
-    const checkBoxes = Array.from(
-      document.querySelectorAll(".targetNumExplosion")
-    );
-    checkBoxes.forEach((checkbox) =>
-      checkbox.addEventListener("change", toggleCheckBox)
-    );
-    return () => {
-      audioElement.removeEventListener("ended", stopDiceSound);
-      checkBoxes.forEach((checkbox) =>
-        checkbox.removeEventListener("change", toggleCheckBox)
-      );
-    };
   }, []);
 
   React.useEffect( ()=> {
@@ -75,44 +65,39 @@ function DiceRollerComponent() {
 
   function stopDiceSound() {
     setDisableRoll(false);
-    const viewArea = document.querySelector("div.container");
-    viewArea.scrollTop = 0;
-  }
-  function toggleCheckBox(event) {
-    const currentCheckBox = event.target;
-    const siblingCheckBox = Array.from(
-      document.querySelectorAll(".targetNumExplosion")
-    ).filter((el) => el.id !== currentCheckBox.id)[0];
-    if (currentCheckBox.checked) siblingCheckBox.checked = false;
+    if (containerRef.current) {
+        containerRef.current.scrollTop = 0;
+    }
   }
 
   function modifyDiceVal({ target }) {
     const val = Number(target.value);
-    if (val < 0 && totalOfDices <= -5) {
-      return null;
-    } else {
-      setTotalOfDices((prev) => {
-        if (prev + val < -5) {
-          return -5;
-        } else {
-          return (prev += val);
-        }
-      });
-    }
+    setTotalOfDices((prev) => {
+      if (prev + val < -5) return -5;
+      return prev + val;
+    });
   }
+
   function handleChange({ target }) {
     const val = Number(target.value);
     setTotalOfDices(val);
   }
+
   function doRoll() {
-    const rollReturn = roll();
+    let explosionTarget = 10;
+    if (explosion8) explosionTarget = 8;
+    else if (explosion9) explosionTarget = 9;
+
+    const result = roll(totalOfDices, explosionTarget);
     setDisableRoll(true);
-    setRollReturn(rollReturn);
+    setRollReturn(result);
+    if (audioRef.current) {
+        audioRef.current.play();
+    }
   }
 
-
   return (
-    <div className={`${styles.bg} container`}>
+    <div ref={containerRef} className={`${styles.bg} container`}>
       <div className={`${styles.grid}`}>
         <center>
           <label htmlFor="numberDados">Quantidade de Dados</label>
@@ -161,7 +146,11 @@ function DiceRollerComponent() {
               id="explod8"
               name="explod8"
               type="checkbox"
-              value="8"
+              checked={explosion8}
+              onChange={(e) => {
+                  setExplosion8(e.target.checked);
+                  if (e.target.checked) setExplosion9(false);
+              }}
               className="targetNumExplosion"
             />
             <label htmlFor="explod8">Explosão do 8</label>
@@ -171,7 +160,11 @@ function DiceRollerComponent() {
               id="explod9"
               name="explod9"
               type="checkbox"
-              value="9"
+              checked={explosion9}
+              onChange={(e) => {
+                  setExplosion9(e.target.checked);
+                  if (e.target.checked) setExplosion8(false);
+              }}
               className="targetNumExplosion"
             />
             <label htmlFor="explod9">Explosão do 9</label>
@@ -185,8 +178,39 @@ function DiceRollerComponent() {
           Rolar!
         </button>
       </div>
-      <audio id="diceSound" src={audioURL}></audio>
-      <div id="rollDisplayArea" className={`${styles.rollDisplayArea}`}></div>
+      <audio ref={audioRef} id="diceSound" src={audioURL}></audio>
+      
+      <div id="rollDisplayArea" className={`${styles.rollDisplayArea}`}>
+          {rollReturn && rollReturn.rolagem.map((val, idx) => (
+              <DiceResult 
+                key={`${rollReturn.hash}-${idx}`}
+                value={val}
+                index={idx}
+                explosionTarget={rollReturn.explosionTarget}
+                successThreshold={rollReturn.successThreshold}
+              />
+          ))}
+
+          {rollReturn && (
+              rollReturn.sucessos === 0 && rollReturn.critFailDices > 0 ? (
+                  <div className="falhaCrit">
+                      <span>Falha Crítica!!!</span>
+                  </div>
+              ) : (
+                  <>
+                    <div className="qtdFalha">
+                        <span>{rollReturn.falhas}</span>
+                        <span>Quantidade de Falhas</span>
+                    </div>
+                    <div className="qtdSucesso">
+                        <span>{rollReturn.sucessos}</span>
+                        <span>Quantidade de Sucessos</span>
+                    </div>
+                  </>
+              )
+          )}
+      </div>
+
       <div className={`${styles.lastRolls}`}>
         <span>Ultimas Rolagens</span>
         <i>filtro</i>
