@@ -10,9 +10,10 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import useSpellCalculator from "../hooks/useSpellCalculator";
 import useResumoMagiaCalcs from "../hooks/useResumoMagiaCalcs";
+import { ref, update } from "firebase/database";
 
 export default function SpellCalcScreen() {
-  const { userData } = React.useContext(AppContext);
+  const { userData, database } = React.useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -307,6 +308,28 @@ Gasto de mana: ${custoMana}`;
     } catch(err) {
       console.error('Falha ao copiar:', err);
     }
+
+    if (userData && database) {
+      const userRefInDB = ref(database, `users/${userData.id}`);
+      const updates = {};
+      
+      if (custoMana > 0) {
+        updates["mana/usado"] = (userData.mana.usado || 0) + custoMana;
+      }
+      
+      if (custoVontade > 0) {
+        updates["fv/usado"] = (userData.fv.usado || 0) + custoVontade;
+      }
+
+      if (Object.keys(updates).length > 0) {
+        try {
+          await update(userRefInDB, updates);
+        } catch (e) {
+          console.error("Erro ao atualizar recursos no DB:", e);
+        }
+      }
+    }
+
     navigate(`/dice?paradaDeDados=${paradaDeDados}`);
   }
 
