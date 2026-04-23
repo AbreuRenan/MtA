@@ -92,11 +92,6 @@ export default function SpellDataComponent(props) {
     setValue[state](1);
   }
 
-  React.useEffect(() => {
-    if (currentFP && setValue[currentFP]) {
-      setValue[currentFP](nivelArcana);
-    }
-  }, [nivelArcana, currentFP, setValue]);
 
   return (
     <div className="page" data-page={page}>
