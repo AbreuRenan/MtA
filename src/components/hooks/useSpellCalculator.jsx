@@ -31,6 +31,7 @@ export default function useSpellCalculator() {
   const setIsCombinado = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'isCombinado', value: typeof value === 'function' ? value(state.isCombinado) : value } }), [state.isCombinado]);
   const setYantras = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'yantras', value: typeof value === 'function' ? value(state.yantras) : value } }), [state.yantras]);
   const setUsouFdV = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'usouFV', value: typeof value === 'function' ? value(state.usouFV) : value } }), [state.usouFV]);
+  const setFerramentaDedicada = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'ferramentaDedicada', value: typeof value === 'function' ? value(state.ferramentaDedicada) : value } }), [state.ferramentaDedicada]);
   const setMitigarDadosParadoxoMana = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'mitigarDadosParadoxoMana', value: typeof value === 'function' ? value(state.mitigarDadosParadoxoMana) : value } }), [state.mitigarDadosParadoxoMana]);
   const setMitigarTodoParadoxoMana = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'mitigarTodoParadoxoMana', value: typeof value === 'function' ? value(state.mitigarTodoParadoxoMana) : value } }), [state.mitigarTodoParadoxoMana]);
   const setManaOpcional = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'manaOpcional', value: typeof value === 'function' ? value(state.manaOpcional) : value } }), [state.manaOpcional]);
@@ -41,7 +42,7 @@ export default function useSpellCalculator() {
     gnose, nivelArcana, nivelRequerido, magiasAtivas, spellType, regente,
     potencia, duracao, escala, alcance, tempoConjuracao, currentFP,
     potenciaElevada, duracaoElevada, escalaElevada, alcanceElevado, tempoConjuracaoElevada,
-    extraElevacoes, isCombinado, yantras, usouFV, mitigarDadosParadoxoMana,
+    extraElevacoes, isCombinado, yantras, usouFV, ferramentaDedicada, mitigarDadosParadoxoMana,
     mitigarTodoParadoxoMana, manaOpcional, dadosExtras, page
   } = state;
 
@@ -92,9 +93,12 @@ export default function useSpellCalculator() {
 
   const calcularTotalDadosParadoxo = React.useCallback(() => {
     let dadosParadoxo = calcularDadosParadoxo();
+    if (ferramentaDedicada) {
+      dadosParadoxo = Math.max(0, dadosParadoxo - 2);
+    }
     let dadosMitigacao = mitigarDadosParadoxoMana;
     return dadosParadoxo - dadosMitigacao;
-  }, [mitigarDadosParadoxoMana, calcularDadosParadoxo]);
+  }, [mitigarDadosParadoxoMana, calcularDadosParadoxo, ferramentaDedicada]);
 
   const calcularDadosPorFator = React.useCallback(() => {
     return spellLogic.calculateFactorPenalty({ potencia, duracao, escala, currentFP, nivelArcana });
@@ -242,6 +246,8 @@ export default function useSpellCalculator() {
     setYantras,
     usouFV,
     setUsouFdV,
+    ferramentaDedicada,
+    setFerramentaDedicada,
     mitigarDadosParadoxoMana,
     setMitigarDadosParadoxoMana,
     mitigarTodoParadoxoMana,

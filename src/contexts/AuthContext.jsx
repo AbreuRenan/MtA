@@ -29,51 +29,32 @@ export function AuthProvider({ children }) {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
-        const userToIdRef = ref(database, `usersToId/${uid}`);
+        const userRef = ref(database, `users/${uid}`);
         
-        get(userToIdRef)
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              const userIdNum = snapshot.val();
-              const userRef = ref(database, `users/${userIdNum}`);
-              
-              const unsubscribeUser = onValue(userRef, (userSnapshot) => {
-                if (userSnapshot.exists()) {
-                  const fetchedUserData = userSnapshot.val();
-                  const finalUserData = { ...fetchedUserData, id: userIdNum, uid: uid };
-                  setUserData(finalUserData);
-                  saveLocalData(finalUserData);
-                  setLoggedIn(true);
-                } else {
-                  setUserData(null);
-                  localStorage.clear();
-                }
-                setDataLoadFinished(true);
-              }, (error) => {
-                console.error("User data fetch error:", error);
-                setUserData(null);
-                localStorage.clear();
-                setLoggedIn(false);
-                setDataLoadFinished(true);
-              });
-
-              return () => unsubscribeUser();
-            } else {
-              setUserData(null);
-              localStorage.clear();
-              setLoggedIn(false);
-              setDataLoadFinished(true);
-              navigate("/");
-            }
-          })
-          .catch((error) => {
-            console.error("Auth mapping error:", error);
+        const unsubscribeUser = onValue(userRef, (userSnapshot) => {
+          if (userSnapshot.exists()) {
+            const fetchedUserData = userSnapshot.val();
+            const finalUserData = { ...fetchedUserData, id: uid, uid: uid };
+            setUserData(finalUserData);
+            saveLocalData(finalUserData);
+            setLoggedIn(true);
+          } else {
             setUserData(null);
             localStorage.clear();
             setLoggedIn(false);
-            setDataLoadFinished(true);
             navigate("/");
-          });
+          }
+          setDataLoadFinished(true);
+        }, (error) => {
+          console.error("User data fetch error:", error);
+          setUserData(null);
+          localStorage.clear();
+          setLoggedIn(false);
+          setDataLoadFinished(true);
+          navigate("/");
+        });
+
+        return () => unsubscribeUser();
       } else {
         localStorage.clear();
         setUserData(null);

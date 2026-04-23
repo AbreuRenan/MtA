@@ -1,6 +1,6 @@
 import React from "react";
 import { AppContext } from "../../AppContext";
-import { onValue, ref } from "firebase/database";
+import { onValue, ref, query, limitToLast } from "firebase/database";
 
 import styles from "../../styles/rollHistory.module.css";
 
@@ -10,7 +10,7 @@ export default function RollHistory({ single = false }) {
   const [rollsHistoryData, setRollsHistoryData] = React.useState([]);
 
   function getRollsHistory() {
-    const rollsHistoryRef = ref(database, "rollsHistory");
+    const rollsHistoryRef = query(ref(database, "rollsHistory"), limitToLast(20));
     onValue(rollsHistoryRef, (snapshotRollsHistory) => {
       setSnapshotDataToState(snapshotRollsHistory.val());
     });

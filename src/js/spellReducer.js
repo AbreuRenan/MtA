@@ -25,6 +25,7 @@ export const initialState = {
   mitigarTodoParadoxoMana: false,
   manaOpcional: 0,
   dadosExtras: 0,
+  ferramentaDedicada: false,
 };
 
 export function spellReducer(state, action) {

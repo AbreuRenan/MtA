@@ -3,20 +3,26 @@ import InputGroup from "../helpers/inputGroup";
 import styles from "../../styles/spellcalc.module.css";
 
 export default function YantraDataComponent(props) {
-  const { gnose, page, setYantras } = props;
-  const qtdDeYantras = returnMaxYantrasPerGnose(gnose);
+  const { gnose, page, setYantras, ferramentaDedicada } = props;
+  const qtdDeYantras = returnMaxYantrasPerGnose(gnose, ferramentaDedicada);
   const [yantraValues, setYantraValues] = React.useState(() => {
     return Array(qtdDeYantras).fill(0);
   });
 
-  function returnMaxYantrasPerGnose(gnose) {
+  function returnMaxYantrasPerGnose(gnose, hasFerramenta) {
     const gnoseCelling = Math.ceil(gnose / 2) + 1;
-    return gnoseCelling;
+    return Math.max(0, gnoseCelling - (hasFerramenta ? 1 : 0));
   }
 
   React.useEffect(() => {
-    setYantraValues(Array(qtdDeYantras).fill(0));
-  }, [gnose, qtdDeYantras]);
+    setYantraValues((prev) => {
+      if (prev.length === qtdDeYantras) return prev;
+      if (prev.length > qtdDeYantras) {
+        return prev.slice(0, qtdDeYantras);
+      }
+      return [...prev, ...Array(qtdDeYantras - prev.length).fill(0)];
+    });
+  }, [qtdDeYantras]);
 
   React.useEffect(() => {
     const newYantraValues = yantraValues.reduce((acc, curr) => acc + curr, 0);

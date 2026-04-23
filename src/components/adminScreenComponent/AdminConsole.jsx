@@ -21,8 +21,9 @@ export default function AdminScreen() {
     const unsubscribe = onValue(usersRef, (snapshot) => {
       if (snapshot.exists()) {
         const playersList = snapshot.val();
-        const data = Object.values(playersList)
-          .filter((user) => user.role !== "narrador")
+        const data = Object.keys(playersList)
+          .map((key) => ({ ...playersList[key], id: key }))
+          .filter((user) => user?.role !== "narrador" && user?.nome)
           .sort((a, b) => {
             let fa = a.nome.toLowerCase();
             let fb = b.nome.toLowerCase();
@@ -59,11 +60,9 @@ export default function AdminScreen() {
 
   const handleDeleteHistory = () => {
     const rollsRef = ref(database, "rollsHistory");
-    remove(rollsRef)
-      .then(() => set(rollsRef, ""))
-      .catch((err) => {
-        console.log(err);
-      });
+    remove(rollsRef).catch((err) => {
+      console.log(err);
+    });
   };
 
   function handleOpenGame() {

@@ -29,15 +29,11 @@ export default function LoginScreen() {
   function performLoginFirebase() {
     if (auth && emailState && passwordState) {
       signInWithEmailAndPassword(auth, emailState, passwordState)
-        .then((userCredential) => {
-          console.log(userCredential)
-
-        })
         .catch((err) => {
           console.log(err);
           setErrorContextState(err);
         });
-        
+
     } else {
       console.log("not signed in with Email");
       setLoggedIn(false);
