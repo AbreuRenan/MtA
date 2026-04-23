@@ -51,14 +51,14 @@ export default function PlayerCompanion() {
   );
 
   const renderSimpleBoxes = React.useCallback((usado, max) => {
-    let countUsado = usado;
+    let countDisponivel = max - usado;
     return Array.from({ length: max }, () => {
-      if (countUsado > 0) {
-        countUsado--;
+      if (countDisponivel > 0) {
+        countDisponivel--;
         return 1;
       } else return 0;
     });
-  }, []); // Dependências vazias
+  }, []);
 
   React.useEffect(() => {
     if (userData && userData.vitalidade && userData.mana && userData.fv) {
@@ -142,11 +142,13 @@ export default function PlayerCompanion() {
       updateVitalidadeOnDB(newDanoObj);
 
     } else if (boxType === "fv") {
-      const newFvUsado = newBoxToChangeState.filter((item) => item === 1).length;
+      const availableFv = newBoxToChangeState.filter((item) => item === 1).length;
+      const newFvUsado = newBoxToChangeState.length - availableFv;
       updateFvOnDB(newFvUsado);
 
     } else if (boxType === "mana") {
-      const newManaUsado = newBoxToChangeState.filter((item) => item === 1).length;
+      const availableMana = newBoxToChangeState.filter((item) => item === 1).length;
+      const newManaUsado = newBoxToChangeState.length - availableMana;
       updateManaOnDB(newManaUsado);
     }
   }
@@ -156,8 +158,8 @@ export default function PlayerCompanion() {
        <h2 className={styles.playerTitle}>Olá {userData.nome}</h2>
        <div className={styles.playerStats}>
         <p>Vitalidade: {userData.vitalidade.max}</p>
-        <p>Vontade: {userData.fv.usado}/{userData.fv.max}</p>
-        <p>Mana: {userData.mana.usado}/{userData.mana.max}</p>
+        <p>Vontade: {userData.fv.max - userData.fv.usado}/{userData.fv.max}</p>
+        <p>Mana: {userData.mana.max - userData.mana.usado}/{userData.mana.max}</p>
        </div>
       <RenderPlayerUtilsBox
         boxToRender={vitalidadeBoxes}
