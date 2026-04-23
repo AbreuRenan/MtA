@@ -85,6 +85,8 @@ export default function SpellCalcScreen() {
     setDadosExtras,
     totalDadosParadoxo,
     setTotalDadosParadoxo,
+    maxManaMitigacao,
+    maxManaOpcional,
 
     // Funções
     toggleRegente,
@@ -206,6 +208,8 @@ export default function SpellCalcScreen() {
     dadosExtras,
     setDadosExtras,
     calcularDadosParadoxo,
+    maxManaMitigacao,
+    maxManaOpcional,
   };
   const getWhatsAppText = React.useCallback(() => {
     const pExtra = Math.max(0, potencia - 1);

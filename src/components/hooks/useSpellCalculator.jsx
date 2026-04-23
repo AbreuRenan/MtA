@@ -2,7 +2,7 @@ import React from "react";
 import * as spellLogic from "../../js/spellLogic";
 import * as spellReducer from "../../js/spellReducer";
 
-export default function useSpellCalculator() {
+export default function useSpellCalculator(userData) {
   const [state, dispatch] = React.useReducer(spellReducer.spellReducer, spellReducer.initialState);
 
   // === WRAPPER SETTERS PARA MANTER A API IGUAL ===
@@ -88,17 +88,18 @@ export default function useSpellCalculator() {
   }, [calcularElevacoesGratis, custoElevacoes]);
 
   const calcularDadosParadoxo = React.useCallback(() => {
-    return spellLogic.calculateParadoxDice(gnose, calcularElevacoesGratis(), custoElevacoes);
-  }, [gnose, calcularElevacoesGratis, custoElevacoes]);
+    let raw = spellLogic.calculateParadoxDice(gnose, calcularElevacoesGratis(), custoElevacoes);
+    if (ferramentaDedicada) {
+      raw = Math.max(0, raw - 2);
+    }
+    return raw;
+  }, [gnose, calcularElevacoesGratis, custoElevacoes, ferramentaDedicada]);
 
   const calcularTotalDadosParadoxo = React.useCallback(() => {
     let dadosParadoxo = calcularDadosParadoxo();
-    if (ferramentaDedicada) {
-      dadosParadoxo = Math.max(0, dadosParadoxo - 2);
-    }
-    let dadosMitigacao = mitigarDadosParadoxoMana;
-    return dadosParadoxo - dadosMitigacao;
-  }, [mitigarDadosParadoxoMana, calcularDadosParadoxo, ferramentaDedicada]);
+    let mitigacaoEfetiva = Math.min(dadosParadoxo, mitigarDadosParadoxoMana);
+    return Math.max(0, dadosParadoxo - mitigacaoEfetiva);
+  }, [mitigarDadosParadoxoMana, calcularDadosParadoxo]);
 
   const calcularDadosPorFator = React.useCallback(() => {
     return spellLogic.calculateFactorPenalty({ potencia, duracao, escala, currentFP, nivelArcana });
@@ -117,15 +118,37 @@ export default function useSpellCalculator() {
 
   const calcularGastoMana = React.useCallback(() => {
     const paradoxDice = calcularDadosParadoxo();
+    let mitigacaoEfetiva = Math.min(paradoxDice, mitigarDadosParadoxoMana);
     return spellLogic.calculateManaCost({
       alcance, regente, duracao, duracaoElevada, manaOpcional,
       paradoxDice, mitigarTodoParadoxo: mitigarTodoParadoxoMana,
-      mitigarDadosParadoxo: mitigarDadosParadoxoMana
+      mitigarDadosParadoxo: mitigacaoEfetiva
     });
   }, [
     alcance, regente, duracao, duracaoElevada, manaOpcional,
     calcularDadosParadoxo, mitigarTodoParadoxoMana, mitigarDadosParadoxoMana
   ]);
+
+  const initialMana = (userData?.mana?.max || 0) - (userData?.mana?.usado || 0);
+
+  const calcularBaseManaCost = React.useCallback(() => {
+    return spellLogic.calculateManaCost({
+      alcance, regente, duracao, duracaoElevada, manaOpcional: 0,
+      paradoxDice: 0, mitigarTodoParadoxo: false,
+      mitigarDadosParadoxo: 0
+    });
+  }, [alcance, regente, duracao, duracaoElevada]);
+
+  const totalDisponivelParaOpcionais = React.useMemo(() => {
+    return Math.max(0, initialMana - calcularBaseManaCost());
+  }, [initialMana, calcularBaseManaCost]);
+
+  const maxManaMitigacao = React.useMemo(() => {
+    const paradoxoDados = calcularDadosParadoxo();
+    return Math.min(paradoxoDados, totalDisponivelParaOpcionais);
+  }, [calcularDadosParadoxo, totalDisponivelParaOpcionais]);
+
+  const maxManaOpcional = totalDisponivelParaOpcionais;
 
   // === VALORES FINAIS (MEMO) ===
   const ModificamElevacao = React.useMemo(() => ({
@@ -185,15 +208,43 @@ export default function useSpellCalculator() {
   }, [nivelRequerido, nivelArcana]);
 
   React.useEffect(() => {
-    // Efeito para mitigar todo o paradoxo com mana
+    // Efeito para mitigar todo o paradoxo com mana respeitando o limite do usuario
     if (mitigarTodoParadoxoMana) {
-      const paradoxoDados = calcularDadosParadoxo();
-      setMitigarDadosParadoxoMana(paradoxoDados);
+      setMitigarDadosParadoxoMana(maxManaMitigacao);
     } else {
-      // Se desmarcado, resetar a mitigação
       setMitigarDadosParadoxoMana(0);
     }
-  }, [mitigarTodoParadoxoMana, calcularDadosParadoxo]);
+  }, [mitigarTodoParadoxoMana, maxManaMitigacao]);
+
+  const prevOptional = React.useRef(manaOpcional);
+  const prevMitigation = React.useRef(mitigarDadosParadoxoMana);
+
+  // Lógica de "Push and Pull": se a soma dos opcionais estourar o disponível, 
+  // o que acabou de ser alterado "empurra" o outro para baixo.
+  React.useEffect(() => {
+    const totalDisponivel = totalDisponivelParaOpcionais;
+    
+    if (manaOpcional !== prevOptional.current) {
+      // Usuário mexeu na Mana Opcional
+      if (manaOpcional + mitigarDadosParadoxoMana > totalDisponivel) {
+        setMitigarDadosParadoxoMana(Math.max(0, totalDisponivel - manaOpcional));
+      }
+      prevOptional.current = manaOpcional;
+    } else if (mitigarDadosParadoxoMana !== prevMitigation.current) {
+      // Usuário mexeu na Mitigação
+      if (manaOpcional + mitigarDadosParadoxoMana > totalDisponivel) {
+        setManaOpcional(Math.max(0, totalDisponivel - mitigarDadosParadoxoMana));
+      }
+      prevMitigation.current = mitigarDadosParadoxoMana;
+    }
+
+    // Trava de segurança absoluta para cada campo
+    if (manaOpcional > totalDisponivel) setManaOpcional(totalDisponivel);
+    const paradoxoMaximo = calcularDadosParadoxo();
+    const tetoMitigacao = Math.min(paradoxoMaximo, totalDisponivel);
+    if (mitigarDadosParadoxoMana > tetoMitigacao) setMitigarDadosParadoxoMana(tetoMitigacao);
+
+  }, [manaOpcional, mitigarDadosParadoxoMana, totalDisponivelParaOpcionais, calcularDadosParadoxo]);
   // === RETORNO DO HOOK ===
   return {
     // Objetos condensados para facilitar passar as props para outros componentes
@@ -263,6 +314,8 @@ export default function useSpellCalculator() {
     dadosExtras,
     setDadosExtras,
     totalDadosParadoxo,
+    maxManaMitigacao,
+    maxManaOpcional,
 
     // Funções de toggle e reset
     toggleRegente,
