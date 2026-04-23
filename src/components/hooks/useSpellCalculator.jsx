@@ -70,9 +70,18 @@ export default function useSpellCalculator(userData) {
     setRegente(e.target.checked);
   }, []);
 
-  const toggleUsouFV = React.useCallback((e) => {
-    setUsouFdV(e);
-  }, []);
+  const toggleUsouFV = React.useCallback((val) => {
+    const isChecked = typeof val === 'object' && val?.target ? val.target.checked : val;
+    
+    if (isChecked) {
+      const initialFV = (userData?.fv?.max || 0) - (userData?.fv?.usado || 0);
+      if (initialFV <= 0) {
+        alert("Você não possui Força de Vontade disponível!");
+        return;
+      }
+    }
+    setUsouFdV(isChecked);
+  }, [userData, setUsouFdV]);
 
   const calcularElevacoesGratis = React.useCallback(() => {
     return spellLogic.calculateFreeReach(nivelArcana, nivelRequerido, spellType);
@@ -245,6 +254,14 @@ export default function useSpellCalculator(userData) {
     if (mitigarDadosParadoxoMana > tetoMitigacao) setMitigarDadosParadoxoMana(tetoMitigacao);
 
   }, [manaOpcional, mitigarDadosParadoxoMana, totalDisponivelParaOpcionais, calcularDadosParadoxo]);
+
+  // Trava de segurança para Força de Vontade (FdV)
+  React.useEffect(() => {
+    const initialFV = (userData?.fv?.max || 0) - (userData?.fv?.usado || 0);
+    if (usouFV && initialFV <= 0) {
+      setUsouFdV(false);
+    }
+  }, [usouFV, userData, setUsouFdV]);
   // === RETORNO DO HOOK ===
   return {
     // Objetos condensados para facilitar passar as props para outros componentes

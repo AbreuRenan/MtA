@@ -24,6 +24,8 @@ export default function ExtraOptionsComponent(props) {
     setDadosExtras,
     maxManaMitigacao,
     maxManaOpcional,
+    toggleUsouFV,
+    userData,
   } = props;
 
   function toggleMitigarTodoParadoxoCheckBox(e) {
@@ -98,7 +100,8 @@ export default function ExtraOptionsComponent(props) {
           label="Força de Vontade?"
           id="gastouVontade"
           checked={usouFdV}
-          setValue={setUsouFdV} 
+          setValue={toggleUsouFV} 
+          disabled={(userData?.fv?.max - userData?.fv?.usado) <= 0 && !usouFdV}
         />
         <InputCheckBox
           label="Ferramenta Dedicada?"

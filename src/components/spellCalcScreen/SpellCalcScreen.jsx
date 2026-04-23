@@ -211,6 +211,7 @@ export default function SpellCalcScreen() {
     calcularDadosParadoxo,
     maxManaMitigacao,
     maxManaOpcional,
+    userData,
   };
   const getWhatsAppText = React.useCallback(() => {
     const pExtra = Math.max(0, potencia - 1);

@@ -233,6 +233,11 @@ label.inputCheckbox {
   background: transparent;
   cursor: pointer;
 }
+label.inputCheckbox[data-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+}
 label.inputCheckbox::before {
   content: "";
   position: absolute;
