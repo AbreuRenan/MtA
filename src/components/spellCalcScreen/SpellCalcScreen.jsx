@@ -11,6 +11,7 @@ import { AppContext } from "../../AppContext";
 import useSpellCalculator from "../hooks/useSpellCalculator";
 import useResumoMagiaCalcs from "../hooks/useResumoMagiaCalcs";
 import { ref, update } from "firebase/database";
+import { pushLog } from "../../js/logUtils";
 
 export default function SpellCalcScreen() {
   const { userData, database } = React.useContext(AppContext);
@@ -86,6 +87,8 @@ export default function SpellCalcScreen() {
     setDadosExtras,
     totalDadosParadoxo,
     setTotalDadosParadoxo,
+    dadosParadoxoExtra,
+    setDadosParadoxoExtra,
     maxManaMitigacao,
     maxManaOpcional,
 
@@ -209,6 +212,8 @@ export default function SpellCalcScreen() {
     dadosExtras,
     setDadosExtras,
     calcularDadosParadoxo,
+    dadosParadoxoExtra,
+    setDadosParadoxoExtra,
     maxManaMitigacao,
     maxManaOpcional,
     userData,
@@ -261,10 +266,9 @@ export default function SpellCalcScreen() {
 Nível da Prática: ${nivelRequerido}
 Potência${pFP}${pElevada}: 1 + ${pExtra} (-${pPenalty}d)
 Duração${dFP}${dElevada}: 1 + ${dExtra} (-${dPenalty}d) | ${exibirDuracao}
-Tempo de conjuração${tFP}${tElevada}: Ritual 1 + ${tExtra} (+${tBonus}d)
-Escala${eFP}${eElevada}: ${escala} | afeta Área (${exibirEscala.area}), Alvos e Tamanho (${exibirEscala.tamanhos})
+Tempo de conjuração${tFP}${tElevada}: Ritual 1 + ${tExtra} (+${tBonus}d) | ${exibirTempoConjuracao}
+Escala${eFP}${eElevada}: ${escala} | Área: ${exibirEscala.area} | Alvos: ${exibirEscala.alvos} | Tamanho: ${exibirEscala.tamanhos} (${exibirTextoPorTamanho})
 Alcance: ${alcance.charAt(0).toUpperCase() + alcance.slice(1)}
-Alvos: 1 + ${eExtra} (-${ePenalty}d)
 
 ${textoSoma}
 
@@ -276,7 +280,7 @@ Elevações grátis: ${calcularElevacoesGratis()}
 Elevações usadas: ${custoElevacoes}${textoElevacoesUsadas}
 Dados paradoxo: ${totalDadosParadoxo}
 Gasto de mana: ${custoMana}`;
-  }, [potencia, currentFP, nivelArcana, potenciaElevada, duracao, duracaoElevada, tempoConjuracaoElevada, tempoConjuracao, escala, escalaElevada, exibirEscala, alcance, yantras, gnose, usouFV, dadosExtras, isCombinado, extraElevacoes, calcularElevacoesGratis, custoElevacoes, paradaDeDados, totalDadosParadoxo, custoMana, exibirDuracao, nivelRequerido]);
+  }, [potencia, currentFP, nivelArcana, potenciaElevada, duracao, duracaoElevada, tempoConjuracaoElevada, tempoConjuracao, escala, escalaElevada, exibirEscala, alcance, yantras, gnose, usouFV, dadosExtras, isCombinado, extraElevacoes, calcularElevacoesGratis, custoElevacoes, paradaDeDados, totalDadosParadoxo, custoMana, exibirDuracao, nivelRequerido, exibirTempoConjuracao, exibirTextoPorTamanho]);
 
   const resumoMagiaProps = {
     exibirPotencia,
@@ -315,11 +319,23 @@ Gasto de mana: ${custoMana}`;
       const updates = {};
       
       if (custoMana > 0) {
+        const manaAtual = userData.mana.max - (userData.mana.usado || 0);
         updates["mana/usado"] = (userData.mana.usado || 0) + custoMana;
+        pushLog(database, userData, "Mana", {
+          antes: manaAtual,
+          depois: manaAtual - custoMana,
+          custo: custoMana
+        });
       }
       
       if (custoVontade > 0) {
+        const fvAtual = userData.fv.max - (userData.fv.usado || 0);
         updates["fv/usado"] = (userData.fv.usado || 0) + custoVontade;
+        pushLog(database, userData, "Vontade", {
+          antes: fvAtual,
+          depois: fvAtual - custoVontade,
+          custo: custoVontade
+        });
       }
 
       if (Object.keys(updates).length > 0) {

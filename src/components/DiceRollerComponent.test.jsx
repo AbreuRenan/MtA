@@ -11,7 +11,9 @@ vi.mock('firebase/database', () => ({
   ref: vi.fn(),
   set: vi.fn(),
   push: vi.fn(() => ({ key: 'mock-key' })),
-  onValue: vi.fn()
+  onValue: vi.fn(),
+  query: vi.fn(),
+  limitToLast: vi.fn(),
 }));
 
 // Mock Assets

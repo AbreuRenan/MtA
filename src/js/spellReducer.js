@@ -26,6 +26,7 @@ export const initialState = {
   manaOpcional: 0,
   dadosExtras: 0,
   ferramentaDedicada: false,
+  dadosParadoxoExtra: 0,
 };
 
 export function spellReducer(state, action) {

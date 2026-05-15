@@ -24,6 +24,8 @@ export default function ExtraOptionsComponent(props) {
     setDadosExtras,
     maxManaMitigacao,
     maxManaOpcional,
+    dadosParadoxoExtra,
+    setDadosParadoxoExtra,
     toggleUsouFV,
     userData,
   } = props;
@@ -66,6 +68,14 @@ export default function ExtraOptionsComponent(props) {
           value={extraElevacoes}
           setValue={setExtraElevacoes}
           min={-10}
+          max={100}
+        />
+        <InputGroup
+          label="Dados Paradoxo Extra"
+          id="dadosParadoxoExtra"
+          value={dadosParadoxoExtra}
+          setValue={setDadosParadoxoExtra}
+          min={-100}
           max={100}
         />
         <InputGroup

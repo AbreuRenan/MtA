@@ -36,6 +36,7 @@ export default function useSpellCalculator(userData) {
   const setMitigarTodoParadoxoMana = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'mitigarTodoParadoxoMana', value: typeof value === 'function' ? value(state.mitigarTodoParadoxoMana) : value } }), [state.mitigarTodoParadoxoMana]);
   const setManaOpcional = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'manaOpcional', value: typeof value === 'function' ? value(state.manaOpcional) : value } }), [state.manaOpcional]);
   const setDadosExtras = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'dadosExtras', value: typeof value === 'function' ? value(state.dadosExtras) : value } }), [state.dadosExtras]);
+  const setDadosParadoxoExtra = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'dadosParadoxoExtra', value: typeof value === 'function' ? value(state.dadosParadoxoExtra) : value } }), [state.dadosParadoxoExtra]);
 
   // Facilita o uso do state para os cálculos derivados abaixo
   const {
@@ -43,7 +44,7 @@ export default function useSpellCalculator(userData) {
     potencia, duracao, escala, alcance, tempoConjuracao, currentFP,
     potenciaElevada, duracaoElevada, escalaElevada, alcanceElevado, tempoConjuracaoElevada,
     extraElevacoes, isCombinado, yantras, usouFV, ferramentaDedicada, mitigarDadosParadoxoMana,
-    mitigarTodoParadoxoMana, manaOpcional, dadosExtras, page
+    mitigarTodoParadoxoMana, manaOpcional, dadosExtras, page, dadosParadoxoExtra
   } = state;
 
   // === CÁLCULOS DERIVADOS (MEMO) ===
@@ -107,8 +108,8 @@ export default function useSpellCalculator(userData) {
   const calcularTotalDadosParadoxo = React.useCallback(() => {
     let dadosParadoxo = calcularDadosParadoxo();
     let mitigacaoEfetiva = Math.min(dadosParadoxo, mitigarDadosParadoxoMana);
-    return Math.max(0, dadosParadoxo - mitigacaoEfetiva);
-  }, [mitigarDadosParadoxoMana, calcularDadosParadoxo]);
+    return Math.max(0, (dadosParadoxo - mitigacaoEfetiva) + dadosParadoxoExtra);
+  }, [mitigarDadosParadoxoMana, calcularDadosParadoxo, dadosParadoxoExtra]);
 
   const calcularDadosPorFator = React.useCallback(() => {
     return spellLogic.calculateFactorPenalty({ potencia, duracao, escala, currentFP, nivelArcana });
@@ -131,11 +132,13 @@ export default function useSpellCalculator(userData) {
     return spellLogic.calculateManaCost({
       alcance, regente, duracao, duracaoElevada, manaOpcional,
       paradoxDice, mitigarTodoParadoxo: mitigarTodoParadoxoMana,
-      mitigarDadosParadoxo: mitigacaoEfetiva
+      mitigarDadosParadoxo: mitigacaoEfetiva,
+      spellType
     });
   }, [
     alcance, regente, duracao, duracaoElevada, manaOpcional,
-    calcularDadosParadoxo, mitigarTodoParadoxoMana, mitigarDadosParadoxoMana
+    calcularDadosParadoxo, mitigarTodoParadoxoMana, mitigarDadosParadoxoMana,
+    spellType
   ]);
 
   const initialMana = (userData?.mana?.max || 0) - (userData?.mana?.usado || 0);
@@ -144,9 +147,10 @@ export default function useSpellCalculator(userData) {
     return spellLogic.calculateManaCost({
       alcance, regente, duracao, duracaoElevada, manaOpcional: 0,
       paradoxDice: 0, mitigarTodoParadoxo: false,
-      mitigarDadosParadoxo: 0
+      mitigarDadosParadoxo: 0,
+      spellType
     });
-  }, [alcance, regente, duracao, duracaoElevada]);
+  }, [alcance, regente, duracao, duracaoElevada, spellType]);
 
   const totalDisponivelParaOpcionais = React.useMemo(() => {
     return Math.max(0, initialMana - calcularBaseManaCost());
@@ -331,6 +335,8 @@ export default function useSpellCalculator(userData) {
     dadosExtras,
     setDadosExtras,
     totalDadosParadoxo,
+    dadosParadoxoExtra,
+    setDadosParadoxoExtra,
     maxManaMitigacao,
     maxManaOpcional,
 

@@ -3,9 +3,11 @@ import { AppContext } from "../../AppContext";
 import { useNavigate } from "react-router-dom";
 import { get, ref, remove, set, update, onValue } from "firebase/database";
 import PlayerDisplayAdmin from "./playerDisplayAdmin";
+import { pushLog } from "../../js/logUtils";
 
 import styles from "./adminStyles.module.css";
 import RollHistory from "../diceScreenComponents/RollHistory";
+import LogHistory from "./LogHistory";
 
 export default function AdminScreen() {
   const navigate = useNavigate();
@@ -47,6 +49,44 @@ export default function AdminScreen() {
         valueToSave = Number(newValue);
       }
       await set(playerPathRef, valueToSave);
+
+      const targetPlayer = playersData.find(p => p.id === userId);
+      if (targetPlayer) {
+          let type = "";
+          let antes = 0;
+          let depois = 0;
+          
+          if (path === "fv/usado") {
+              type = "Vontade";
+              antes = targetPlayer.fv.max - (targetPlayer.fv.usado || 0);
+              depois = targetPlayer.fv.max - valueToSave;
+          } else if (path === "mana/usado") {
+              type = "Mana";
+              antes = targetPlayer.mana.max - (targetPlayer.mana.usado || 0);
+              depois = targetPlayer.mana.max - valueToSave;
+          } else if (path === "fv/max") {
+              type = "Vontade Max";
+              antes = targetPlayer.fv.max || 0;
+              depois = valueToSave;
+          } else if (path === "mana/max") {
+              type = "Mana Max";
+              antes = targetPlayer.mana.max || 0;
+              depois = valueToSave;
+          } else if (path === "vitalidade/max") {
+              type = "Vitalidade Max";
+              antes = targetPlayer.vitalidade.max || 0;
+              depois = valueToSave;
+          }
+
+          if (type) {
+              pushLog(database, userData, type, {
+                 antes,
+                 depois,
+                 targetUser: targetPlayer.nome,
+                 isAdminAction: true
+              });
+          }
+      }
     } catch (error) {
       console.error("Erro ao atualizar dados do jogador:", error);
     }
@@ -65,30 +105,56 @@ export default function AdminScreen() {
     });
   };
 
+  const handleDeleteLogs = () => {
+    const logsRef = ref(database, "actionLogs");
+    remove(logsRef).catch((err) => {
+      console.log(err);
+    });
+  };
+
   function handleOpenGame() {
     setGameOpen(!gameOpen);
   }
   return (
     <div className={`${styles.adminConsoleContainer}`}>
-      <RollHistory single={true} />
-      <div className={styles.btnContainer}>
-        <button className={`btn ${styles.deletar}`}onClick={handleDeleteHistory}>
-          Apagar RollsHistory
-        </button>
-        <button className={`btn ${!gameOpen ? `${styles.openGame}` : `${styles.closeGame}`}`}
-          onClick={handleOpenGame}>
-          {!gameOpen ? "Abrir Jogo" : "Fechar Jogo"}
-        </button>
+      <div className={styles.topFixedArea}>
+        <div className={styles.btnContainer}>
+          <button className={`btn ${styles.deletar}`}onClick={handleDeleteHistory}>
+            Apagar Rolls
+          </button>
+          <button className={`btn ${styles.deletar}`}onClick={handleDeleteLogs}>
+            Apagar Logs
+          </button>
+          <button className={`btn ${!gameOpen ? `${styles.openGame}` : `${styles.closeGame}`}`}
+            onClick={handleOpenGame}>
+            {!gameOpen ? "Abrir Jogo" : "Fechar Jogo"}
+          </button>
+        </div>
+        <div className={styles.historiesContainer}>
+          <div className={styles.historySection}>
+            <span className={styles.sectionTitle}>Histórico de Rolagens</span>
+            <RollHistory single={true} />
+          </div>
+          <div className={styles.historySection}>
+            <span className={styles.sectionTitle}>Log de Recursos</span>
+            <div className={styles.logContainer}>
+              <LogHistory />
+            </div>
+          </div>
+        </div>
       </div>
-      {playersData.map((selectedPlayer, index) => {
-        return (
-          <PlayerDisplayAdmin
-            player={selectedPlayer}
-            key={selectedPlayer.id}
-            onUpdatePlayer={handlePlayerUpdate}
-          />
-        );
-      })}
+      <div className={styles.playersListContainer}>
+        {playersData.map((selectedPlayer, index) => {
+          return (
+            <PlayerDisplayAdmin
+              player={selectedPlayer}
+              key={selectedPlayer.id}
+              onUpdatePlayer={handlePlayerUpdate}
+            />
+          );
+        })}
+      </div>
     </div>
+
   );
 }

@@ -2,9 +2,15 @@ import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import useSpellCalculator from './useSpellCalculator';
 
+const mockUserData = {
+  mana: { max: 10, usado: 0 },
+  fv: { max: 10, usado: 0 }
+};
+
+
 describe('useSpellCalculator', () => {
   it('should initialize with default values', () => {
-    const { result } = renderHook(() => useSpellCalculator());
+    const { result } = renderHook(() => useSpellCalculator(mockUserData));
     
     expect(result.current.gnose).toBe(1);
     expect(result.current.nivelArcana).toBe(1);
@@ -12,7 +18,7 @@ describe('useSpellCalculator', () => {
   });
 
   it('should calculate free reach (elevações grátis) correctly', () => {
-    const { result } = renderHook(() => useSpellCalculator());
+    const { result } = renderHook(() => useSpellCalculator(mockUserData));
     
     // Default: Arcana 1, Required 1, Improvisado
     // Formula: nivelArcana - nivelRequerido + 1 = 1 - 1 + 1 = 1
@@ -27,7 +33,7 @@ describe('useSpellCalculator', () => {
   });
 
   it('should calculate paradox pool correctly', () => {
-    const { result } = renderHook(() => useSpellCalculator());
+    const { result } = renderHook(() => useSpellCalculator(mockUserData));
     
     act(() => {
       result.current.setGnose(3); // Gnosis 3 -> 2 dice per excess reach (ceil(3/2) = 2)
@@ -46,7 +52,7 @@ describe('useSpellCalculator', () => {
   });
 
   it('should calculate dice pool correctly', () => {
-    const { result } = renderHook(() => useSpellCalculator());
+    const { result } = renderHook(() => useSpellCalculator(mockUserData));
     
     act(() => {
       result.current.setGnose(3);
@@ -65,7 +71,7 @@ describe('useSpellCalculator', () => {
   });
 
   it('should calculate custoMana correctly based on reach and options', () => {
-    const { result } = renderHook(() => useSpellCalculator());
+    const { result } = renderHook(() => useSpellCalculator(mockUserData));
     
     act(() => {
       // Base is 0
@@ -78,7 +84,7 @@ describe('useSpellCalculator', () => {
   });
 
   it('should calculate total elevations (custoElevacoes) correctly', () => {
-    const { result } = renderHook(() => useSpellCalculator());
+    const { result } = renderHook(() => useSpellCalculator(mockUserData));
     
     act(() => {
       result.current.setPotenciaElevada(true);
@@ -90,7 +96,7 @@ describe('useSpellCalculator', () => {
   });
 
   it('should calculate mitigated paradox correctly', () => {
-    const { result } = renderHook(() => useSpellCalculator());
+    const { result } = renderHook(() => useSpellCalculator(mockUserData));
     
     act(() => {
       result.current.setGnose(3);
@@ -118,7 +124,7 @@ describe('useSpellCalculator', () => {
   });
 
   it('should fully reset state on resetCalculadora', () => {
-    const { result } = renderHook(() => useSpellCalculator());
+    const { result } = renderHook(() => useSpellCalculator(mockUserData));
     
     act(() => {
       result.current.setGnose(5);

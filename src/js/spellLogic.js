@@ -108,12 +108,13 @@ export function calculateParadoxDice(gnose, freeReach, totalReach) {
 export function calculateManaCost(params) {
   const {
     alcance, regente, duracao, duracaoElevada, manaOpcional, 
-    paradoxDice, mitigarTodoParadoxo, mitigarDadosParadoxo
+    paradoxDice, mitigarTodoParadoxo, mitigarDadosParadoxo,
+    spellType = "improvisado"
   } = params;
 
   let totalMana = 0;
   if (alcance === "simpatico") totalMana += 1;
-  if (!regente) totalMana += 1;
+  if (spellType === "improvisado" && !regente) totalMana += 1;
   if (duracaoElevada && duracao >= 6) totalMana += 1;
   
   totalMana += manaOpcional;

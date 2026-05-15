@@ -3,6 +3,7 @@ import styles from "../../styles/playerCompanion.module.css";
 import { AppContext } from "../../AppContext";
 import RenderPlayerUtilsBox from "./RenderPlayerUtilsBox";
 import { ref, set, update } from "firebase/database";
+import { pushLog } from "../../js/logUtils";
 
 export default function PlayerCompanion() {
   const { userData, gameOpen, database } =
@@ -78,6 +79,10 @@ export default function PlayerCompanion() {
       if (gameOpen || userData.role === "narrador") {
         try {
           await update(userRefInDB, updates);
+          pushLog(database, userData, "Vitalidade", {
+            antes: JSON.stringify(userData.vitalidade.dano),
+            depois: JSON.stringify(newDamageState)
+          });
         } catch (e) {
           console.error("Erro ao atualizar vitalidade no DB:", e);
         }
@@ -96,6 +101,11 @@ export default function PlayerCompanion() {
       if (gameOpen || userData.role === "narrador") {
         try {
           await update(userRefInDB, updates);
+          const fvMax = userData.fv.max;
+          pushLog(database, userData, "Vontade", {
+            antes: fvMax - (userData.fv.usado || 0),
+            depois: fvMax - newFvUsado
+          });
         } catch (e) {
           console.error("Erro ao atualizar FdV no DB:", e);
         }
@@ -113,6 +123,11 @@ export default function PlayerCompanion() {
       if (gameOpen || userData?.role === "narrador") {
         try {
           await update(userRefInDB, updates);
+          const manaMax = userData.mana.max;
+          pushLog(database, userData, "Mana", {
+            antes: manaMax - (userData.mana.usado || 0),
+            depois: manaMax - newManaUsado
+          });
         } catch (e) {
           console.error("Erro ao atualizar Mana no DB:", e);
         }

@@ -20,6 +20,7 @@ export default function ResumoMagia(props) {
 
     paradaDeDados,
     custoMana,
+    custoVontade,
     calcularElevacoesExcedentes,
     custoElevacoes,
     totalDadosParadoxo,
@@ -114,6 +115,9 @@ export default function ResumoMagia(props) {
 
             <p className={styles.custoMana}>
               Custo de Mana:<b> {custoMana}</b>
+            </p>
+            <p className={styles.custoVontade}>
+              Custo de Vontade:<b> {custoVontade}</b>
             </p>
             <p className={styles.manaDisponivel}>
               Mana Disponível:<b> {manaDisponivel}</b>
