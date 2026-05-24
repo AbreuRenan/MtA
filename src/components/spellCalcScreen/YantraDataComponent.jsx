@@ -11,20 +11,25 @@ export default function YantraDataComponent(props) {
   const qtdDeYantras = returnMaxYantrasPerGnose(gnose);
   
   const [yantraValues, setYantraValues] = useState(() => {
-    return Array.isArray(yantras) && yantras.length > 0 
-      ? yantras 
-      : Array(qtdDeYantras).fill(null);
+    const initialValues = Array.isArray(yantras) ? yantras.slice(0, qtdDeYantras) : [];
+    while (initialValues.length < qtdDeYantras) {
+      initialValues.push(null);
+    }
+    return initialValues;
   });
 
-  // Se o contexto ainda está carregando, mostra um placeholder
-  if (isLoading) {
-    return (
-      <div className="page" data-page={page} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}>
-        <p>Carregando Yantras...</p>
-      </div>
-    );
-  }
-  
+  useEffect(() => {
+    const normalized = Array.isArray(yantras) ? yantras.slice(0, qtdDeYantras) : [];
+    while (normalized.length < qtdDeYantras) {
+      normalized.push(null);
+    }
+
+    const isSame = normalized.length === yantraValues.length && normalized.every((item, index) => item?.id === yantraValues[index]?.id);
+    if (!isSame) {
+      setYantraValues(normalized);
+    }
+  }, [yantras, qtdDeYantras, yantraValues]);
+
   function returnMaxYantrasPerGnose(gnose) {
     const gnoseCelling = Math.ceil(gnose / 2) + 1;
     return Math.max(0, gnoseCelling);
@@ -54,6 +59,15 @@ export default function YantraDataComponent(props) {
       setYantras(validYantras);
     }
   }, [yantraValues, setYantras]);
+
+  // Se o contexto ainda está carregando, mostra um placeholder
+  if (isLoading) {
+    return (
+      <div className="page" data-page={page} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}>
+        <p>Carregando Yantras...</p>
+      </div>
+    );
+  }
 
   const handleSelectYantra = (index, yantraId) => {
     const newYantraValues = [...yantraValues];
