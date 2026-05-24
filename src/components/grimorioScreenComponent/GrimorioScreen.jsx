@@ -13,21 +13,18 @@ export default function GrimorioScreen() {
   const [selectedSpell, setSelectedSpell] = useState(null);
   const [loadingSpells, setLoadingSpells] = useState(true);
   
-  // Se o contexto ainda está carregando, mostra loading
-  if (isLoading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <p>Carregando contexto de magia...</p>
-      </div>
-    );
-  }
-  
   // Estados para os inputs editáveis nos detalhes
   const [editableArcanas, setEditableArcanas] = useState("");
   const [editableDescription, setEditableDescription] = useState("");
   const [savingChanges, setSavingChanges] = useState(false);
   
   const navigate = useNavigate();
+
+  const loadingContent = (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <p>Carregando contexto de magia...</p>
+    </div>
+  );
 
   // Efeito para carregar magias
   useEffect(() => {
@@ -175,7 +172,27 @@ export default function GrimorioScreen() {
     }
   };
 
-  return (
+  // Computa um valor numérico de bônus de dados vindo do estado salvo (pode ser number, array de objetos ou ter yantraBonus salvo)
+  const computeSavedYantraBonus = (calcState) => {
+    if (!calcState) return 0;
+    if (typeof calcState.yantraBonus === 'number') return Number(calcState.yantraBonus) || 0;
+    const y = calcState.yantras;
+    if (Array.isArray(y)) {
+      return y.reduce((acc, item) => {
+        if (!item) return acc;
+        if (typeof item.dadosBonus !== 'undefined') return acc + (Number(item.dadosBonus) || 0);
+        if (Array.isArray(item.efeitosDinamicos)) {
+          const ef = item.efeitosDinamicos.find(e => e.campo === 'dadosBonus');
+          return acc + (Number(ef?.valor) || 0);
+        }
+        return acc;
+      }, 0);
+    }
+    if (typeof y === 'number') return Number(y) || 0;
+    return 0;
+  };
+
+  return isLoading ? loadingContent : (
     <div className={styles.grimorioContainer}>
       <h1 className={styles.grimorioTitle}>Grimório Místico</h1>
       
@@ -361,7 +378,7 @@ export default function GrimorioScreen() {
                     </div>
                     <div className={styles.imagoItem}>
                       <span>Yantras:</span>
-                      <span className={styles.imagoValue}>+{selectedSpell.calculatorState?.yantras}d</span>
+                      <span className={styles.imagoValue}>+{computeSavedYantraBonus(selectedSpell.calculatorState)}d</span>
                     </div>
                     <div className={styles.imagoItem}>
                       <span>Força de Vontade:</span>
