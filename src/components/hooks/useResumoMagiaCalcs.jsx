@@ -14,7 +14,8 @@ export default function useResumoMagiaCalcs(
   escalaElevada,
   duracaoElevada,
   tempoConjuracao,
-  tempoConjuracaoElevada
+  tempoConjuracaoElevada,
+  efeitosYantra = {}
 ) {
   const { userData } = React.useContext(AppContext);
 
@@ -29,6 +30,7 @@ export default function useResumoMagiaCalcs(
       currentFP,
       tempoConjuracao,
       tempoConjuracaoElevada,
+      efeitosYantra,
     });
   }, [
     potencia,
@@ -40,6 +42,7 @@ export default function useResumoMagiaCalcs(
     currentFP,
     tempoConjuracao,
     tempoConjuracaoElevada,
+    efeitosYantra,
   ]);
 
   const manaDisponivel = React.useMemo(() => {

@@ -71,22 +71,24 @@ export function calculateFactorPenalty({ potencia, duracao, escala, currentFP, n
 /**
  * Calcula a parada de dados final.
  */
+
 export function calculateDicePool(params) {
   const {
     gnose, nivelArcana, yantras, dadosExtras, isCombinado, usouFV,
-    tempoConjuracao, tempoConjuracaoElevada, currentFP, factorPenalty
+    tempoConjuracao, tempoConjuracaoElevada, currentFP, factorPenalty, fatorFdv = 0
   } = params;
 
   let dadosIniciais = gnose + nivelArcana + yantras + dadosExtras;
   const combinadoPenalty = isCombinado * 2;
   let totalDados = dadosIniciais - factorPenalty - combinadoPenalty;
   
-  if (usouFV) totalDados += 3;
+  if (usouFV) totalDados += (3 + fatorFdv);
 
-  // Lógica do Tempo de Conjuracao
-  if (!tempoConjuracaoElevada && currentFP !== "tempoConjuracao") {
-    totalDados += Math.min(5, tempoConjuracao - 1);
-  } else if (!tempoConjuracaoElevada && currentFP === "tempoConjuracao") {
+  // Lógica do Tempo de Conjuração
+  // Se não houver tempo elevado, o bônus de dados por tempo é (tempoConjuracao - 1).
+  // Não imporemos um limite arbitrário aqui — chamadores podem passar um valor já limitado
+  // (por exemplo, `e_tempoConjuracao` calculado por hooks que consideram `tempoExceder`).
+  if (!tempoConjuracaoElevada) {
     totalDados += Math.max(0, tempoConjuracao - 1);
   }
 
@@ -122,7 +124,7 @@ export function calculateManaCost(params) {
   let manaParaParadoxo = mitigarTodoParadoxo ? paradoxDice : Math.max(0, mitigarDadosParadoxo);
   totalMana += manaParaParadoxo;
 
-  return totalMana;
+  return Math.max(0, totalMana);
 }
 
 /**
@@ -130,8 +132,12 @@ export function calculateManaCost(params) {
  */
 export function formatSpellFactors(params) {
   const {
-    potencia, duracao, duracaoElevada, escala, escalaElevada, gnose, currentFP, tempoConjuracao, tempoConjuracaoElevada
+    potencia, duracao, duracaoElevada, escala, escalaElevada, gnose, currentFP, tempoConjuracao, tempoConjuracaoElevada,
+    efeitosYantra = {}
   } = params;
+  const e_potencia = potencia + (efeitosYantra.fatorPotencia || 0);
+  const e_duracao = duracao + (efeitosYantra.fatorDuracao || 0);
+  const e_escala = escala + (efeitosYantra.fatorEscala || 0);
 
   // Duração
   const calculateDuracaoPadrao = (d) => {
@@ -144,12 +150,12 @@ export function formatSpellFactors(params) {
   };
 
   let textoDuracao = "";
-  if (duracaoElevada) {
-    const index = Math.min(Math.max(0, duracao - 1), SPELL_CONSTANTS.TEXTO_DURACAO_ELEVADA.length - 1);
+  if (duracaoElevada || efeitosYantra.duracaoElevada) {
+    const index = Math.min(Math.max(0, e_duracao - 1), SPELL_CONSTANTS.TEXTO_DURACAO_ELEVADA.length - 1);
     textoDuracao = SPELL_CONSTANTS.TEXTO_DURACAO_ELEVADA[index];
   } else {
-    const dPadrao = calculateDuracaoPadrao(duracao);
-    textoDuracao = `${dPadrao} ${duracao === 1 ? "Turno" : "Turnos"}`;
+    const dPadrao = calculateDuracaoPadrao(e_duracao);
+    textoDuracao = `${dPadrao} ${e_duracao === 1 ? "Turno" : "Turnos"}`;
   }
 
   // Escala
@@ -158,7 +164,7 @@ export function formatSpellFactors(params) {
       return {
         alvos: 5 * Math.max(1, 2 ** Math.max(0, e - 1)),
         tamanhos: e * 5,
-        area: ["Edifício Pequeno", "Depósito Pequeno", "Depósito Grande", "Fábrica Pequena", "Fábrica Grande", "Vizinhança"][Math.min(Math.max(0, e - 1), 5)],
+        area: ["Edifício Pequeno", "Depósito Pequeno", "Depósito Grande", "Fábrica Pequena", "Fábrica Grande", "Vizinhança"][Math.min(Math.max(0, e - 1), 5)] || "Área Gigantesca",
       };
     }
     return {
@@ -168,16 +174,31 @@ export function formatSpellFactors(params) {
     };
   };
 
-  const escalaData = getEscalaData(escala, escalaElevada);
+  const escalaData = getEscalaData(e_escala, escalaElevada || efeitosYantra.escalaElevada);
   const textoTamanho = SPELL_CONSTANTS.TEXTO_TAMANHOS[escalaData.tamanhos] || "Fora de Escala";
 
   // Tempo de Conjuração
   let textoTempo = "AGORA!";
-  if (!tempoConjuracaoElevada) {
+  if (!(tempoConjuracaoElevada || efeitosYantra.tempoConjuracaoElevada)) {
     const gnoseIndex = Math.max(0, Math.ceil(gnose / 2) - 1);
     const fatorMago = SPELL_CONSTANTS.FATORES_TEMPO_POR_GNOSE[gnoseIndex] || 1;
-    const maxNivel = currentFP === "tempoConjuracao" ? 100 : 6;
-    const tempoTotal = fatorMago * Math.min(maxNivel, tempoConjuracao);
+    
+    // Yantra: Exceder adiciona níveis ao limite máximo do Tempo de Conjuração
+    const maxNivel = currentFP === "tempoConjuracao" ? 100 : (6 + (efeitosYantra.tempoExceder || 0));
+    
+    const maxTempoSugerido = Math.min(maxNivel, tempoConjuracao);
+    
+    // Yantra: Acelerar altera a quantidade final de tempo real gasto (horas/minutos)
+    let tempoTotal = fatorMago * maxTempoSugerido;
+    if (efeitosYantra.tempoAcelerar) {
+        // Acelerar soma ou subtrai níveis da "escada de tempo".
+        // Uma abordagem simples: ajusta o fatorMago ou diretamente os turnos.
+        // Se a instrução do usuário é que aumenta/reduz tempo, podemos mudar a quantidade de minutos calculados:
+        // Como Mago a cada passo do gráfico de tempo multiplica o tempo, a melhor abstração para "acelerar N níveis" é pular os passos do FATORES_TEMPO.
+        const novoGnoseIndex = Math.max(0, gnoseIndex + efeitosYantra.tempoAcelerar);
+        const novoFatorMago = SPELL_CONSTANTS.FATORES_TEMPO_POR_GNOSE[Math.min(novoGnoseIndex, 4)] || 1;
+        tempoTotal = novoFatorMago * maxTempoSugerido;
+    }
     
     const horas = Math.floor(tempoTotal / 60);
     const minutos = tempoTotal % 60;
@@ -185,7 +206,7 @@ export function formatSpellFactors(params) {
   }
 
   return {
-    potencia: Math.max(0, potencia),
+    potencia: Math.max(0, e_potencia),
     duracao: textoDuracao,
     escala: escalaData,
     tamanho: textoTamanho,

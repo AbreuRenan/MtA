@@ -123,6 +123,23 @@ describe('useSpellCalculator', () => {
     expect(result.current.custoMana).toBe(1);
   });
 
+  it('should reduce total paradox when extra paradox dice are applied and mana is used', () => {
+    const { result } = renderHook(() => useSpellCalculator(mockUserData));
+
+    act(() => {
+      result.current.setDadosParadoxoExtra(4);
+    });
+
+    expect(result.current.totalDadosParadoxo).toBe(4);
+
+    act(() => {
+      result.current.setMitigarDadosParadoxoMana(2);
+    });
+
+    expect(result.current.totalDadosParadoxo).toBe(2);
+    expect(result.current.custoMana).toBe(2);
+  });
+
   it('should fully reset state on resetCalculadora', () => {
     const { result } = renderHook(() => useSpellCalculator(mockUserData));
     

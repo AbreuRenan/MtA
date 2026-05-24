@@ -19,13 +19,12 @@ export const initialState = {
   tempoConjuracaoElevada: false,
   extraElevacoes: 0,
   isCombinado: 0,
-  yantras: 0,
+  yantras: [],
   usouFV: false,
   mitigarDadosParadoxoMana: 0,
   mitigarTodoParadoxoMana: false,
   manaOpcional: 0,
   dadosExtras: 0,
-  ferramentaDedicada: false,
   dadosParadoxoExtra: 0,
 };
 

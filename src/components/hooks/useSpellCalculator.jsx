@@ -1,12 +1,14 @@
 import React from "react";
 import * as spellLogic from "../../js/spellLogic";
 import * as spellReducer from "../../js/spellReducer";
+import { ref, set, remove, update } from "firebase/database";
+import { AppContext } from "../../AppContext";
 
 export default function useSpellCalculator(userData) {
   const [state, dispatch] = React.useReducer(spellReducer.spellReducer, spellReducer.initialState);
+  const { database } = React.useContext(AppContext) || {};
 
   // === WRAPPER SETTERS PARA MANTER A API IGUAL ===
-  const setPage = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'page', value: typeof value === 'function' ? value(state.page) : value } }), [state.page]);
   const setGnose = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'gnose', value: typeof value === 'function' ? value(state.gnose) : value } }), [state.gnose]);
   const setNivelArcana = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'nivelArcana', value: typeof value === 'function' ? value(state.nivelArcana) : value } }), [state.nivelArcana]);
   const setNivelRequerido = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'nivelRequerido', value: typeof value === 'function' ? value(state.nivelRequerido) : value } }), [state.nivelRequerido]);
@@ -31,38 +33,121 @@ export default function useSpellCalculator(userData) {
   const setIsCombinado = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'isCombinado', value: typeof value === 'function' ? value(state.isCombinado) : value } }), [state.isCombinado]);
   const setYantras = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'yantras', value: typeof value === 'function' ? value(state.yantras) : value } }), [state.yantras]);
   const setUsouFdV = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'usouFV', value: typeof value === 'function' ? value(state.usouFV) : value } }), [state.usouFV]);
-  const setFerramentaDedicada = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'ferramentaDedicada', value: typeof value === 'function' ? value(state.ferramentaDedicada) : value } }), [state.ferramentaDedicada]);
+  
   const setMitigarDadosParadoxoMana = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'mitigarDadosParadoxoMana', value: typeof value === 'function' ? value(state.mitigarDadosParadoxoMana) : value } }), [state.mitigarDadosParadoxoMana]);
   const setMitigarTodoParadoxoMana = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'mitigarTodoParadoxoMana', value: typeof value === 'function' ? value(state.mitigarTodoParadoxoMana) : value } }), [state.mitigarTodoParadoxoMana]);
   const setManaOpcional = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'manaOpcional', value: typeof value === 'function' ? value(state.manaOpcional) : value } }), [state.manaOpcional]);
   const setDadosExtras = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'dadosExtras', value: typeof value === 'function' ? value(state.dadosExtras) : value } }), [state.dadosExtras]);
   const setDadosParadoxoExtra = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'dadosParadoxoExtra', value: typeof value === 'function' ? value(state.dadosParadoxoExtra) : value } }), [state.dadosParadoxoExtra]);
 
-  // Facilita o uso do state para os cálculos derivados abaixo
   const {
     gnose, nivelArcana, nivelRequerido, magiasAtivas, spellType, regente,
     potencia, duracao, escala, alcance, tempoConjuracao, currentFP,
     potenciaElevada, duracaoElevada, escalaElevada, alcanceElevado, tempoConjuracaoElevada,
-    extraElevacoes, isCombinado, yantras, usouFV, ferramentaDedicada, mitigarDadosParadoxoMana,
-    mitigarTodoParadoxoMana, manaOpcional, dadosExtras, page, dadosParadoxoExtra
+    extraElevacoes, isCombinado, yantras, usouFV, mitigarDadosParadoxoMana,
+    mitigarTodoParadoxoMana, manaOpcional, dadosExtras, dadosParadoxoExtra
   } = state;
 
+  const efeitosYantra = React.useMemo(() => {
+    let efeitos = {
+      dadosBonus: 0,
+      manaOpcional: 0,
+      gnose: 0,
+      nivelArcana: 0,
+      extraElevacoes: 0,
+      dadosParadoxoExtra: 0,
+      potenciaElevada: false,
+      duracaoElevada: false,
+      escalaElevada: false,
+      alcanceElevado: false,
+      tempoConjuracaoElevada: false,
+      fatorPotencia: 0,
+      fatorDuracao: 0,
+      fatorEscala: 0,
+      fatorFdv: 0,
+      alcanceToque: false,
+      alcanceSensorial: false,
+      alcanceSimpatico: false,
+      tempoAcelerar: 0,
+      tempoExceder: 0
+    };
+
+    if (Array.isArray(yantras)) {
+      yantras.forEach(yantra => {
+        if (yantra.efeitosDinamicos && Array.isArray(yantra.efeitosDinamicos)) {
+          yantra.efeitosDinamicos.forEach(ef => {
+            const v = Number(ef.valor) || 0;
+            switch (ef.campo) {
+              case 'potenciaElevada':
+              case 'duracaoElevada':
+              case 'escalaElevada':
+              case 'alcanceElevado':
+              case 'tempoConjuracaoElevada':
+              case 'alcanceToque':
+              case 'alcanceSensorial':
+              case 'alcanceSimpatico':
+                if (v > 0) efeitos[ef.campo] = true;
+                break;
+              default:
+                if (efeitos[ef.campo] !== undefined) efeitos[ef.campo] += v;
+            }
+          });
+        } else if (yantra.dadosBonus !== undefined) {
+          efeitos.dadosBonus += Number(yantra.dadosBonus) || 0;
+        }
+      });
+    } else {
+      efeitos.dadosBonus = Number(yantras || 0);
+    }
+    return efeitos;
+  }, [yantras]);
+
+  // === VALORES EFETIVOS (COM YANTRAS APLICADOS) ===
+  const e_potenciaElevada = potenciaElevada || efeitosYantra.potenciaElevada;
+  const e_duracaoElevada = duracaoElevada || efeitosYantra.duracaoElevada;
+  const e_escalaElevada = escalaElevada || efeitosYantra.escalaElevada;
+  const e_alcanceElevado = alcanceElevado || efeitosYantra.alcanceElevado;
+  const e_tempoConjuracaoElevada = tempoConjuracaoElevada || efeitosYantra.tempoConjuracaoElevada;
+
+  const e_gnose = Math.max(1, gnose + efeitosYantra.gnose);
+  const e_potencia = Math.max(1, potencia + (efeitosYantra.fatorPotencia || 0));
+  const e_duracao = Math.max(1, duracao + (efeitosYantra.fatorDuracao || 0));
+  const e_escala = Math.max(1, escala + (efeitosYantra.fatorEscala || 0));
+
+  // === AJUSTE DE TEMPO DE CONJURAÇÃO CONSIDERANDO EFEITOS YANTRA ===
+  // Cap base: 6 (máximo tempo de conjuração ritual)
+  // Se yantra tem tempoExceder: cap = 6 + tempoExceder
+  // Nota: tempoAcelerar NÃO afeta bônus de dados, apenas o tempo exibido em spellLogic.formatSpellFactors
+  const e_tempoConjuracao = (() => {
+    const capMaximo = 6 + (Number(efeitosYantra.tempoExceder) || 0);
+    return Math.min(tempoConjuracao || 1, capMaximo);
+  })();
+
+  const e_nivelArcana = Math.max(1, nivelArcana + efeitosYantra.nivelArcana);
+  const e_extraElevacoes = extraElevacoes + efeitosYantra.extraElevacoes;
+  const e_dadosParadoxoExtra = dadosParadoxoExtra + efeitosYantra.dadosParadoxoExtra;
+
+  let e_alcance = alcance;
+  if (efeitosYantra.alcanceSimpatico) e_alcance = 'simpatico';
+  else if (efeitosYantra.alcanceSensorial) e_alcance = 'sensorial';
+  else if (efeitosYantra.alcanceToque) e_alcance = 'toque';
+
   // === CÁLCULOS DERIVADOS (MEMO) ===
-  const MagoData = React.useMemo(() => ({ gnose, nivelArcana, nivelRequerido }), [gnose, nivelArcana, nivelRequerido]);
+  const MagoData = React.useMemo(() => ({ gnose: e_gnose, nivelArcana: e_nivelArcana, nivelRequerido }), [e_gnose, e_nivelArcana, nivelRequerido]);
   const Fatores = React.useMemo(() => ({ potencia, duracao, escala, alcance, tempoConjuracao }), [potencia, duracao, escala, alcance, tempoConjuracao]);
 
   const custoElevacoes = React.useMemo(() => {
-    const custoPorExcessomMagiasAtivas = magiasAtivas >= gnose ? ((1 + magiasAtivas) - gnose) : 0;
+    const custoPorExcessomMagiasAtivas = magiasAtivas >= e_gnose ? ((1 + magiasAtivas) - e_gnose) : 0;
     let totalElevacoesCalculadas = 0;
-    if (potenciaElevada) totalElevacoesCalculadas++;
-    if (duracaoElevada) totalElevacoesCalculadas++;
-    if (escalaElevada) totalElevacoesCalculadas++;
-    if (tempoConjuracaoElevada) totalElevacoesCalculadas++;
-    if (alcanceElevado) totalElevacoesCalculadas += 1;
-    totalElevacoesCalculadas += extraElevacoes;
+    if (e_potenciaElevada) totalElevacoesCalculadas++;
+    if (e_duracaoElevada) totalElevacoesCalculadas++;
+    if (e_escalaElevada) totalElevacoesCalculadas++;
+    if (e_tempoConjuracaoElevada) totalElevacoesCalculadas++;
+    if (e_alcanceElevado) totalElevacoesCalculadas += 1;
+    totalElevacoesCalculadas += e_extraElevacoes;
     totalElevacoesCalculadas += custoPorExcessomMagiasAtivas;
     return totalElevacoesCalculadas;
-  }, [potenciaElevada, duracaoElevada, escalaElevada, tempoConjuracaoElevada, extraElevacoes, alcanceElevado, magiasAtivas, gnose]);
+  }, [e_potenciaElevada, e_duracaoElevada, e_escalaElevada, e_tempoConjuracaoElevada, e_extraElevacoes, e_alcanceElevado, magiasAtivas, e_gnose]);
 
   const custoVontade = usouFV ? 1 : 0;
 
@@ -85,8 +170,8 @@ export default function useSpellCalculator(userData) {
   }, [userData, setUsouFdV]);
 
   const calcularElevacoesGratis = React.useCallback(() => {
-    return spellLogic.calculateFreeReach(nivelArcana, nivelRequerido, spellType);
-  }, [spellType, nivelArcana, nivelRequerido]);
+    return spellLogic.calculateFreeReach(e_nivelArcana, nivelRequerido, spellType);
+  }, [spellType, e_nivelArcana, nivelRequerido]);
 
   const calcularElevacoesExcedentes = React.useCallback(() => {
     const elevacoesGratis = calcularElevacoesGratis();
@@ -98,46 +183,51 @@ export default function useSpellCalculator(userData) {
   }, [calcularElevacoesGratis, custoElevacoes]);
 
   const calcularDadosParadoxo = React.useCallback(() => {
-    let raw = spellLogic.calculateParadoxDice(gnose, calcularElevacoesGratis(), custoElevacoes);
-    if (ferramentaDedicada) {
-      raw = Math.max(0, raw - 2);
-    }
+    let raw = spellLogic.calculateParadoxDice(e_gnose, calcularElevacoesGratis(), custoElevacoes);
     return raw;
-  }, [gnose, calcularElevacoesGratis, custoElevacoes, ferramentaDedicada]);
+  }, [e_gnose, calcularElevacoesGratis, custoElevacoes]);
 
   const calcularTotalDadosParadoxo = React.useCallback(() => {
     let dadosParadoxo = calcularDadosParadoxo();
-    let mitigacaoEfetiva = Math.min(dadosParadoxo, mitigarDadosParadoxoMana);
-    return Math.max(0, (dadosParadoxo - mitigacaoEfetiva) + dadosParadoxoExtra);
-  }, [mitigarDadosParadoxoMana, calcularDadosParadoxo, dadosParadoxoExtra]);
+    let effectiveParadoxo = Math.max(0, dadosParadoxo + e_dadosParadoxoExtra);
+    let mitigacaoEfetiva = Math.min(effectiveParadoxo, mitigarDadosParadoxoMana);
+    return Math.max(0, effectiveParadoxo - mitigacaoEfetiva);
+  }, [mitigarDadosParadoxoMana, calcularDadosParadoxo, e_dadosParadoxoExtra]);
 
   const calcularDadosPorFator = React.useCallback(() => {
-    return spellLogic.calculateFactorPenalty({ potencia, duracao, escala, currentFP, nivelArcana });
-  }, [potencia, duracao, escala, currentFP, nivelArcana]);
+    return spellLogic.calculateFactorPenalty({ potencia: e_potencia, duracao: e_duracao, escala: e_escala, currentFP, nivelArcana: e_nivelArcana });
+  }, [e_potencia, e_duracao, e_escala, currentFP, e_nivelArcana]);
 
   const calcularParadaDeDados = React.useCallback(() => {
     const factorPenalty = calcularDadosPorFator();
+    const yantrasBonus = efeitosYantra.dadosBonus;
+
     return spellLogic.calculateDicePool({
-      gnose, nivelArcana, yantras, dadosExtras, isCombinado, usouFV,
-      tempoConjuracao, tempoConjuracaoElevada, currentFP, factorPenalty
+      gnose: e_gnose, 
+      nivelArcana: e_nivelArcana, 
+      yantras: yantrasBonus, dadosExtras, isCombinado, usouFV,
+      tempoConjuracao: e_tempoConjuracao, 
+      tempoConjuracaoElevada: e_tempoConjuracaoElevada, currentFP, factorPenalty,
+      fatorFdv: efeitosYantra.fatorFdv
     });
   }, [
-    gnose, nivelArcana, yantras, dadosExtras, isCombinado, usouFV,
-    tempoConjuracao, tempoConjuracaoElevada, currentFP, calcularDadosPorFator
+    e_gnose, e_nivelArcana, efeitosYantra.dadosBonus, dadosExtras, isCombinado, usouFV,
+    e_tempoConjuracao, e_tempoConjuracaoElevada, currentFP, calcularDadosPorFator
   ]);
 
   const calcularGastoMana = React.useCallback(() => {
     const paradoxDice = calcularDadosParadoxo();
-    let mitigacaoEfetiva = Math.min(paradoxDice, mitigarDadosParadoxoMana);
+    const effectiveParadox = Math.max(0, paradoxDice + e_dadosParadoxoExtra);
+    let mitigacaoEfetiva = Math.min(effectiveParadox, mitigarDadosParadoxoMana);
     return spellLogic.calculateManaCost({
-      alcance, regente, duracao, duracaoElevada, manaOpcional,
-      paradoxDice, mitigarTodoParadoxo: mitigarTodoParadoxoMana,
+      alcance: e_alcance, regente, duracao, duracaoElevada: e_duracaoElevada, manaOpcional: manaOpcional + efeitosYantra.manaOpcional,
+      paradoxDice: effectiveParadox, mitigarTodoParadoxo: mitigarTodoParadoxoMana,
       mitigarDadosParadoxo: mitigacaoEfetiva,
       spellType
     });
   }, [
-    alcance, regente, duracao, duracaoElevada, manaOpcional,
-    calcularDadosParadoxo, mitigarTodoParadoxoMana, mitigarDadosParadoxoMana,
+    e_alcance, regente, duracao, e_duracaoElevada, manaOpcional, efeitosYantra.manaOpcional,
+    calcularDadosParadoxo, mitigarTodoParadoxoMana, mitigarDadosParadoxoMana, e_dadosParadoxoExtra,
     spellType
   ]);
 
@@ -145,29 +235,30 @@ export default function useSpellCalculator(userData) {
 
   const calcularBaseManaCost = React.useCallback(() => {
     return spellLogic.calculateManaCost({
-      alcance, regente, duracao, duracaoElevada, manaOpcional: 0,
+      alcance: e_alcance, regente, duracao, duracaoElevada: e_duracaoElevada, manaOpcional: efeitosYantra.manaOpcional,
       paradoxDice: 0, mitigarTodoParadoxo: false,
       mitigarDadosParadoxo: 0,
       spellType
     });
-  }, [alcance, regente, duracao, duracaoElevada, spellType]);
+  }, [e_alcance, regente, duracao, e_duracaoElevada, spellType, efeitosYantra.manaOpcional]);
 
   const totalDisponivelParaOpcionais = React.useMemo(() => {
     return Math.max(0, initialMana - calcularBaseManaCost());
   }, [initialMana, calcularBaseManaCost]);
 
   const maxManaMitigacao = React.useMemo(() => {
-    const paradoxoDados = calcularDadosParadoxo();
-    return Math.min(paradoxoDados, totalDisponivelParaOpcionais);
-  }, [calcularDadosParadoxo, totalDisponivelParaOpcionais]);
+    const baseParadoxo = calcularDadosParadoxo();
+    const effectiveParadoxo = Math.max(0, baseParadoxo + e_dadosParadoxoExtra);
+    return Math.min(effectiveParadoxo, totalDisponivelParaOpcionais);
+  }, [calcularDadosParadoxo, totalDisponivelParaOpcionais, e_dadosParadoxoExtra]);
 
   const maxManaOpcional = totalDisponivelParaOpcionais;
 
   // === VALORES FINAIS (MEMO) ===
   const ModificamElevacao = React.useMemo(() => ({
-    magiasAtivas, potenciaElevada, duracaoElevada, escalaElevada,
-    tempoConjuracaoElevada, extraElevacoes, calcularElevacoesGratis, custoElevacoes
-  }), [magiasAtivas, potenciaElevada, duracaoElevada, escalaElevada, tempoConjuracaoElevada, extraElevacoes, calcularElevacoesGratis, custoElevacoes]);
+    magiasAtivas, potenciaElevada: e_potenciaElevada, duracaoElevada: e_duracaoElevada, escalaElevada: e_escalaElevada,
+    tempoConjuracaoElevada: e_tempoConjuracaoElevada, extraElevacoes: e_extraElevacoes, calcularElevacoesGratis, custoElevacoes
+  }), [magiasAtivas, e_potenciaElevada, e_duracaoElevada, e_escalaElevada, e_tempoConjuracaoElevada, e_extraElevacoes, calcularElevacoesGratis, custoElevacoes]);
 
   const custoMana = React.useMemo(() => {
     return Math.max(0, calcularGastoMana());
@@ -182,26 +273,72 @@ export default function useSpellCalculator(userData) {
   }, [calcularParadaDeDados]);
 
 
-  const saveSpellData = React.useCallback((spellName) => {
-    try {
-      const KEY = `spellCalculator_${spellName}`;
-      localStorage.setItem(KEY, JSON.stringify(state));
-      console.log(`Dados da magia "${spellName}" salvos com sucesso!`);
-    } catch (error) {
-      console.error('Erro ao salvar dados da magia no localStorage:', error);
-    }
-  }, [state]);
+  const checkSpellExists = React.useCallback((spellName) => {
+    return !!(userData?.savedSpells && userData.savedSpells[spellName]);
+  }, [userData]);
 
-  const loadSpellData = React.useCallback(() => {
+  const saveSpellData = React.useCallback(async (spellName) => {
+    if (!userData || !database) {
+      alert("Usuário não autenticado ou banco de dados indisponível.");
+      return false;
+    }
     try {
-      const savedData = localStorage.getItem('spellCalculatorData');
-      if (savedData) {
-        const spellDataObj = JSON.parse(savedData);
-        dispatch({ type: 'LOAD_STATE', payload: spellDataObj });
-        console.log('Dados da magia carregados com sucesso!');
-      }
+      const spellPathRef = ref(database, `users/${userData.id}/savedSpells/${spellName}`);
+      
+      const spellToSave = {
+        name: spellName,
+        arcanas: `Arcana Nível ${nivelArcana}`,
+        description: "",
+        calculatorState: {
+          ...state,
+          calculatorParadaDeDados: calcularParadaDeDados(),
+          custoMana: calcularGastoMana(),
+          totalDadosParadoxo: calcularTotalDadosParadoxo()
+        }
+      };
+      
+      await set(spellPathRef, spellToSave);
+      console.log(`Magia "${spellName}" salva com sucesso no Firebase!`);
+      return true;
     } catch (error) {
-      console.error('Erro ao carregar dados da magia do localStorage:', error);
+      console.error("Erro ao salvar magia no Firebase:", error);
+      alert("Erro ao salvar a magia. Tente novamente.");
+      return false;
+    }
+  }, [userData, database, state, nivelArcana, calcularParadaDeDados, calcularGastoMana, calcularTotalDadosParadoxo]);
+
+  const deleteSpellData = React.useCallback(async (spellName, userId) => {
+    const targetUid = userId || userData?.id;
+    if (!targetUid || !database) return false;
+    try {
+      const spellPathRef = ref(database, `users/${targetUid}/savedSpells/${spellName}`);
+      await remove(spellPathRef);
+      console.log(`Magia "${spellName}" excluída do Firebase.`);
+      return true;
+    } catch (error) {
+      console.error("Erro ao excluir magia do Firebase:", error);
+      return false;
+    }
+  }, [userData, database]);
+
+  const updateSavedSpell = React.useCallback(async (spellName, fields, userId) => {
+    const targetUid = userId || userData?.id;
+    if (!targetUid || !database) return false;
+    try {
+      const spellPathRef = ref(database, `users/${targetUid}/savedSpells/${spellName}`);
+      await update(spellPathRef, fields);
+      console.log(`Magia "${spellName}" atualizada com sucesso no Firebase.`);
+      return true;
+    } catch (error) {
+      console.error("Erro ao atualizar magia no Firebase:", error);
+      return false;
+    }
+  }, [userData, database]);
+
+  const loadSpellData = React.useCallback((spellCalculatorState) => {
+    if (spellCalculatorState) {
+      dispatch({ type: 'LOAD_STATE', payload: spellCalculatorState });
+      console.log('Dados da magia carregados no estado do calculador!');
     }
   }, []);
 
@@ -253,11 +390,12 @@ export default function useSpellCalculator(userData) {
 
     // Trava de segurança absoluta para cada campo
     if (manaOpcional > totalDisponivel) setManaOpcional(totalDisponivel);
-    const paradoxoMaximo = calcularDadosParadoxo();
-    const tetoMitigacao = Math.min(paradoxoMaximo, totalDisponivel);
+    const rawParadoxo = calcularDadosParadoxo();
+    const effectiveParadoxo = Math.max(0, rawParadoxo + e_dadosParadoxoExtra);
+    const tetoMitigacao = Math.min(effectiveParadoxo, totalDisponivel);
     if (mitigarDadosParadoxoMana > tetoMitigacao) setMitigarDadosParadoxoMana(tetoMitigacao);
 
-  }, [manaOpcional, mitigarDadosParadoxoMana, totalDisponivelParaOpcionais, calcularDadosParadoxo]);
+  }, [manaOpcional, mitigarDadosParadoxoMana, totalDisponivelParaOpcionais, calcularDadosParadoxo, e_dadosParadoxoExtra]);
 
   // Trava de segurança para Força de Vontade (FdV)
   React.useEffect(() => {
@@ -272,9 +410,8 @@ export default function useSpellCalculator(userData) {
     MagoData,
     Fatores,
     ModificamElevacao,
+    efeitosYantra,
     // Estados e seus setters
-    page,
-    setPage,
     gnose,
     setGnose,
     nivelArcana,
@@ -318,8 +455,7 @@ export default function useSpellCalculator(userData) {
     setYantras,
     usouFV,
     setUsouFdV,
-    ferramentaDedicada,
-    setFerramentaDedicada,
+    
     mitigarDadosParadoxoMana,
     setMitigarDadosParadoxoMana,
     mitigarTodoParadoxoMana,
@@ -354,7 +490,10 @@ export default function useSpellCalculator(userData) {
     calcularGastoMana, 
     calcularTotalDadosParadoxo, 
     calcularParadaDeDados: calcularParadaDeDados,
+    checkSpellExists,
     saveSpellData,
+    deleteSpellData,
+    updateSavedSpell,
     loadSpellData
   };
 }

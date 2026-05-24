@@ -8,20 +8,47 @@ import ExtraOptionsComponent from "./ExtraOptionsComponent";
 import ResumoMagia from "./ResumoMagia";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../AppContext";
-import useSpellCalculator from "../hooks/useSpellCalculator";
+import { useAppSpellContext } from "../../AppSpellContext";
 import useResumoMagiaCalcs from "../hooks/useResumoMagiaCalcs";
 import { ref, update } from "firebase/database";
 import { pushLog } from "../../js/logUtils";
+import SalvarMagiaModal from "./SalvarMagiaModal";
 
 export default function SpellCalcScreen() {
   const { userData, database } = React.useContext(AppContext);
-
   const navigate = useNavigate();
+
+  const [modalSalvarAberto, setModalSalvarAberto] = React.useState(false);
+
+  // Obter contexto da magia com proteção de loading
+  const spellContextData = useAppSpellContext();
+  const { isLoading } = spellContextData;
+
+  // Se o contexto ainda está carregando, mostra loading
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <p>Carregando calculadora de magia...</p>
+      </div>
+    );
+  }
+
+  const handleSalvarMagia = async (spellName) => {
+    if (spellContextData.checkSpellExists(spellName)) {
+      const confirmOverwrite = window.confirm(
+        `Já existe uma magia salva com o nome "${spellName}". Deseja substituí-la?`
+      );
+      if (!confirmOverwrite) return;
+    }
+    
+    const success = await spellContextData.saveSpellData(spellName);
+    if (success) {
+      setModalSalvarAberto(false);
+    }
+  };
 
   const {
     // Estados
-    page,
-    setPage,
     gnose,
     setGnose,
     nivelArcana,
@@ -65,8 +92,6 @@ export default function SpellCalcScreen() {
     setYantras,
     usouFV,
     setUsouFdV,
-    ferramentaDedicada,
-    setFerramentaDedicada,
     mitigarDadosParadoxoMana,
     setMitigarDadosParadoxoMana,
     mitigarTodoParadoxoMana,
@@ -101,7 +126,10 @@ export default function SpellCalcScreen() {
     calcularElevacoesTotais,
     calcularDadosParadoxo,
     calcularDadosPorFator,
-  } = useSpellCalculator(userData);
+    checkSpellExists,
+    saveSpellData,
+    efeitosYantra,
+  } = spellContextData;
 
   const {
     exibirPotencia,
@@ -125,7 +153,7 @@ export default function SpellCalcScreen() {
     duracaoElevada,
     tempoConjuracao,
     tempoConjuracaoElevada,
-    
+    efeitosYantra
   );
 
   const mageDataProps = {
@@ -141,8 +169,6 @@ export default function SpellCalcScreen() {
     setSpellType,
     regente,
     setRegente,
-    page,
-    setPage,
     toggleRegente,
   };
   const spellDataProps = {
@@ -157,12 +183,9 @@ export default function SpellCalcScreen() {
     setAlcance,
     tempoConjuracao,
     setTempoConjuracao,
-    page,
-    setPage,
     currentFP,
-    setCurrentFP,
-    potenciaElevada,
-    setPotenciaElevada,
+    yantras,
+    setYantras,
     duracaoElevada,
     setDuracaoElevada,
     escalaElevada,
@@ -187,11 +210,8 @@ export default function SpellCalcScreen() {
     setSpellType,
     regente,
     setRegente,
-    page,
-    setPage,
     yantras,
     setYantras,
-    ferramentaDedicada,
   };
   const extraOptionDataProps = {
     isCombinado,
@@ -200,8 +220,7 @@ export default function SpellCalcScreen() {
     setExtraElevacoes,
     usouFV,
     setUsouFdV,
-    ferramentaDedicada,
-    setFerramentaDedicada,
+    
     toggleUsouFV,
     mitigarDadosParadoxoMana,
     setMitigarDadosParadoxoMana,
@@ -219,46 +238,64 @@ export default function SpellCalcScreen() {
     userData,
   };
   const getWhatsAppText = React.useCallback(() => {
-    const pExtra = Math.max(0, potencia - 1);
-    const pPenalty = currentFP === "potencia" ? Math.max(0, potencia - nivelArcana) * 2 : pExtra * 2;
-    const pFP = currentFP === "potencia" ? " (Fator Primário)" : "";
-    const pElevada = potenciaElevada ? " (E)" : "";
+    const e_potenciaElevada = potenciaElevada || efeitosYantra.potenciaElevada;
+    const e_duracaoElevada = duracaoElevada || efeitosYantra.duracaoElevada;
+    const e_tempoConjuracaoElevada = tempoConjuracaoElevada || efeitosYantra.tempoConjuracaoElevada;
+    // Effective tempoConjuracao considers yantra.tempoExceder (increases cap beyond 6)
+    const tMaxNivel = currentFP === "tempoConjuracao" ? 100 : (6 + (efeitosYantra.tempoExceder || 0));
+    const e_tempoConjuracao = Math.min(tempoConjuracao, tMaxNivel);
+    const e_escalaElevada = escalaElevada || efeitosYantra.escalaElevada;
+    
+    let e_alcance = alcance;
+    if (efeitosYantra.alcanceSimpatico) e_alcance = 'simpatico';
+    else if (efeitosYantra.alcanceSensorial) e_alcance = 'sensorial';
+    else if (efeitosYantra.alcanceToque) e_alcance = 'toque';
 
-    const dExtra = Math.max(0, duracao - 1);
-    const dPenalty = currentFP === "duracao" ? Math.max(0, duracao - nivelArcana) * 2 : dExtra * 2;
+    const e_potencia = potencia + (efeitosYantra.fatorPotencia || 0);
+    const e_duracao = duracao + (efeitosYantra.fatorDuracao || 0);
+    const e_escala = escala + (efeitosYantra.fatorEscala || 0);
+    const e_gnose = Math.max(1, gnose + (efeitosYantra.gnose || 0));
+    const e_nivelArcana = Math.max(1, nivelArcana + (efeitosYantra.nivelArcana || 0));
+    const yantrasBonus = efeitosYantra.dadosBonus || 0;
+
+    const pExtra = Math.max(0, e_potencia - 1);
+    const pPenalty = currentFP === "potencia" ? Math.max(0, e_potencia - e_nivelArcana) * 2 : pExtra * 2;
+    const pFP = currentFP === "potencia" ? " (Fator Primário)" : "";
+    const pElevada = e_potenciaElevada ? " (E)" : "";
+
+    const dExtra = Math.max(0, e_duracao - 1);
+    const dPenalty = currentFP === "duracao" ? Math.max(0, e_duracao - e_nivelArcana) * 2 : dExtra * 2;
     const dFP = currentFP === "duracao" ? " (Fator Primário)" : "";
-    const dElevada = duracaoElevada ? " (E)" : "";
+    const dElevada = e_duracaoElevada ? " (E)" : "";
 
     let tBonus = 0;
-    if (!tempoConjuracaoElevada && currentFP !== "tempoConjuracao") {
-      tBonus = Math.min(5, Math.max(0, tempoConjuracao - 1));
-    } else if (!tempoConjuracaoElevada && currentFP === "tempoConjuracao") {
-      tBonus = Math.max(0, tempoConjuracao - 1);
+    if (!e_tempoConjuracaoElevada) {
+      tBonus = Math.max(0, e_tempoConjuracao - 1);
     }
-    const tExtra = Math.max(0, tempoConjuracao - 1);
+    const tExtra = Math.max(0, e_tempoConjuracao - 1);
     const tFP = currentFP === "tempoConjuracao" ? " (Fator Primário)" : "";
-    const tElevada = tempoConjuracaoElevada ? " (E)" : "";
+    const tElevada = e_tempoConjuracaoElevada ? " (E)" : "";
 
-    const eExtra = Math.max(0, escala - 1);
-    const ePenalty = currentFP === "escala" ? Math.max(0, escala - nivelArcana) * 2 : eExtra * 2;
+    const eExtra = Math.max(0, e_escala - 1);
+    const ePenalty = currentFP === "escala" ? Math.max(0, e_escala - e_nivelArcana) * 2 : eExtra * 2;
     const eFP = currentFP === "escala" ? " (Fator Primário)" : "";
-    const eElevada = escalaElevada ? " (E)" : "";
+    const eElevada = e_escalaElevada ? " (E)" : "";
 
-    let textoSoma = `Arcano ${nivelArcana} + Gnose ${gnose}`;
-    if (yantras > 0) textoSoma += ` + Yantras ${yantras}`;
+    let textoSoma = `Arcano ${e_nivelArcana} + Gnose ${e_gnose}`;
+    if (yantrasBonus > 0) textoSoma += ` + Yantras ${yantrasBonus}`;
     if (tBonus > 0) textoSoma += ` + Ritual ${tBonus}`;
     if (usouFV) textoSoma += ` + FDV 3`;
     if (dadosExtras > 0) textoSoma += ` + Dados Extras ${dadosExtras}`;
 
-    const xSoma = nivelArcana + gnose + yantras + tBonus + (usouFV ? 3 : 0) + dadosExtras;
+    const xSoma = e_nivelArcana + e_gnose + yantrasBonus + tBonus + (usouFV ? 3 : 0) + dadosExtras;
     const yPenalties = pPenalty + dPenalty + ePenalty + (isCombinado ? 2 : 0);
 
     let elevacoesList = [];
-    if (potenciaElevada) elevacoesList.push("Potência");
-    if (duracaoElevada) elevacoesList.push("Duração");
-    if (tempoConjuracaoElevada) elevacoesList.push("Tempo de Conjuração");
-    if (escalaElevada) elevacoesList.push("Escala");
-    if (alcance !== 'toque') elevacoesList.push("Alcance");
+    if (e_potenciaElevada) elevacoesList.push("Potência");
+    if (e_duracaoElevada) elevacoesList.push("Duração");
+    if (e_tempoConjuracaoElevada) elevacoesList.push("Tempo de Conjuração");
+    if (e_escalaElevada) elevacoesList.push("Escala");
+    if (e_alcance !== 'toque') elevacoesList.push("Alcance");
     if (extraElevacoes > 0) elevacoesList.push(`Elevação Opcionais ${extraElevacoes}`);
     const textoElevacoesUsadas = elevacoesList.length > 0 ? ` (${elevacoesList.join(', ')})` : '';
 
@@ -267,8 +304,8 @@ Nível da Prática: ${nivelRequerido}
 Potência${pFP}${pElevada}: 1 + ${pExtra} (-${pPenalty}d)
 Duração${dFP}${dElevada}: 1 + ${dExtra} (-${dPenalty}d) | ${exibirDuracao}
 Tempo de conjuração${tFP}${tElevada}: Ritual 1 + ${tExtra} (+${tBonus}d) | ${exibirTempoConjuracao}
-Escala${eFP}${eElevada}: ${escala} | Área: ${exibirEscala.area} | Alvos: ${exibirEscala.alvos} | Tamanho: ${exibirEscala.tamanhos} (${exibirTextoPorTamanho})
-Alcance: ${alcance.charAt(0).toUpperCase() + alcance.slice(1)}
+Escala${eFP}${eElevada}: ${e_escala} | Área: ${exibirEscala.area} | Alvos: ${exibirEscala.alvos} | Tamanho: ${exibirEscala.tamanhos} (${exibirTextoPorTamanho})
+Alcance: ${e_alcance.charAt(0).toUpperCase() + e_alcance.slice(1)}
 
 ${textoSoma}
 
@@ -280,7 +317,7 @@ Elevações grátis: ${calcularElevacoesGratis()}
 Elevações usadas: ${custoElevacoes}${textoElevacoesUsadas}
 Dados paradoxo: ${totalDadosParadoxo}
 Gasto de mana: ${custoMana}`;
-  }, [potencia, currentFP, nivelArcana, potenciaElevada, duracao, duracaoElevada, tempoConjuracaoElevada, tempoConjuracao, escala, escalaElevada, exibirEscala, alcance, yantras, gnose, usouFV, dadosExtras, isCombinado, extraElevacoes, calcularElevacoesGratis, custoElevacoes, paradaDeDados, totalDadosParadoxo, custoMana, exibirDuracao, nivelRequerido, exibirTempoConjuracao, exibirTextoPorTamanho]);
+  }, [potencia, currentFP, nivelArcana, potenciaElevada, duracao, duracaoElevada, tempoConjuracaoElevada, tempoConjuracao, escala, escalaElevada, exibirEscala, alcance, yantras, gnose, usouFV, dadosExtras, isCombinado, extraElevacoes, calcularElevacoesGratis, custoElevacoes, paradaDeDados, totalDadosParadoxo, custoMana, exibirDuracao, nivelRequerido, exibirTempoConjuracao, exibirTextoPorTamanho, efeitosYantra]);
 
   const resumoMagiaProps = {
     exibirPotencia,
@@ -362,15 +399,25 @@ Gasto de mana: ${custoMana}`;
         <div className={styles.notScrollableData}>
           <ResumoMagia {...resumoMagiaProps} />
           <div className={styles.spellCalcFooter}>
-            <button className={styles.button} onClick={resetCalculadora}>
-              Limpar
-            </button>
+            <div className={styles.footerRow}>
+              <button className={styles.button} onClick={resetCalculadora}>
+                Limpar
+              </button>
+             {playerData.role === "narrador" &&  <button className={styles.button} onClick={() => setModalSalvarAberto(true)}>
+                Salvar
+              </button>}
+            </div>
             <button className={styles.button} onClick={goToDice}>
               Ir para Rolagem
             </button>
           </div>
         </div>
       </div>
+      <SalvarMagiaModal
+        isOpen={modalSalvarAberto}
+        onClose={() => setModalSalvarAberto(false)}
+        onSave={handleSalvarMagia}
+      />
     </>
   );
 }

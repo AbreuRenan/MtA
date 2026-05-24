@@ -1,0 +1,36 @@
+{
+  "background_color": "#0c0e00",
+  "description": "Kit de utilidades para RPG Mago o Despertar, com ficha, grimorio e rolador de dados",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Mage The Awakening Companion",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "short_name": "mt-a",
+  "start_url": "/",
+  "theme_color": "#0c0e00",
+  "icons": [
+    {
+      "src": "src/assets/skull.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/mtashare.png"
+    }
+  ],
+  "id": "mt-aCompanion",
+  "lang": "pt",
+  "categories": [
+    "entertainment",
+    "games",
+    "utilities"
+  ],
+  "shortcuts": [
+    {
+      "name": "Dado",
+      "url": "/#/dice",
+      "description": "Ir para Rolador de Dados"
+    }
+  ]
+}

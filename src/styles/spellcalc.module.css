@@ -5,16 +5,15 @@
   gap: 10px;
   margin-bottom: 20px;
 }
-.spellCalcHeader > h1 {
+
+.spellCalcHeader>h1 {
   position: relative;
   font-family: var(--magoFont);
   font-weight: 600;
   color: transparent;
-  background: linear-gradient(
-    90deg,
-    var(--amarelo) 0%,
-    var(--amareloSombra) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--amarelo) 0%,
+      var(--amareloSombra) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -22,7 +21,7 @@
   text-shadow: 0 0 2px var(--amarelo);
 }
 
-.spellCalcHeader > h1::before {
+.spellCalcHeader>h1::before {
   content: "";
   position: absolute;
   top: 0;
@@ -35,10 +34,12 @@
   transform: skew(-20deg);
   animation: shinyText 5s ease-in forwards infinite;
 }
+
 .scrollableData {
   overflow-y: scroll;
   padding-bottom: 20px;
 }
+
 .notScrollableData {
   display: flex;
   flex-direction: column;
@@ -54,16 +55,20 @@
   gap: 10px;
   padding-top: 10px;
 }
+
 .notScrollableData * {
   font-size: 0.85rem;
 }
+
 .resumoDisponivel {
   display: flex;
   justify-content: space-between;
 }
+
 .resumoDisponivel * {
   font-size: .7rem;
 }
+
 .resumoMagia {
   position: relative;
   text-align: center;
@@ -71,9 +76,11 @@
   grid-template-columns: 55% 45%;
   gap: 10px;
 }
+
 .resumoMagia .tooltipParent .tooltip {
   display: none;
 }
+
 .resumoMagia .tooltipParent:hover .tooltip {
   display: flex;
   position: absolute;
@@ -85,14 +92,17 @@
   border: 1px solid var(--amarelo);
   box-shadow: 0 0 10px 2px var(--amarelo)
 }
+
 .resumoMagia .notelevada::before {
   content: " ◌ ";
   color: var(--amarelo)
 }
+
 .resumoMagia .elevada::before {
   content: " ● ";
   color: var(--amarelo);
 }
+
 b {
   text-transform: capitalize;
 }
@@ -103,6 +113,7 @@ b {
   display: flex;
   flex-direction: column;
 }
+
 .fatoresCol p,
 .dadosCol p {
   text-align: left;
@@ -111,21 +122,32 @@ b {
 .elevacao.verde {
   color: rgb(0, 210, 0);
 }
+
 .elevacao.vermelho {
   color: red;
 }
+
 .spellCalcFooter {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 10px;
   width: 100%;
-  padding-bottom: 8%;
+  padding-bottom: clamp(25px, 1vw, 60px);
 }
-.spellCalcFooter > div {
-  grid-column: span 3;
+
+.footerRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
 }
-.spellCalcFooter > button {
+
+.footerRow>button {
+  flex: 1;
+}
+
+.spellCalcFooter button {
   display: flex;
   width: 100%;
   height: 50px;
@@ -136,7 +158,10 @@ b {
   font-weight: 600;
   padding: 14px 28px;
   border-radius: 6px;
+  color: black;
+  cursor: pointer;
 }
+
 .optionalsData,
 .spellData,
 .yantraData,
@@ -148,22 +173,26 @@ b {
   gap: 10px;
   padding-bottom: 30px;
 }
+
 .optionalsData,
 .spellData {
   grid-template-columns: 10% 40% 10% 40%;
   column-gap: 0;
 }
 
-.optionalsData > label {
+.optionalsData>label {
   grid-column: 1/3;
 }
-.optionalsData > input[type="checkbox"] {
+
+.optionalsData>input[type="checkbox"] {
   grid-column: 3/3;
 }
-.optionalsData > div.inputGroupControl {
+
+.optionalsData>div.inputGroupControl {
   grid-column: 4/4;
 }
-.optionalsData > .mitigarDadosParadoxoContainer {
+
+.optionalsData>.mitigarDadosParadoxoContainer {
   display: flex;
 }
 
@@ -179,7 +208,7 @@ b {
   justify-content: flex-end;
 }
 
-.inputGroupControl > button {
+.inputGroupControl>button {
   background: var(--amarelo);
   box-shadow: 0 4px 0 0 #837e2e;
   font-weight: 600;
@@ -187,17 +216,19 @@ b {
   width: 100%;
 }
 
-.inputGroupControl > button:active:not(:disabled),
-.spellCalcFooter > button:active:not(:disabled) {
+.inputGroupControl>button:active:not(:disabled),
+.spellCalcFooter>button:active:not(:disabled) {
   box-shadow: 0 2px 0 0 #837e2e;
   transform: translateY(2px);
   transition: all 0.05s ease-in-out;
 }
-.inputGroupControl > button:first-of-type {
+
+.inputGroupControl>button:first-of-type {
   border-left: 1px solid var(--amarelo);
   border-radius: 4px 0 0 4px;
 }
-.inputGroupControl > button:last-of-type {
+
+.inputGroupControl>button:last-of-type {
   border-right: 1px solid var(--amareloSombra);
   border-radius: 0 4px 4px 0;
 }
@@ -214,13 +245,16 @@ b {
   color: var(--branco);
   text-align: center;
 }
+
 .inputNumber:focus-within {
   outline: none;
   box-shadow: 0 0 10px 4px var(--amarelo);
 }
+
 input.inputCheckbox {
   display: none;
 }
+
 label.inputCheckbox {
   position: relative;
   display: grid;
@@ -233,11 +267,13 @@ label.inputCheckbox {
   background: transparent;
   cursor: pointer;
 }
+
 label.inputCheckbox[data-disabled="true"] {
   opacity: 0.4;
   cursor: not-allowed;
   filter: grayscale(0.8);
 }
+
 label.inputCheckbox::before {
   content: "";
   position: absolute;
@@ -248,6 +284,7 @@ label.inputCheckbox::before {
   background: white;
   transition: all 0.15s;
 }
+
 label.inputCheckbox::before {
   content: "";
   position: absolute;
@@ -258,14 +295,15 @@ label.inputCheckbox::before {
   background: var(--amarelo);
   transition: all 0.15s;
 }
-input.inputCheckbox:checked + label.inputCheckbox::before {
+
+input.inputCheckbox:checked+label.inputCheckbox::before {
   left: 50%;
   border-radius: 0 4px 4px 0;
   background: var(--amarelo);
   box-shadow: 0 0 10px 2px var(--amarelo);
 }
 
-label.inputCheckbox > div {
+label.inputCheckbox>div {
   width: 100%;
   height: 36px;
   color: transparent;
@@ -274,12 +312,15 @@ label.inputCheckbox > div {
   justify-content: center;
   z-index: 10;
 }
-input.inputCheckbox + label.inputCheckbox > div:first-child {
+
+input.inputCheckbox+label.inputCheckbox>div:first-child {
   color: black;
 }
-input.inputCheckbox:checked + label.inputCheckbox > div:last-of-type {
+
+input.inputCheckbox:checked+label.inputCheckbox>div:last-of-type {
   color: black;
 }
+
 .inputCheckbox:checked {
   background-image: url(/src/assets/checkmark.png);
   background-size: contain;
@@ -293,6 +334,7 @@ input.inputCheckbox:checked + label.inputCheckbox > div:last-of-type {
   display: none !important;
   appearance: none;
 }
+
 fieldset.inputGroupSpellExtras,
 fieldset.inputGroupSpellType {
   display: flex;
@@ -310,15 +352,18 @@ fieldset.inputGroupSpellType {
   padding-block: 0.75em;
   padding-inline: 0.75em;
 }
+
 .spellData fieldset.inputGroupSpellType {
   grid-column: span 4;
 }
-.inputGroupSpellType > div {
+
+.inputGroupSpellType>div {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
 }
+
 .inputGroupSpellExtras {
   display: flex;
   align-items: center;
@@ -335,6 +380,7 @@ input[type="checkbox"].checkboxElevada,
   height: 18px;
   width: 18px;
 }
+
 input[type="radio"].checkboxElevada:checked,
 input[type="checkbox"].checkboxElevada:checked,
 input[type="checkbox"].checkboxElevada:active,
@@ -352,10 +398,12 @@ input[type="checkbox"].checkboxElevada:active,
   0% {
     left: -20%;
   }
+
   25% {
     left: 110%;
     transform: skew(-18deg);
   }
+
   100% {
     left: 110%;
   }

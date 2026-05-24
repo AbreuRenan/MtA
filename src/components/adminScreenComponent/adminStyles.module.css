@@ -10,6 +10,25 @@
   overflow: hidden;
 }
 
+.selectTiposEfeitosYantra {
+  appearance: none; /* Remove a setinha padrão do navegador */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+   flex: 1;
+   padding: 8px;
+   background: rgba(0,0,0,0.95);
+   border: 1px solid var(--separador);
+   color: white ;
+   border-radius: 4px
+}
+.selectTiposEfeitosYantra::picker {
+   appearance: base-select;
+   background: rgba(255,255,255,0.1);
+   border: 1px solid var(--separador);
+   color: white ;
+   border-radius: 4px
+}
+
 .topFixedArea {
   display: flex;
   flex-direction: column;
@@ -158,4 +177,310 @@
   filter: brightness(1.3);
   transform: scale(1.02);
   transition: all .2s ease;
+}
+
+/* Redesign de Abas */
+.tabsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  background: rgba(12, 14, 0, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid var(--separador);
+  border-radius: 12px;
+  padding: 6px;
+  margin: 10px 0 15px 0;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  flex-shrink: 0;
+}
+
+.tabBtn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--branco);
+  padding: 14px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+
+.tabBtn:hover {
+  background: rgba(210, 200, 90, 0.15);
+  color: var(--amarelo);
+  transform: translateY(-1px);
+}
+
+.tabBtn:active {
+  transform: translateY(0);
+}
+
+.activeTab {
+  background: var(--grad-dourado-chic, linear-gradient(135deg, #d2c85a 25%, #c89d00 75%));
+  color: #0c0e00 !important;
+  box-shadow: 0 4px 15px rgba(210, 200, 90, 0.4);
+}
+
+/* Barra de sub-abas de Logs */
+.logSubtabsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  background: rgba(12, 14, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid var(--separador);
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 15px;
+  flex-shrink: 0;
+}
+
+.logSubtabBtn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--branco);
+  padding: 10px 14px;
+  font-family: var(--magoFont);
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  text-align: center;
+  user-select: none;
+}
+
+.logSubtabBtn:hover {
+  background: rgba(210, 200, 90, 0.12);
+  color: var(--amarelo);
+}
+
+.activeLogSubtab {
+  background: rgba(210, 200, 90, 0.25);
+  color: var(--amarelo) !important;
+  font-family: var(--magoFontBold);
+  border: 1px solid rgba(210, 200, 90, 0.3);
+  box-shadow: inset 0 0 8px rgba(210, 200, 90, 0.15);
+}
+
+/* Painel de Log em Tela Cheia */
+.logFullPanel {
+  width: 100%;
+  max-width: 900px;
+  background: rgba(12, 14, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--separador);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  height: 70vh;
+}
+
+
+/* Contêiner Geral do Conteúdo das Abas */
+.tabContentContainer {
+  width: 100%;
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+/* Grid de Logs (Aba Logs) */
+.logsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+  align-items: stretch;
+}
+
+@media (max-width: 850px) {
+  .logsGrid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}
+
+.logPanel {
+  background: rgba(12, 14, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--separador);
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  max-height: 70vh;
+}
+
+@media (max-width: 850px) {
+  .logPanel {
+    max-height: 45vh;
+  }
+}
+
+.panelTitle {
+  font-family: var(--magoFont);
+  color: var(--amarelo);
+  font-size: 1.1rem;
+  text-align: center;
+  border-bottom: 1px solid var(--separador);
+  padding-bottom: 8px;
+  margin-bottom: 5px;
+  letter-spacing: 1px;
+}
+
+.logScrollArea {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+/* Aba Configurações */
+.configContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  width: 100%;
+  max-width: 600px;
+  margin: 10px auto;
+  padding-bottom: 30px;
+}
+
+.configCard {
+  background: rgba(12, 14, 0, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--separador);
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.configCard h3 {
+  font-family: var(--magoFont);
+  color: var(--amarelo);
+  font-size: 1.2rem;
+  border-bottom: 1.5px solid var(--separador);
+  padding-bottom: 10px;
+  margin-bottom: 5px;
+  letter-spacing: 1px;
+}
+
+.gameStatusArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  font-family: var(--magoFont);
+  letter-spacing: 0.5px;
+}
+
+.statusDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+.statusDotActive {
+  background-color: #389b3c;
+  box-shadow: 0 0 12px #389b3c;
+}
+
+.statusDotInactive {
+  background-color: #9e4141;
+  box-shadow: 0 0 12px #9e4141;
+}
+
+.actionsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .actionsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.configBtn {
+  padding: 14px 20px;
+  font-family: var(--magoFont);
+  font-size: 0.95rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+  text-align: center;
+}
+
+.configBtn.primary {
+  background: var(--amarelo);
+  color: #0c0e00;
+  box-shadow: 0 4px 0 0 var(--amareloSombra);
+}
+
+.configBtn.primary:hover {
+  background: #e3d96c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 0 var(--amareloSombra);
+}
+
+.configBtn.danger {
+  background: var(--vermelho);
+  color: var(--branco);
+  box-shadow: 0 4px 0 0 var(--vermelhoSombra);
+}
+
+.configBtn.danger:hover {
+  background: #b54f4f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 0 var(--vermelhoSombra);
+}
+
+.configBtn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 0 0 inherit;
 }

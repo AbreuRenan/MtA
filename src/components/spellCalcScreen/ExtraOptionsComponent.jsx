@@ -11,8 +11,6 @@ export default function ExtraOptionsComponent(props) {
     setExtraElevacoes,
     usouFdV,
     setUsouFdV,
-    ferramentaDedicada,
-    setFerramentaDedicada,
     mitigarDadosParadoxoMana,
     setMitigarDadosParadoxoMana,
     manaOpcional,
@@ -112,12 +110,6 @@ export default function ExtraOptionsComponent(props) {
           checked={usouFdV}
           setValue={toggleUsouFV} 
           disabled={(userData?.fv?.max - userData?.fv?.usado) <= 0 && !usouFdV}
-        />
-        <InputCheckBox
-          label="Ferramenta Dedicada?"
-          id="ferramentaDedicada"
-          checked={ferramentaDedicada}
-          setValue={setFerramentaDedicada} 
         />
       </div>
     </div>

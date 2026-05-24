@@ -61,6 +61,15 @@ describe('spellLogic.js', () => {
         tempoConjuracao: 1, tempoConjuracaoElevada: false, currentFP: 'potencia'
       })).toBe(5);
     });
+
+    it('should increase dice for tempoConjuracao above 6 when not elevated', () => {
+      // Gnose 1 + Arcana 1 = 2 base, tempoConjuracao 7 => bonus (7-1)=6, total 8
+      expect(logic.calculateDicePool({
+        gnose: 1, nivelArcana: 1, yantras: 0, dadosExtras: 0,
+        isCombinado: 0, usouFV: false, factorPenalty: 0,
+        tempoConjuracao: 7, tempoConjuracaoElevada: false, currentFP: 'potencia'
+      })).toBe(8);
+    });
   });
 
   describe('calculateManaCost', () => {

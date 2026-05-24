@@ -1,0 +1,510 @@
+.grimorioContainer {
+  display: flex;
+  flex-direction: column;
+  height: calc(100svh - 80px); /* desconta o header */
+  width: 100%;
+  color: var(--branco);
+  font-family: 'Roboto', sans-serif;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.grimorioTitle {
+  font-family: var(--magoFont);
+  font-size: 2rem;
+  color: var(--amarelo);
+  text-align: center;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px rgba(210, 200, 90, 0.4);
+}
+
+.grimorioLayout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 20px;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Coluna da Esquerda: Lista de Magias */
+.spellListPanel {
+  display: flex;
+  flex-direction: column;
+  background: rgba(12, 14, 0, 0.6);
+  border: 1px solid var(--separador);
+  border-radius: 8px;
+  padding: 15px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.panelHeader {
+  font-family: var(--magoFontBold);
+  font-size: 1.1rem;
+  color: var(--amarelo);
+  margin-bottom: 15px;
+  border-bottom: 1px solid var(--separador);
+  padding-bottom: 8px;
+}
+
+.spellListScroll {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-right: 5px;
+}
+
+/* Cards das Magias */
+.spellCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(210, 200, 90, 0.15);
+  border-radius: 6px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.spellCard:hover {
+  background: rgba(210, 200, 90, 0.05);
+  border-color: var(--amarelo);
+  box-shadow: 0 0 10px rgba(210, 200, 90, 0.15);
+  transform: translateY(-2px);
+}
+
+.spellCardActive {
+  background: rgba(210, 200, 90, 0.08);
+  border-color: var(--amarelo);
+  box-shadow: 0 0 15px rgba(210, 200, 90, 0.25);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.spellName {
+  font-family: var(--magoFontBold);
+  font-size: 1.05rem;
+  color: var(--branco);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.spellCardActive .spellName {
+  color: var(--amarelo);
+}
+
+.spellOwner {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  max-width: 120px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.cardDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.cardArcana {
+  color: var(--amarelo);
+  font-weight: 500;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 180px;
+}
+
+.cardFP {
+  font-size: 0.75rem;
+  background: rgba(210, 200, 90, 0.12);
+  color: var(--amarelo);
+  padding: 1px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+/* Coluna da Direita: Detalhes da Magia */
+.spellDetailsPanel {
+  background: rgba(12, 14, 0, 0.75);
+  border: 1px solid var(--separador);
+  border-radius: 8px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  backdrop-filter: blur(15px);
+  position: relative;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  gap: 15px;
+}
+
+.emptyState svg {
+  opacity: 0.25;
+}
+
+.emptyStateText {
+  font-family: var(--magoFont);
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+/* Cabeçalho de Detalhes */
+.detailsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 15px;
+  border-bottom: 2px solid var(--separador);
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.detailsTitleContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 auto;
+  min-width: 200px;
+}
+
+.detailsTitle {
+  font-family: var(--magoFontBold);
+  font-size: 1.8rem;
+  color: var(--amarelo);
+  margin: 0;
+  text-shadow: 0 0 5px rgba(210, 200, 90, 0.3);
+}
+
+.detailsAuthor {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.detailsActions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Campos Editáveis */
+.editorGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.editorField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.editorLabel {
+  font-family: var(--magoFontBold);
+  font-size: 0.95rem;
+  color: var(--amarelo);
+  letter-spacing: 0.5px;
+}
+
+.editorInput {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--separador);
+  border-radius: 4px;
+  padding: 10px 12px;
+  color: var(--branco);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.editorInput:focus {
+  border-color: var(--amarelo);
+  outline: none;
+  box-shadow: 0 0 5px rgba(210, 200, 90, 0.2);
+}
+
+.editorTextarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.4;
+  font-family: inherit;
+}
+
+.saveChangesRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Tabela IMAGO */
+.imagoSection {
+  margin-top: 10px;
+  border-top: 1px dashed var(--separador);
+  padding-top: 20px;
+  margin-bottom: 25px;
+}
+
+.imagoTitle {
+  font-family: var(--magoFontBold);
+  font-size: 1.15rem;
+  color: var(--amarelo);
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.imagoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 20px;
+}
+
+.imagoColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.imagoColumn h4 {
+  font-family: var(--magoFont);
+  font-size: 0.9rem;
+  color: var(--amarelo);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+}
+
+.imagoItem {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.imagoValue {
+  font-weight: bold;
+  color: var(--branco);
+}
+
+.imagoElevated {
+  color: var(--amarelo);
+  font-size: 0.75rem;
+  background: rgba(210, 200, 90, 0.15);
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 5px;
+  font-weight: bold;
+}
+
+.imagoFooterResult {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 15px;
+  background: rgba(210, 200, 90, 0.04);
+  border-top: 1px solid rgba(210, 200, 90, 0.15);
+  padding-top: 15px;
+  margin-top: 5px;
+}
+
+.resultBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 100px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.resultBox.manaBox {
+  border-left: 3px solid var(--azul);
+}
+
+.resultBox.vontadeBox {
+  border-left: 3px solid var(--amarelo);
+}
+
+.resultBox.diceBox {
+  border-left: 3px solid var(--verde);
+}
+
+.resultBox.paradoxBox {
+  border-left: 3px solid var(--vermelho);
+}
+
+.resultLabel {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 4px;
+}
+
+.resultValue {
+  font-family: var(--magoFontBold);
+  font-size: 1.2rem;
+  color: var(--amarelo);
+}
+
+/* Botões */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding: 10px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  border: none;
+  font-family: inherit;
+}
+
+.btnPrimary {
+  background: var(--amarelo);
+  color: #0c0e00;
+  box-shadow: 0 3px 0 0 var(--amareloSombra);
+  padding: 8px 16px;
+}
+
+.btnPrimary:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 var(--amareloSombra);
+}
+
+.btnSecondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--branco);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btnSecondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.btnDanger {
+  background: #3f1818;
+  color: var(--branco);
+  border: 1px solid var(--vermelho);
+  box-shadow: 0 3px 0 0 var(--vermelhoSombra);
+}
+
+.btnDanger:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 var(--vermelhoSombra);
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.closeDrawerBtn {
+  background: transparent;
+  border: none;
+  color: var(--branco);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.closeDrawerBtn:hover {
+  color: var(--vermelho);
+}
+
+@media screen and (min-width: 901px) {
+  .closeDrawerBtn {
+    display: none;
+  }
+}
+
+/* Responsividade - Drawer Mobile */
+@media screen and (max-width: 900px) {
+  .grimorioLayout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  
+  .grimorioContainer {
+    height: auto;
+    overflow: visible;
+  }
+  
+  .spellDetailsPanel {
+    position: fixed;
+    top: 0;
+    right: -100vw; /* escondido à direita */
+    width: 100vw;
+    height: 100svh; /* Ocupa a tela inteira */
+    z-index: 2000;
+    transition: right 0.35s ease-in-out;
+    border-radius: 0;
+    border: none;
+    border-left: 2px solid var(--amarelo);
+  }
+
+  .spellDetailsPanel.drawerOpen {
+    right: 0;
+  }
+}
+
+/* Custom Scrollbar */
+.spellListScroll::-webkit-scrollbar,
+.spellDetailsPanel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.spellListScroll::-webkit-scrollbar-track,
+.spellDetailsPanel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.spellListScroll::-webkit-scrollbar-thumb,
+.spellDetailsPanel::-webkit-scrollbar-thumb {
+  background: rgba(210, 200, 90, 0.2);
+  border-radius: 3px;
+}
+
+.spellListScroll::-webkit-scrollbar-thumb:hover,
+.spellDetailsPanel::-webkit-scrollbar-thumb:hover {
+  background: var(--amarelo);
+}
