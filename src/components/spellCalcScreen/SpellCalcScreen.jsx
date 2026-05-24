@@ -403,9 +403,9 @@ Gasto de mana: ${custoMana}`;
               <button className={styles.button} onClick={resetCalculadora}>
                 Limpar
               </button>
-             {playerData.role === "narrador" &&  <button className={styles.button} onClick={() => setModalSalvarAberto(true)}>
+             <button className={styles.button} onClick={() => setModalSalvarAberto(true)}>
                 Salvar
-              </button>}
+              </button>
             </div>
             <button className={styles.button} onClick={goToDice}>
               Ir para Rolagem

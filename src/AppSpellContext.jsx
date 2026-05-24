@@ -86,7 +86,7 @@ export default function SpellProvider({ children }) {
 
   const value = {
     ...spellCalculator,
-    yantrasList,
+    yantrasList, 
     isReady
   };
 
