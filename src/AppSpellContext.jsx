@@ -63,9 +63,12 @@ export default function SpellProvider({ children }) {
  
   useEffect(() => {
     if (!database) {
+      setYantrasList([]);
       setIsReady(false);
       return;
     }
+
+    setIsReady(false);
     const yantrasRef = ref(database, 'yantras');
     const unsubscribe = onValue(yantrasRef, (snapshot) => {
       if (snapshot.exists()) {
@@ -82,7 +85,7 @@ export default function SpellProvider({ children }) {
       setIsReady(true);
     });
     return () => unsubscribe();
-  }, [database]);
+  }, [database, userData]);
 
   const value = {
     ...spellCalculator,

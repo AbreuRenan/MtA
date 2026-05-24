@@ -150,6 +150,7 @@ export default function useSpellCalculator(userData) {
   }, [e_potenciaElevada, e_duracaoElevada, e_escalaElevada, e_tempoConjuracaoElevada, e_extraElevacoes, e_alcanceElevado, magiasAtivas, e_gnose]);
 
   const custoVontade = usouFV ? 1 : 0;
+  const yantraBonus = efeitosYantra.dadosBonus || 0;
 
   // === FUNÇÕES DE CÁLCULO (CALLBACKS) ===
   const toggleRegente = React.useCallback((e) => {
@@ -291,7 +292,10 @@ export default function useSpellCalculator(userData) {
         description: "",
         calculatorState: {
           ...state,
-          calculatorParadaDeDados: calcularParadaDeDados(),
+          yantraBonus,
+          custoVontade,
+          custoElevacoes,
+          paradaDeDados: calcularParadaDeDados(),
           custoMana: calcularGastoMana(),
           totalDadosParadoxo: calcularTotalDadosParadoxo()
         }

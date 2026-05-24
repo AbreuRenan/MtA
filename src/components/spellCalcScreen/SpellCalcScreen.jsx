@@ -249,14 +249,26 @@ export default function SpellCalcScreen() {
     const e_nivelArcana = Math.max(1, nivelArcana + (efeitosYantra.nivelArcana || 0));
     const yantraBonus = efeitosYantra.dadosBonus || 0;
 
+    const getYantraBonusValue = (yantra) => {
+      if (!yantra) return 0;
+      if (typeof yantra.dadosBonus !== 'undefined') {
+        return Number(yantra.dadosBonus) || 0;
+      }
+      if (Array.isArray(yantra.efeitosDinamicos)) {
+        const dadosBonusEffect = yantra.efeitosDinamicos.find(ef => ef.campo === 'dadosBonus');
+        return Number(dadosBonusEffect?.valor) || 0;
+      }
+      return 0;
+    };
+
     const textoYantras = Array.isArray(yantras) && yantras.length > 0
       ? yantras.filter(Boolean).map(y => (typeof y === 'string' ? y : (y.nome || y.name || 'Yantra'))).join(', ')
       : '';
 
     const textoYantraBonus = Array.isArray(yantras)
       ? yantras
-          .filter(y => y && typeof y === 'object' && Number(y.dadosBonus) > 0)
-          .map(y => `${y.nome || y.name || 'Yantra'} +${Number(y.dadosBonus)}`)
+          .filter(y => y && typeof y === 'object' && getYantraBonusValue(y) > 0)
+          .map(y => `${y.nome || y.name || 'Yantra'} +${getYantraBonusValue(y)}`)
           .join(' + ')
       : '';
 
@@ -314,8 +326,7 @@ Parada Inicial: ${textoSoma}
 Calculando: ${xSoma} - ${yPenalties} = ${paradaDeDados}
 Parada de dados: ${paradaDeDados} dados
 
-${textoYantras ? `Yantras Selecionados: ${textoYantras}` : ''}
-
+${textoYantras ? `Yantras Selecionados: ${textoYantras}\n` : ''}
 Elevações grátis: ${calcularElevacoesGratis()}
 Elevações usadas: ${custoElevacoes}${textoElevacoesUsadas}
 Dados paradoxo: ${totalDadosParadoxo}
