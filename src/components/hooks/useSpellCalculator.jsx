@@ -285,22 +285,37 @@ export default function useSpellCalculator(userData) {
     }
     try {
       const spellPathRef = ref(database, `users/${userData.id}/savedSpells/${spellName}`);
-      
+      // Build a complete calculator snapshot to persist: raw state + derived values + yantra details
+      const calculatorStateSnapshot = {
+        // core reducer state (gnose, potencia, duracao, yantras, etc.)
+        ...state,
+        // detailed yantra effects and derived effective values
+        efeitosYantra,
+        e_gnose,
+        e_potencia,
+        e_duracao,
+        e_escala,
+        e_tempoConjuracao,
+        e_nivelArcana,
+        custoElevacoes,
+        custoVontade,
+        // ensure full yantras array (with objects) is saved
+        yantras: Array.isArray(yantras) ? yantras : (typeof yantras === 'number' ? yantras : []),
+        // final calculated outputs
+        paradaDeDados: calcularParadaDeDados(),
+        calculatorParadaDeDados: calcularParadaDeDados(),
+        custoMana: calcularGastoMana(),
+        totalDadosParadoxo: calcularTotalDadosParadoxo(),
+        savedAt: Date.now()
+      };
+
       const spellToSave = {
         name: spellName,
         arcanas: `Arcana Nível ${nivelArcana}`,
         description: "",
-        calculatorState: {
-          ...state,
-          yantraBonus,
-          custoVontade,
-          custoElevacoes,
-          paradaDeDados: calcularParadaDeDados(),
-          custoMana: calcularGastoMana(),
-          totalDadosParadoxo: calcularTotalDadosParadoxo()
-        }
+        calculatorState: calculatorStateSnapshot
       };
-      
+
       await set(spellPathRef, spellToSave);
       console.log(`Magia "${spellName}" salva com sucesso no Firebase!`);
       return true;
@@ -309,7 +324,7 @@ export default function useSpellCalculator(userData) {
       alert("Erro ao salvar a magia. Tente novamente.");
       return false;
     }
-  }, [userData, database, state, nivelArcana, calcularParadaDeDados, calcularGastoMana, calcularTotalDadosParadoxo]);
+  }, [userData, database, state, nivelArcana, calcularParadaDeDados, calcularGastoMana, calcularTotalDadosParadoxo, efeitosYantra, e_gnose, e_potencia, e_duracao, e_escala, e_tempoConjuracao, e_nivelArcana, custoElevacoes, custoVontade, yantras]);
 
   const deleteSpellData = React.useCallback(async (spellName, userId) => {
     const targetUid = userId || userData?.id;
