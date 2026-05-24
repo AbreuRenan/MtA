@@ -8,6 +8,14 @@ export default function YantraDataComponent(props) {
   const { userData } = useContext(AppContext);
   const { yantrasList, isLoading } = useAppSpellContext();
   
+  const qtdDeYantras = returnMaxYantrasPerGnose(gnose);
+  
+  const [yantraValues, setYantraValues] = useState(() => {
+    return Array.isArray(yantras) && yantras.length > 0 
+      ? yantras 
+      : Array(qtdDeYantras).fill(null);
+  });
+
   // Se o contexto ainda está carregando, mostra um placeholder
   if (isLoading) {
     return (
@@ -17,14 +25,6 @@ export default function YantraDataComponent(props) {
     );
   }
   
-  const qtdDeYantras = returnMaxYantrasPerGnose(gnose);
-  
-  const [yantraValues, setYantraValues] = useState(() => {
-    return Array.isArray(yantras) && yantras.length > 0 
-      ? yantras 
-      : Array(qtdDeYantras).fill(null);
-  });
-
   function returnMaxYantrasPerGnose(gnose) {
     const gnoseCelling = Math.ceil(gnose / 2) + 1;
     return Math.max(0, gnoseCelling);

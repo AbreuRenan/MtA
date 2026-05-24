@@ -24,15 +24,6 @@ export default function SpellCalcScreen() {
   const spellContextData = useAppSpellContext();
   const { isLoading } = spellContextData;
 
-  // Se o contexto ainda está carregando, mostra loading
-  if (isLoading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <p>Carregando calculadora de magia...</p>
-      </div>
-    );
-  }
-
   const handleSalvarMagia = async (spellName) => {
     if (spellContextData.checkSpellExists(spellName)) {
       const confirmOverwrite = window.confirm(
@@ -256,7 +247,18 @@ export default function SpellCalcScreen() {
     const e_escala = escala + (efeitosYantra.fatorEscala || 0);
     const e_gnose = Math.max(1, gnose + (efeitosYantra.gnose || 0));
     const e_nivelArcana = Math.max(1, nivelArcana + (efeitosYantra.nivelArcana || 0));
-    const yantrasBonus = efeitosYantra.dadosBonus || 0;
+    const yantraBonus = efeitosYantra.dadosBonus || 0;
+
+    const textoYantras = Array.isArray(yantras) && yantras.length > 0
+      ? yantras.filter(Boolean).map(y => (typeof y === 'string' ? y : (y.nome || y.name || 'Yantra'))).join(', ')
+      : '';
+
+    const textoYantraBonus = Array.isArray(yantras)
+      ? yantras
+          .filter(y => y && typeof y === 'object' && Number(y.dadosBonus) > 0)
+          .map(y => `${y.nome || y.name || 'Yantra'} +${Number(y.dadosBonus)}`)
+          .join(' + ')
+      : '';
 
     const pExtra = Math.max(0, e_potencia - 1);
     const pPenalty = currentFP === "potencia" ? Math.max(0, e_potencia - e_nivelArcana) * 2 : pExtra * 2;
@@ -282,12 +284,13 @@ export default function SpellCalcScreen() {
     const eElevada = e_escalaElevada ? " (E)" : "";
 
     let textoSoma = `Arcano ${e_nivelArcana} + Gnose ${e_gnose}`;
-    if (yantrasBonus > 0) textoSoma += ` + Yantras ${yantrasBonus}`;
+    if (textoYantraBonus) textoSoma += ` + ${textoYantraBonus}`;
+    else if (yantraBonus > 0) textoSoma += ` + Yantras ${yantraBonus}`;
     if (tBonus > 0) textoSoma += ` + Ritual ${tBonus}`;
     if (usouFV) textoSoma += ` + FDV 3`;
     if (dadosExtras > 0) textoSoma += ` + Dados Extras ${dadosExtras}`;
 
-    const xSoma = e_nivelArcana + e_gnose + yantrasBonus + tBonus + (usouFV ? 3 : 0) + dadosExtras;
+    const xSoma = e_nivelArcana + e_gnose + yantraBonus + tBonus + (usouFV ? 3 : 0) + dadosExtras;
     const yPenalties = pPenalty + dPenalty + ePenalty + (isCombinado ? 2 : 0);
 
     let elevacoesList = [];
@@ -307,11 +310,11 @@ Tempo de conjuração${tFP}${tElevada}: Ritual 1 + ${tExtra} (+${tBonus}d) | ${e
 Escala${eFP}${eElevada}: ${e_escala} | Área: ${exibirEscala.area} | Alvos: ${exibirEscala.alvos} | Tamanho: ${exibirEscala.tamanhos} (${exibirTextoPorTamanho})
 Alcance: ${e_alcance.charAt(0).toUpperCase() + e_alcance.slice(1)}
 
-${textoSoma}
-
+Parada Inicial: ${textoSoma}
 Calculando: ${xSoma} - ${yPenalties} = ${paradaDeDados}
-
 Parada de dados: ${paradaDeDados} dados
+
+${textoYantras ? `Yantras Selecionados: ${textoYantras}` : ''}
 
 Elevações grátis: ${calcularElevacoesGratis()}
 Elevações usadas: ${custoElevacoes}${textoElevacoesUsadas}
