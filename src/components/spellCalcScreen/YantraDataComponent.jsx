@@ -51,15 +51,6 @@ export default function YantraDataComponent(props) {
     });
   }, [qtdDeYantras]);
 
-  useEffect(() => {
-    const validYantras = yantraValues.filter(y => y !== null);
-    const currentYantras = Array.isArray(yantras) ? yantras : [];
-    const isSame = currentYantras.length === validYantras.length && currentYantras.every((y, i) => y?.id === validYantras[i]?.id);
-    if (!isSame) {
-      setYantras(validYantras);
-    }
-  }, [yantraValues, setYantras]);
-
   // Se o contexto ainda está carregando, mostra um placeholder
   if (isLoading) {
     return (
@@ -77,7 +68,9 @@ export default function YantraDataComponent(props) {
       const selectedObj = availableYantras.find(y => y.id === yantraId);
       newYantraValues[index] = selectedObj || null;
     }
+    const validYantras = newYantraValues.filter(y => y !== null);
     setYantraValues(newYantraValues);
+    setYantras(validYantras);
   };
 
   return (

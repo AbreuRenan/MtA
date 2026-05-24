@@ -153,6 +153,7 @@
   overflow-y: auto;
   backdrop-filter: blur(15px);
   position: relative;
+  margin-top: 70px;
 }
 
 .emptyState {

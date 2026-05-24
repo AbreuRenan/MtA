@@ -31,15 +31,6 @@ export default function AdminYantras({ playersData }) {
   const { database } = useContext(AppContext);
   const { yantrasList, isLoading } = useAppSpellContext();
 
-  // Se o contexto ainda está carregando, mostra loading
-  if (isLoading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <p>Carregando Yantras...</p>
-      </div>
-    );
-  }
-
   const [view, setView] = useState('list'); // 'list' | 'form'
   const [editingId, setEditingId] = useState(null);
   
@@ -49,6 +40,15 @@ export default function AdminYantras({ playersData }) {
   const [efeitosDinamicos, setEfeitosDinamicos] = useState([
     { id: Date.now().toString(), campo: 'dadosBonus', valor: 1 }
   ]);
+
+  // Se o contexto ainda está carregando, mostra loading
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <p>Carregando Yantras...</p>
+      </div>
+    );
+  }
 
   const resetForm = () => {
     setEditingId(null);
