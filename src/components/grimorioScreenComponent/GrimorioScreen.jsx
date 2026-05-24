@@ -192,6 +192,12 @@ export default function GrimorioScreen() {
     return 0;
   };
 
+  // Nomes dos yantras salvos (para exibição)
+  const savedYantrasArr = selectedSpell?.calculatorState?.yantras || [];
+  const savedYantraNames = Array.isArray(savedYantrasArr)
+    ? savedYantrasArr.filter(Boolean).map(y => (typeof y === 'string' ? y : (y.nome || y.name || 'Yantra'))).join(', ')
+    : (typeof savedYantrasArr === 'string' ? savedYantrasArr : '');
+
   return isLoading ? loadingContent : (
     <div className={styles.grimorioContainer}>
       <h1 className={styles.grimorioTitle}>Grimório Místico</h1>
@@ -368,7 +374,7 @@ export default function GrimorioScreen() {
                   </div>
 
                   {/* Bloco 3: Opções */}
-                  <div className={styles.imagoColumn}>
+                  <div className={`${styles.imagoColumn} ${styles.imagoColumnOptions}`}>
                     <h4>Modificadores</h4>
                     <div className={styles.imagoItem}>
                       <span>Alcance:</span>
@@ -378,7 +384,16 @@ export default function GrimorioScreen() {
                     </div>
                     <div className={styles.imagoItem}>
                       <span>Yantras:</span>
-                      <span className={styles.imagoValue}>+{computeSavedYantraBonus(selectedSpell.calculatorState)}d</span>
+                      <div className={` ${styles.imagoValue} ${styles.imagoValueYantras}`}>
+                        {savedYantraNames ? (
+                          <div>
+                            <div className={styles.yantraNames}>{savedYantraNames}</div>
+                            <div className={styles.yantraBonus}>+{computeSavedYantraBonus(selectedSpell.calculatorState)}d</div>
+                          </div>
+                        ) : (
+                          <div className={styles.yantraBonus}>+{computeSavedYantraBonus(selectedSpell.calculatorState)}d</div>
+                        )}
+                      </div>
                     </div>
                     <div className={styles.imagoItem}>
                       <span>Força de Vontade:</span>

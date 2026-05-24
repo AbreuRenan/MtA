@@ -1,10 +1,11 @@
 .grimorioContainer {
   display: flex;
   flex-direction: column;
+  margin-top: 70px;
   height: calc(100svh - 80px); /* desconta o header */
   width: 100%;
   color: var(--branco);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   padding: 20px;
   overflow: hidden;
 }
@@ -306,6 +307,10 @@
   margin-bottom: 4px;
 }
 
+.imagoColumnOptions {
+  grid-column: 1/3;
+}
+
 .imagoItem {
   display: flex;
   justify-content: space-between;
@@ -313,9 +318,31 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-.imagoValue {
-  font-weight: bold;
+.imagoValue > div {
   color: var(--branco);
+  display: flex;
+  gap: 1rem;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 20px;
+}
+.imagoValueYantras {
+  width: 100%;
+}
+
+.yantraNames {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 100;
+  word-break: break-word;
+  margin-top: 3px;
+}
+
+.yantraBonus {
+  font-weight: bold;
+  color: var(--amarelo);
+  font-size: 0.95rem;
 }
 
 .imagoElevated {
@@ -464,12 +491,12 @@
     grid-template-columns: 1fr;
     grid-template-rows: auto;
   }
-  
+
   .grimorioContainer {
     height: auto;
     overflow: visible;
   }
-  
+
   .spellDetailsPanel {
     position: fixed;
     top: 0;
