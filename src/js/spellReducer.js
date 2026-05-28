@@ -1,7 +1,9 @@
 export const initialState = {
   page: 1,
   gnose: 1,
+  arcana: "Espaço",
   nivelArcana: 1,
+  arcanasExtras: [],
   nivelRequerido: 1,
   magiasAtivas: 0,
   spellType: "improvisado",

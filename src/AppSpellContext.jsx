@@ -3,7 +3,7 @@ import useSpellCalculator from './components/hooks/useSpellCalculator';
 import { AppContext } from './AppContext';
 import { ref, onValue } from 'firebase/database';
 
-const SpellContext = React.createContext(null);
+const SpellContext = React.createContext(null); 
 
 // Valor padrão/seguro para quando o contexto ainda não foi carregado
 const defaultSpellContextValue = {
@@ -12,7 +12,10 @@ const defaultSpellContextValue = {
   // adiciona stub methods para evitar undefined reference errors
   setPage: () => {},
   setGnose: () => {},
+  setArcana: () => {},
   setNivelArcana: () => {},
+  arcanasExtras: [],
+  setArcanasExtras: () => {},
   setNivelRequerido: () => {},
   setMagiasAtivas: () => {},
   setSpellType: () => {},

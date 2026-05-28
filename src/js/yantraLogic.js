@@ -1,0 +1,132 @@
+export const tiposYantra = [
+  "Ferramenta Dedicada", 
+  "Ferramenta", 
+  "Mudra", 
+  "Mantra", 
+  "Sacramento", 
+  "Runa", 
+  "Concentração"
+];
+
+export function evaluateCondition(condicao, context) {
+  const { origem, chave, operador, valor } = condicao;
+  let contextValue;
+
+  if (origem === "FATOR_MAGIA") {
+    // Normalizamos para string/number dependendo do que vier
+    contextValue = context.fatoresMagia?.[chave] || 0;
+  } else if (origem === "POOL_YANTRAS") {
+    // Para POOL_YANTRAS, a chave é o tipo do Yantra. Queremos saber se está "ATIVO" ou "INATIVO".
+    const isActive = context.poolYantras?.some(y => y.tipo === chave);
+    contextValue = isActive ? "ATIVO" : "INATIVO";
+  }
+
+  switch (operador) {
+    case "EQ": return String(contextValue) === String(valor);
+    case "GE": return Number(contextValue) >= Number(valor);
+    case "LE": return Number(contextValue) <= Number(valor);
+    default: return false; // Operador desconhecido
+  }
+}
+
+export function evaluateRequisitos(requisitosNode, context) {
+  if (!requisitosNode || !requisitosNode.condicoes || requisitosNode.condicoes.length === 0) {
+    return true; // Se não tem requisitos, passa automaticamente
+  }
+
+  const { operadorLogico = "AND", condicoes } = requisitosNode;
+
+  if (operadorLogico === "AND") {
+    return condicoes.every(cond => {
+      if (cond.operadorLogico) {
+        return evaluateRequisitos(cond, context); // É um sub-nó (grupo)
+      }
+      return evaluateCondition(cond, context); // É uma condição individual
+    });
+  } else if (operadorLogico === "OR") {
+    return condicoes.some(cond => {
+      if (cond.operadorLogico) {
+        return evaluateRequisitos(cond, context);
+      }
+      return evaluateCondition(cond, context);
+    });
+  }
+
+  return true;
+}
+
+export function validateYantra(yantraToEvaluate, context) {
+  if (!yantraToEvaluate) return { isValid: true, reason: "" };
+
+  // 1. Regra de Unicidade: Ferramenta Dedicada
+  // Verifica se o yantra é uma Ferramenta Dedicada e já existe outra (com ID diferente) no pool
+  if (yantraToEvaluate.tipo === "Ferramenta Dedicada") {
+    const hasFerramentaDedicada = context.poolYantras?.some(
+      y => y.tipo === "Ferramenta Dedicada" && y.id !== yantraToEvaluate.id
+    );
+    if (hasFerramentaDedicada) {
+      return { isValid: false, reason: "Apenas uma Ferramenta Dedicada por magia." };
+    }
+  }
+
+  // 2. Avaliação de Requisitos Recursivos
+  if (yantraToEvaluate.requisitos && Object.keys(yantraToEvaluate.requisitos).length > 0) {
+    const passed = evaluateRequisitos(yantraToEvaluate.requisitos, context);
+    if (!passed) {
+      return { isValid: false, reason: "Não atende aos requisitos do Yantra." };
+    }
+  }
+
+  return { isValid: true, reason: "" };
+}
+
+export function extractYantraCosts(poolYantras) {
+  if (!Array.isArray(poolYantras)) return {};
+  
+  const totalCosts = {
+    SLOT_YANTRA: 0,
+    MANA: 0,
+    DANO_RESISTENTE: 0
+  };
+
+  poolYantras.forEach(yantraData => {
+    // O pool de yantras agora pode ter a propriedade selectedOptions embutida
+    const { custoSlots, efeitosDinamicos, selectedOptions } = yantraData;
+    
+    let baseSlotCost = Number(custoSlots) || 0;
+    let appliedCostsFromOptions = [];
+    let hasVariableCosts = false;
+
+    if (efeitosDinamicos && Array.isArray(efeitosDinamicos)) {
+      efeitosDinamicos.forEach((ef, index) => {
+        if (ef.tipoVariacao === 'SELECAO_VARIAVEL' && ef.opcoes) {
+          const selectedIndex = selectedOptions ? (selectedOptions[index] || 0) : 0;
+          const selectedOption = ef.opcoes[selectedIndex];
+          if (selectedOption && selectedOption.custosAplicados) {
+            hasVariableCosts = true;
+            appliedCostsFromOptions.push(...selectedOption.custosAplicados);
+          }
+        }
+      });
+    }
+
+    if (hasVariableCosts) {
+      appliedCostsFromOptions.forEach(cost => {
+        const type = cost.tipoCusto;
+        const value = Number(cost.valor) || 0;
+        if (totalCosts[type] === undefined) totalCosts[type] = 0;
+        totalCosts[type] += value;
+      });
+    } else {
+      // Fallback para Yantras antigos/simples
+      totalCosts.SLOT_YANTRA += baseSlotCost;
+    }
+  });
+
+  return totalCosts;
+}
+
+export function calculateUsedSlots(poolYantras) {
+  const costs = extractYantraCosts(poolYantras);
+  return costs.SLOT_YANTRA || 0;
+}

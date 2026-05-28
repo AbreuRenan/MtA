@@ -2,7 +2,7 @@ import React from "react";
 import styles from "../../styles/spellcalc.module.css";
 
 export default function InputGroup({label,value: estateValue,setValue,min = 0,max = 10,childInputContainer = false, 
-  childContainerClass,children, ...props})  {
+  childContainerClass, children, ...props})  {
 
   const handleBtnAddOrRemove = (e) => {
     const btnValue = parseInt(e.currentTarget.value, 10);

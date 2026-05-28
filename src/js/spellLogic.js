@@ -111,12 +111,19 @@ export function calculateManaCost(params) {
   const {
     alcance, regente, duracao, duracaoElevada, manaOpcional, 
     paradoxDice, mitigarTodoParadoxo, mitigarDadosParadoxo,
-    spellType = "improvisado"
+    spellType = "improvisado", arcanasExtras = []
   } = params;
 
   let totalMana = 0;
   if (alcance === "simpatico") totalMana += 1;
-  if (spellType === "improvisado" && !regente) totalMana += 1;
+  if (spellType === "improvisado") {
+    if (!regente) totalMana += 1;
+    if (Array.isArray(arcanasExtras)) {
+      arcanasExtras.forEach(extra => {
+        if (!extra.regente) totalMana += 1;
+      });
+    }
+  }
   if (duracaoElevada && duracao >= 6) totalMana += 1;
   
   totalMana += manaOpcional;

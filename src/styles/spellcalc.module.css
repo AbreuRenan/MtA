@@ -147,6 +147,10 @@ b {
   flex: 1;
 }
 
+.footerRow>button:nth-of-type(3) {
+  width: 50px
+}
+
 .spellCalcFooter button {
   display: flex;
   width: 100%;
@@ -171,7 +175,7 @@ b {
   grid-template-columns: calc(100% - 146px) 136px;
   grid-auto-rows: minmax(20px, auto);
   gap: 10px;
-  padding-bottom: 30px;
+  padding: 0 0 30px 10px;
 }
 
 .optionalsData,
@@ -392,6 +396,18 @@ input[type="checkbox"].checkboxElevada:active,
   background-repeat: no-repeat;
   background-color: var(--amarelo);
   box-shadow: 0 0 10px 1px var(--amarelo);
+}
+
+.selectArcana {
+  padding: 12px 12px 12px 4px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--separador);
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  max-width: 55vw;
+  min-width: 45vw;
+  transform: translateX(-10px);
 }
 
 @keyframes shinyText {
