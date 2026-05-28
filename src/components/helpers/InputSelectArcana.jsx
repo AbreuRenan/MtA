@@ -10,7 +10,7 @@ export default function InputSelectArcana({
   options = [
     "Espaço",
     "Morte",
-    "Destino",
+    "Sorte",
     "Forças",
     "Matéria",
     "Mente",

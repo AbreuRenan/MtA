@@ -80,27 +80,47 @@ export default function useSpellCalculator(userData) {
         if (yantra.efeitosDinamicos && Array.isArray(yantra.efeitosDinamicos)) {
           yantra.efeitosDinamicos.forEach((ef, index) => {
             let v = 0;
+            let valoresMapeados = null;
+
             if (ef.tipoVariacao === 'SELECAO_VARIAVEL' && ef.opcoes) {
               const selectedIndex = yantra.selectedOptions ? (yantra.selectedOptions[index] || 0) : 0;
               const selectedOption = ef.opcoes[selectedIndex];
-              v = Number(selectedOption?.valor) || 0;
+              
+              if (selectedOption?.valores && typeof selectedOption.valores === 'object') {
+                valoresMapeados = selectedOption.valores;
+              } else {
+                v = Number(selectedOption?.valor) || 0;
+              }
             } else {
               v = Number(ef.valor) || 0;
             }
             
-            switch (ef.campo) {
-              case 'potenciaElevada':
-              case 'duracaoElevada':
-              case 'escalaElevada':
-              case 'alcanceElevado':
-              case 'tempoConjuracaoElevada':
-              case 'alcanceToque':
-              case 'alcanceSensorial':
-              case 'alcanceSimpatico':
-                if (v > 0) efeitos[ef.campo] = true;
-                break;
-              default:
-                if (efeitos[ef.campo] !== undefined) efeitos[ef.campo] += v;
+            if (valoresMapeados) {
+              // Aplica múltiplos efeitos simultaneamente da opção selecionada
+              Object.keys(valoresMapeados).forEach(key => {
+                const val = Number(valoresMapeados[key]) || 0;
+                if (['potenciaElevada', 'duracaoElevada', 'escalaElevada', 'alcanceElevado', 'tempoConjuracaoElevada', 'alcanceToque', 'alcanceSensorial', 'alcanceSimpatico'].includes(key)) {
+                  if (val > 0) efeitos[key] = true;
+                } else if (efeitos[key] !== undefined) {
+                  efeitos[key] += val;
+                }
+              });
+            } else {
+              // Comportamento padrão de único campo
+              switch (ef.campo) {
+                case 'potenciaElevada':
+                case 'duracaoElevada':
+                case 'escalaElevada':
+                case 'alcanceElevado':
+                case 'tempoConjuracaoElevada':
+                case 'alcanceToque':
+                case 'alcanceSensorial':
+                case 'alcanceSimpatico':
+                  if (v > 0) efeitos[ef.campo] = true;
+                  break;
+                default:
+                  if (efeitos[ef.campo] !== undefined) efeitos[ef.campo] += v;
+              }
             }
           });
         } else if (yantra.dadosBonus !== undefined) {

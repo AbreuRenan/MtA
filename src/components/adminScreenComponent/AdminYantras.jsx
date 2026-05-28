@@ -102,7 +102,12 @@ export default function AdminYantras({ playersData }) {
 
     let parsedEfeitos = [];
     try {
-      parsedEfeitos = JSON.parse(efeitosJson);
+      const parsed = JSON.parse(efeitosJson);
+      if (parsed && !Array.isArray(parsed) && typeof parsed === 'object' && parsed.efeitosDinamicos) {
+        parsedEfeitos = Array.isArray(parsed.efeitosDinamicos) ? parsed.efeitosDinamicos : [];
+      } else {
+        parsedEfeitos = Array.isArray(parsed) ? parsed : [];
+      }
     } catch (err) {
       return alert("Erro ao parsear o JSON de Efeitos. Corrija a sintaxe.");
     }

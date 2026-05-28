@@ -178,6 +178,21 @@ b {
   padding: 0 0 30px 10px;
 }
 
+.yantraAdded {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid var(--separador);
+  width: 100%;
+}
+
+.yantraAdded~div {
+  width: 100%;
+}
+
 .optionalsData,
 .spellData {
   grid-template-columns: 10% 40% 10% 40%;

@@ -8,7 +8,7 @@ export default function YantraDataComponent(props) {
   const { gnose, nivelArcana, arcana, arcanasExtras = [], page, setYantras, yantras = [] } = props;
   const { userData } = useContext(AppContext);
   const { yantrasList, isLoading } = useAppSpellContext();
-  
+
   // Garantir que yantras seja um array de objetos válidos
   const selectedYantras = Array.isArray(yantras) ? yantras.filter(Boolean) : [];
 
@@ -95,50 +95,50 @@ export default function YantraDataComponent(props) {
           Slots: {usedSlots} / {maxSlots} utilizados
         </p>
       </div>
-      
+
       <div className={styles.yantraData} style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
         {/* Lista de Yantras Selecionados */}
         {selectedYantras.map((yantra, index) => (
-          <div key={`${yantra.id}-${index}`} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '4px', border: '1px solid var(--separador)' }}>
+          <div key={`${yantra.id}-${index}`} className={styles.yantraAdded}>
             <div style={{ flex: 1 }}>
               <strong style={{ color: 'white', display: 'block' }}>{yantra.nome}</strong>
               <span style={{ fontSize: '0.8rem', color: 'var(--amarelo)' }}>
                 {yantra.tipo || 'Ferramenta Dedicada'} | Custo: {getSpecificYantraCost(yantra)} Slot(s)
               </span>
               {(yantra.descricaoEfeito || yantra.efeitoExtra) && (
-                 <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)', display: 'block', marginTop: '2px' }}>
-                   Efeito: {yantra.descricaoEfeito || yantra.efeitoExtra}
-                 </span>
+                <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)', display: 'block', marginTop: '2px' }}>
+                  Efeito: {yantra.descricaoEfeito || yantra.efeitoExtra}
+                </span>
               )}
-              
+
               {(yantra.efeitosDinamicos && yantra.efeitosDinamicos.some(ef => ef.tipoVariacao === 'SELECAO_VARIAVEL')) && (
-                 <div style={{ marginTop: '8px', padding: '8px', background: 'rgba(0,0,0,0.3)', borderRadius: '4px' }}>
-                   {yantra.efeitosDinamicos.map((ef, efIndex) => {
-                     if (ef.tipoVariacao === 'SELECAO_VARIAVEL' && ef.opcoes) {
-                       return (
-                         <div key={efIndex} style={{ marginBottom: '5px' }}>
-                           <label style={{ fontSize: '0.8rem', color: 'var(--amarelo)', display: 'block', marginBottom: '2px' }}>Variação de Efeito</label>
-                           <select
-                             value={yantra.selectedOptions ? (yantra.selectedOptions[efIndex] || 0) : 0}
-                             onChange={(e) => handleOptionChange(index, efIndex, e.target.value)}
-                             style={{ width: '100%', padding: '6px', background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid var(--separador)', borderRadius: '4px', fontSize: '0.85rem' }}
-                           >
-                             {ef.opcoes.map((op, opIndex) => (
-                               <option key={opIndex} value={opIndex} style={{ color: 'black' }}>
-                                 {op.rotulo || `Opção ${opIndex + 1}`}
-                               </option>
-                             ))}
-                           </select>
-                         </div>
-                       );
-                     }
-                     return null;
-                   })}
-                 </div>
+                <div style={{ marginTop: '8px', padding: '8px', background: 'rgba(0,0,0,0.3)', borderRadius: '4px' }}>
+                  {yantra.efeitosDinamicos.map((ef, efIndex) => {
+                    if (ef.tipoVariacao === 'SELECAO_VARIAVEL' && ef.opcoes) {
+                      return (
+                        <div key={efIndex} style={{ marginBottom: '5px' }}>
+                          <label style={{ fontSize: '0.8rem', color: 'var(--amarelo)', display: 'block', marginBottom: '2px' }}>Variação de Efeito</label>
+                          <select
+                            value={yantra.selectedOptions ? (yantra.selectedOptions[efIndex] || 0) : 0}
+                            onChange={(e) => handleOptionChange(index, efIndex, e.target.value)}
+                            style={{ width: '100%', padding: '6px', background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid var(--separador)', borderRadius: '4px', fontSize: '0.85rem' }}
+                          >
+                            {ef.opcoes.map((op, opIndex) => (
+                              <option key={opIndex} value={opIndex} style={{ color: 'black' }}>
+                                {op.rotulo || `Opção ${opIndex + 1}`}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
               )}
             </div>
-            <button 
-              onClick={() => handleRemoveYantra(index)} 
+            <button
+              onClick={() => handleRemoveYantra(index)}
               style={{ background: 'rgba(255,0,0,0.2)', color: 'var(--vermelho)', border: '1px solid rgba(255,0,0,0.5)', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}
             >
               Remover
@@ -153,50 +153,50 @@ export default function YantraDataComponent(props) {
         {/* Dropdown para Adicionar Novo Yantra */}
         {availableSlots > 0 ? (
           <div style={{ marginTop: '10px' }}>
-             <label style={{ color: 'var(--amarelo)', fontSize: '0.9rem', marginBottom: '5px', display: 'block' }}>Adicionar Yantra (Disponível: {availableSlots} slots)</label>
-             <select
-                onChange={handleAddYantra}
-                defaultValue=""
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  background: 'rgba(0,0,0,0.5)',
-                  border: '1px dashed var(--amarelo)',
-                  color: 'white',
-                  borderRadius: '4px',
-                  fontSize: '1rem',
-                  cursor: 'pointer'
-                }}
-              >
-                <option value="" disabled>Selecione para adicionar...</option>
-                {availableYantras.map(yantra => {
-                  const yantraAsAdded = { ...yantra, selectedOptions: {} };
-                  if (yantraAsAdded.efeitosDinamicos) {
-                    yantraAsAdded.efeitosDinamicos.forEach((ef, i) => {
-                      if (ef.tipoVariacao === 'SELECAO_VARIAVEL') yantraAsAdded.selectedOptions[i] = 0;
-                    });
-                  }
-                  
-                  const custo = getSpecificYantraCost(yantraAsAdded);
-                  const doesntFit = custo > availableSlots;
-                  
-                  const validation = validateYantra(yantraAsAdded, contextAtual);
-                  const isInvalid = !validation.isValid;
-                  const reason = validation.reason;
+            <label style={{ color: 'var(--amarelo)', fontSize: '0.9rem', marginBottom: '5px', display: 'block' }}>Adicionar Yantra (Disponível: {availableSlots} slots)</label>
+            <select
+              onChange={handleAddYantra}
+              defaultValue=""
+              style={{
+                width: '100%',
+                padding: '10px',
+                background: 'rgba(0,0,0,0.5)',
+                border: '1px dashed var(--amarelo)',
+                color: 'white',
+                borderRadius: '4px',
+                fontSize: '1rem',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="" disabled>Selecione para adicionar...</option>
+              {availableYantras.map(yantra => {
+                const yantraAsAdded = { ...yantra, selectedOptions: {} };
+                if (yantraAsAdded.efeitosDinamicos) {
+                  yantraAsAdded.efeitosDinamicos.forEach((ef, i) => {
+                    if (ef.tipoVariacao === 'SELECAO_VARIAVEL') yantraAsAdded.selectedOptions[i] = 0;
+                  });
+                }
 
-                  const disabled = doesntFit || isInvalid;
-                  let label = `${yantra.nome} (${custo} Slot${custo > 1 ? 's' : ''})`;
-                  
-                  if (doesntFit) label += ' - Faltam Slots';
-                  else if (isInvalid) label += ` - ${reason}`;
+                const custo = getSpecificYantraCost(yantraAsAdded);
+                const doesntFit = custo > availableSlots;
 
-                  return (
-                    <option key={yantra.id} value={yantra.id} disabled={disabled} style={{ color: disabled ? 'gray' : 'black' }}>
-                      {label}
-                    </option>
-                  );
-                })}
-              </select>
+                const validation = validateYantra(yantraAsAdded, contextAtual);
+                const isInvalid = !validation.isValid;
+                const reason = validation.reason;
+
+                const disabled = doesntFit || isInvalid;
+                let label = `${yantra.nome} (${custo} Slot${custo > 1 ? 's' : ''})`;
+
+                if (doesntFit) label += ' - Faltam Slots';
+                else if (isInvalid) label += ` - ${reason}`;
+
+                return (
+                  <option key={yantra.id} value={yantra.id} disabled={disabled} style={{ color: disabled ? 'gray' : 'black' }}>
+                    {label}
+                  </option>
+                );
+              })}
+            </select>
           </div>
         ) : (
           <div style={{ textAlign: 'center', marginTop: '10px', color: 'var(--vermelho)', padding: '10px', background: 'rgba(255,0,0,0.1)', borderRadius: '4px', border: '1px solid rgba(255,0,0,0.3)' }}>
