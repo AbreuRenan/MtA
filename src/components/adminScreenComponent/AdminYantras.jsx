@@ -2,7 +2,9 @@ import React, { useState, useContext } from 'react';
 import { ref, push, set, remove } from 'firebase/database';
 import { AppContext } from '../../AppContext';
 import { useAppSpellContext } from '../../AppSpellContext';
+import { tiposYantra } from '../../js/yantraLogic';
 import styles from "./adminStyles.module.css";
+import ConditionBuilder from './ConditionBuilder';
 
 const CAMPOS_YANTRA = [
   { value: 'dadosBonus', label: 'Bônus de Dado' },
@@ -27,6 +29,9 @@ const CAMPOS_YANTRA = [
   { value: 'fatorFdv', label: 'Força de Vontade (Bônus)'}
 ];
 
+// Os campos abaixo são referências úteis para quem vai escrever o JSON
+// 'dadosBonus', 'manaOpcional', 'gnose', 'nivelArcana', 'extraElevacoes', 'dadosParadoxoExtra', 'fatorPotencia', etc.
+
 export default function AdminYantras({ playersData }) {
   const { database } = useContext(AppContext);
   const { yantrasList, isLoading } = useAppSpellContext();
@@ -35,11 +40,14 @@ export default function AdminYantras({ playersData }) {
   const [editingId, setEditingId] = useState(null);
   
   const [nome, setNome] = useState('');
+  const [tipo, setTipo] = useState('Ferramenta Dedicada');
+  const [custoSlots, setCustoSlots] = useState(1);
+  const [requisitos, setRequisitos] = useState({ operadorLogico: 'AND', condicoes: [] });
   const [descricaoEfeito, setDescricaoEfeito] = useState('');
   const [conhecidoPor, setConhecidoPor] = useState([]);
-  const [efeitosDinamicos, setEfeitosDinamicos] = useState([
-    { id: Date.now().toString(), campo: 'dadosBonus', valor: 1 }
-  ]);
+  
+  const [efeitosJson, setEfeitosJson] = useState('[\n  {\n    "campo": "dadosBonus",\n    "valor": 1\n  }\n]');
+  const [jsonError, setJsonError] = useState('');
 
   // Se o contexto ainda está carregando, mostra loading
   if (isLoading) {
@@ -53,59 +61,65 @@ export default function AdminYantras({ playersData }) {
   const resetForm = () => {
     setEditingId(null);
     setNome('');
+    setTipo('Ferramenta Dedicada');
+    setCustoSlots(1);
+    setRequisitos({ operadorLogico: 'AND', condicoes: [] });
     setDescricaoEfeito('');
     setConhecidoPor([]);
-    setEfeitosDinamicos([{ id: Date.now().toString(), campo: 'dadosBonus', valor: 1 }]);
+    setEfeitosJson('[\n  {\n    "campo": "dadosBonus",\n    "valor": 1\n  }\n]');
+    setJsonError('');
     setView('list');
   };
 
   const handleEdit = (yantra) => {
     setEditingId(yantra.id);
     setNome(yantra.nome || '');
+    setTipo(yantra.tipo || 'Ferramenta Dedicada');
+    setCustoSlots(yantra.custoSlots !== undefined ? yantra.custoSlots : 1);
+    setRequisitos(yantra.requisitos || { operadorLogico: 'AND', condicoes: [] });
     setDescricaoEfeito(yantra.descricaoEfeito || yantra.efeitoExtra || '');
     setConhecidoPor(yantra.conhecidoPor || []);
     
-    // Migração de Yantras Antigos para o Novo Formato
+    // Configurar o JSON dos Efeitos
+    let initialEfeitos = [];
     if (yantra.efeitosDinamicos && yantra.efeitosDinamicos.length > 0) {
-      setEfeitosDinamicos(yantra.efeitosDinamicos);
+      initialEfeitos = yantra.efeitosDinamicos;
     } else if (yantra.dadosBonus !== undefined) {
-      setEfeitosDinamicos([{ id: Date.now().toString(), campo: 'dadosBonus', valor: Number(yantra.dadosBonus) }]);
+      initialEfeitos = [{ campo: 'dadosBonus', valor: Number(yantra.dadosBonus) }];
     } else {
-      setEfeitosDinamicos([{ id: Date.now().toString(), campo: 'dadosBonus', valor: 1 }]);
+      initialEfeitos = [{ campo: 'dadosBonus', valor: 1 }];
     }
+    setEfeitosJson(JSON.stringify(initialEfeitos, null, 2));
+    setJsonError('');
     
     setView('form');
-  };
-
-  const handleAddEffect = () => {
-    setEfeitosDinamicos([
-      ...efeitosDinamicos,
-      { id: Date.now().toString() + Math.random(), campo: 'dadosBonus', valor: 0 }
-    ]);
-  };
-
-  const handleRemoveEffect = (id) => {
-    setEfeitosDinamicos(efeitosDinamicos.filter(ef => ef.id !== id));
-  };
-
-  const handleEffectChange = (id, field, value) => {
-    setEfeitosDinamicos(efeitosDinamicos.map(ef => {
-      if (ef.id === id) {
-        return { ...ef, [field]: value };
-      }
-      return ef;
-    }));
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
     if (!nome) return alert("O nome do Yantra é obrigatório!");
+    if (jsonError) return alert("O JSON de Efeitos Dinâmicos contém erros de sintaxe!");
+
+    let parsedEfeitos = [];
+    try {
+      const parsed = JSON.parse(efeitosJson);
+      if (parsed && !Array.isArray(parsed) && typeof parsed === 'object' && parsed.efeitosDinamicos) {
+        parsedEfeitos = Array.isArray(parsed.efeitosDinamicos) ? parsed.efeitosDinamicos : [];
+      } else {
+        parsedEfeitos = Array.isArray(parsed) ? parsed : [];
+      }
+    } catch (err) {
+      return alert("Erro ao parsear o JSON de Efeitos. Corrija a sintaxe.");
+    }
 
     const yantraData = {
       nome,
+      tipo,
+      custoSlots: Number(custoSlots) || 0,
+      requisitos,
       descricaoEfeito,
       conhecidoPor,
-      efeitosDinamicos: efeitosDinamicos.map(ef => ({ campo: ef.campo, valor: Number(ef.valor) }))
+      efeitosDinamicos: parsedEfeitos
     };
 
     try {
@@ -154,6 +168,19 @@ export default function AdminYantras({ playersData }) {
             <input type="text" value={nome} onChange={e => setNome(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255,255,255,0.1)', border: '1px solid var(--separador)', color: 'white', borderRadius: '4px' }} required />
           </div>
           
+          <div style={{ display: 'flex', gap: '15px' }}>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', color: 'var(--amarelo)', marginBottom: '5px' }}>Tipo do Yantra</label>
+              <select value={tipo} onChange={e => setTipo(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255,255,255,0.1)', border: '1px solid var(--separador)', color: 'white', borderRadius: '4px' }} required>
+                {tiposYantra.map(t => <option key={t} value={t} style={{color: 'black'}}>{t}</option>)}
+              </select>
+            </div>
+            <div style={{ width: '150px' }}>
+              <label style={{ display: 'block', color: 'var(--amarelo)', marginBottom: '5px' }}>Custo em Slots</label>
+              <input type="number" min="0" value={custoSlots} onChange={e => setCustoSlots(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255,255,255,0.1)', border: '1px solid var(--separador)', color: 'white', borderRadius: '4px' }} required />
+            </div>
+          </div>
+          
           <div>
             <label style={{ display: 'block', color: 'var(--amarelo)', marginBottom: '5px' }}>Descrição do Efeito</label>
             <textarea value={descricaoEfeito} onChange={e => setDescricaoEfeito(e.target.value)} style={{ width: '100%', padding: '10px', minHeight: '80px', background: 'rgba(255,255,255,0.1)', border: '1px solid var(--separador)', color: 'white', borderRadius: '4px' }} />
@@ -177,35 +204,50 @@ export default function AdminYantras({ playersData }) {
           </div>
 
           <div style={{ marginTop: '10px', borderTop: '1px solid var(--separador)', paddingTop: '15px' }}>
-            <h3 style={{ color: 'var(--amarelo)', marginBottom: '10px' }}>Efeitos Matemáticos na Calculadora</h3>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {efeitosDinamicos.map((efeito) => (
-                <div key={efeito.id} style={{ display: 'flex', gap: '10px', alignItems: 'center', background: 'rgba(0,0,0,0.4)', padding: '10px', borderRadius: '4px' }}>
-                  <select 
-                    className={styles.selectTiposEfeitosYantra}
-                    value={efeito.campo} 
-                    onChange={(e) => handleEffectChange(efeito.id, 'campo', e.target.value)}
-                    
-                  >
-                    {CAMPOS_YANTRA.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
-                  </select>
-                  <input 
-                    type="number" 
-                    value={efeito.valor} 
-                    onChange={(e) => handleEffectChange(efeito.id, 'valor', e.target.value)}
-                    style={{ width: '80px', padding: '8px', background: 'rgba(255,255,255,0.1)', border: '1px solid var(--separador)', color: 'white', borderRadius: '4px', textAlign: 'center' }}
-                  />
-                  <button type="button" onClick={() => handleRemoveEffect(efeito.id)} style={{ padding: '8px', background: 'transparent', color: 'var(--vermelho)', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
-                    ✕
-                  </button>
-                </div>
-              ))}
+            <h3 style={{ color: 'var(--amarelo)', marginBottom: '10px' }}>Efeitos Dinâmicos (JSON)</h3>
+            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', marginBottom: '10px' }}>
+              Cole ou edite a estrutura JSON dos efeitos dinâmicos, incluindo campos de SELECAO_VARIAVEL, opcoes e custosAplicados.
+            </p>
+            <div style={{ display: 'flex', gap: '20px' }}>
+              <div style={{ flex: 2 }}>
+                <textarea 
+                  value={efeitosJson} 
+                  onChange={(e) => {
+                    setEfeitosJson(e.target.value);
+                    try {
+                      JSON.parse(e.target.value);
+                      setJsonError('');
+                    } catch(err) {
+                      setJsonError('Sintaxe JSON inválida');
+                    }
+                  }} 
+                  style={{ width: '100%', padding: '10px', height: '250px', background: 'rgba(0,0,0,0.5)', border: jsonError ? '1px solid var(--vermelho)' : '1px solid var(--separador)', color: 'white', borderRadius: '4px', fontFamily: 'monospace', resize: 'vertical' }} 
+                />
+                {jsonError && <span style={{ color: 'var(--vermelho)', fontSize: '0.85rem' }}>{jsonError}</span>}
+              </div>
+              <div style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--separador)', borderRadius: '4px', padding: '15px', overflowY: 'auto', height: '250px' }}>
+                <h4 style={{ color: 'var(--amarelo)', marginBottom: '10px', fontSize: '0.9rem' }}>Glossário de Campos</h4>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: '0.8rem', color: 'rgba(255,255,255,0.8)' }}>
+                  {CAMPOS_YANTRA.map(campo => (
+                    <li key={campo.value} style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: 'white' }}>"{campo.value}"</strong>
+                      <br/>
+                      <span style={{ color: 'rgba(255,255,255,0.5)' }}>{campo.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            
-            <button type="button" onClick={handleAddEffect} style={{ marginTop: '10px', padding: '8px 15px', background: 'transparent', border: '1px dashed var(--amarelo)', color: 'var(--amarelo)', borderRadius: '4px', cursor: 'pointer', width: '100%' }}>
-              + Adicionar Efeito
-            </button>
+          </div>
+
+          <div style={{ marginTop: '10px', borderTop: '1px solid var(--separador)', paddingTop: '15px' }}>
+            <h3 style={{ color: 'var(--amarelo)', marginBottom: '10px' }}>Requisitos e Validações</h3>
+            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', marginBottom: '15px' }}>Defina as condições lógicas necessárias para este yantra ser equipado. Deixe vazio para permitir uso livre.</p>
+            <ConditionBuilder 
+              node={requisitos} 
+              onChange={setRequisitos} 
+              isRoot={true} 
+            />
           </div>
           
           <div style={{ display: 'flex', gap: '10px', marginTop: '20px', justifyContent: 'flex-end' }}>
@@ -236,6 +278,7 @@ export default function AdminYantras({ playersData }) {
           <thead>
             <tr style={{ borderBottom: '1px solid var(--separador)', color: 'var(--amarelo)' }}>
               <th style={{ padding: '12px', fontWeight: 'normal' }}>Nome</th>
+              <th style={{ padding: '12px', fontWeight: 'normal' }}>Tipo / Slots</th>
               <th style={{ padding: '12px', fontWeight: 'normal' }}>Efeitos Mapeados</th>
               <th style={{ padding: '12px', fontWeight: 'normal', textAlign: 'right' }}>Ações</th>
             </tr>
@@ -261,6 +304,10 @@ export default function AdminYantras({ playersData }) {
                     <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', marginTop: '4px' }}>
                       Conhecido por: {yantra.conhecidoPor?.length > 0 ? yantra.conhecidoPor.join(', ') : "Nenhum jogador"}
                     </div>
+                  </td>
+                  <td style={{ padding: '12px', color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem' }}>
+                    {yantra.tipo || 'Desconhecido'} <br/>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--amarelo)' }}>Custo: {yantra.custoSlots !== undefined ? yantra.custoSlots : 1} Slot(s)</span>
                   </td>
                   <td style={{ padding: '12px', color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem' }}>
                     {resumo}

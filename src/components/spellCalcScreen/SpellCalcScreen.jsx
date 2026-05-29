@@ -1,5 +1,6 @@
 // SpellCalcScreen.js (O componente principal agora)
 import React from "react";
+import { createPortal } from "react-dom";
 import styles from "../../styles/spellcalc.module.css";
 import MageDataComponent from "./MageDataComponent";
 import SpellDataComponent from "./SpellDataComponent";
@@ -19,6 +20,7 @@ export default function SpellCalcScreen() {
   const navigate = useNavigate();
 
   const [modalSalvarAberto, setModalSalvarAberto] = React.useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   // Obter contexto da magia com proteção de loading
   const spellContextData = useAppSpellContext();
@@ -31,7 +33,7 @@ export default function SpellCalcScreen() {
       );
       if (!confirmOverwrite) return;
     }
-    
+
     const success = await spellContextData.saveSpellData(spellName);
     if (success) {
       setModalSalvarAberto(false);
@@ -42,8 +44,12 @@ export default function SpellCalcScreen() {
     // Estados
     gnose,
     setGnose,
+    arcana,
+    setArcana,
     nivelArcana,
     setNivelArcana,
+    arcanasExtras,
+    setArcanasExtras,
     nivelRequerido,
     setNivelRequerido,
     magiasAtivas,
@@ -150,8 +156,12 @@ export default function SpellCalcScreen() {
   const mageDataProps = {
     gnose,
     setGnose,
+    arcana,
+    setArcana,
     nivelArcana,
     setNivelArcana,
+    arcanasExtras,
+    setArcanasExtras,
     nivelRequerido,
     setNivelRequerido,
     magiasAtivas,
@@ -191,8 +201,11 @@ export default function SpellCalcScreen() {
   const yantraDataProps = {
     gnose,
     setGnose,
+    arcana,
+    setArcana,
     nivelArcana,
     setNivelArcana,
+    arcanasExtras,
     nivelRequerido,
     setNivelRequerido,
     magiasAtivas,
@@ -211,7 +224,7 @@ export default function SpellCalcScreen() {
     setExtraElevacoes,
     usouFV,
     setUsouFdV,
-    
+
     toggleUsouFV,
     mitigarDadosParadoxoMana,
     setMitigarDadosParadoxoMana,
@@ -236,7 +249,7 @@ export default function SpellCalcScreen() {
     const tMaxNivel = currentFP === "tempoConjuracao" ? 100 : (6 + (efeitosYantra.tempoExceder || 0));
     const e_tempoConjuracao = Math.min(tempoConjuracao, tMaxNivel);
     const e_escalaElevada = escalaElevada || efeitosYantra.escalaElevada;
-    
+
     let e_alcance = alcance;
     if (efeitosYantra.alcanceSimpatico) e_alcance = 'simpatico';
     else if (efeitosYantra.alcanceSensorial) e_alcance = 'sensorial';
@@ -267,9 +280,9 @@ export default function SpellCalcScreen() {
 
     const textoYantraBonus = Array.isArray(yantras)
       ? yantras
-          .filter(y => y && typeof y === 'object' && getYantraBonusValue(y) > 0)
-          .map(y => `${y.nome || y.name || 'Yantra'} +${getYantraBonusValue(y)}`)
-          .join(' + ')
+        .filter(y => y && typeof y === 'object' && getYantraBonusValue(y) > 0)
+        .map(y => `${y.nome || y.name || 'Yantra'} +${getYantraBonusValue(y)}`)
+        .join(' + ')
       : '';
 
     const pExtra = Math.max(0, e_potencia - 1);
@@ -295,7 +308,15 @@ export default function SpellCalcScreen() {
     const eFP = currentFP === "escala" ? " (Fator Primário)" : "";
     const eElevada = e_escalaElevada ? " (E)" : "";
 
-    let textoSoma = `Arcano ${e_nivelArcana} + Gnose ${e_gnose}`;
+    const arcanasList = [`${arcana} ${nivelArcana}${regente ? " (R)" : ""}`];
+    if (Array.isArray(arcanasExtras)) {
+      arcanasExtras.forEach(extra => {
+        arcanasList.push(`${extra.arcana} ${extra.nivelArcana}${extra.regente ? " (R)" : ""}`);
+      });
+    }
+    const textoArcanasText = arcanasList.join(", ");
+
+    let textoSoma = `Arcano (${arcana} ${e_nivelArcana}) + Gnose ${e_gnose}`;
     if (textoYantraBonus) textoSoma += ` + ${textoYantraBonus}`;
     else if (yantraBonus > 0) textoSoma += ` + Yantras ${yantraBonus}`;
     if (tBonus > 0) textoSoma += ` + Ritual ${tBonus}`;
@@ -315,6 +336,7 @@ export default function SpellCalcScreen() {
     const textoElevacoesUsadas = elevacoesList.length > 0 ? ` (${elevacoesList.join(', ')})` : '';
 
     return `
+Arcanas: ${textoArcanasText}
 Nível da Prática: ${nivelRequerido}
 Potência${pFP}${pElevada}: 1 + ${pExtra} (-${pPenalty}d)
 Duração${dFP}${dElevada}: 1 + ${dExtra} (-${dPenalty}d) | ${exibirDuracao}
@@ -327,11 +349,12 @@ Calculando: ${xSoma} - ${yPenalties} = ${paradaDeDados}
 Parada de dados: ${paradaDeDados} dados
 
 ${textoYantras ? `Yantras Selecionados: ${textoYantras}\n` : ''}
+Arcanos: ${arcanasList}
 Elevações grátis: ${calcularElevacoesGratis()}
 Elevações usadas: ${custoElevacoes}${textoElevacoesUsadas}
 Dados paradoxo: ${totalDadosParadoxo}
 Gasto de mana: ${custoMana}`;
-  }, [potencia, currentFP, nivelArcana, potenciaElevada, duracao, duracaoElevada, tempoConjuracaoElevada, tempoConjuracao, escala, escalaElevada, exibirEscala, alcance, yantras, gnose, usouFV, dadosExtras, isCombinado, extraElevacoes, calcularElevacoesGratis, custoElevacoes, paradaDeDados, totalDadosParadoxo, custoMana, exibirDuracao, nivelRequerido, exibirTempoConjuracao, exibirTextoPorTamanho, efeitosYantra]);
+  }, [potencia, currentFP, arcana, nivelArcana, regente, arcanasExtras, potenciaElevada, duracao, duracaoElevada, tempoConjuracaoElevada, tempoConjuracao, escala, escalaElevada, exibirEscala, alcance, yantras, gnose, usouFV, dadosExtras, isCombinado, extraElevacoes, calcularElevacoesGratis, custoElevacoes, paradaDeDados, totalDadosParadoxo, custoMana, exibirDuracao, nivelRequerido, exibirTempoConjuracao, exibirTextoPorTamanho, efeitosYantra]);
 
   const resumoMagiaProps = {
     exibirPotencia,
@@ -359,16 +382,45 @@ Gasto de mana: ${custoMana}`;
   };
 
   async function goToDice() {
+    const copyToClipboard = (text) => {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        return new Promise((resolve, reject) => {
+          try {
+            const successful = document.execCommand('copy');
+            document.body.removeChild(textArea);
+            if (successful) {
+              resolve();
+            } else {
+              reject(new Error("execCommand('copy') failed"));
+            }
+          } catch (err) {
+            document.body.removeChild(textArea);
+            reject(err);
+          }
+        });
+      }
+    };
+
     try {
-      await navigator.clipboard.writeText(getWhatsAppText());
-    } catch(err) {
+      await copyToClipboard(getWhatsAppText());
+    } catch (err) {
       console.error('Falha ao copiar:', err);
     }
 
     if (userData && database) {
       const userRefInDB = ref(database, `users/${userData.id}`);
       const updates = {};
-      
+
       if (custoMana > 0) {
         const manaAtual = userData.mana.max - (userData.mana.usado || 0);
         updates["mana/usado"] = (userData.mana.usado || 0) + custoMana;
@@ -378,7 +430,7 @@ Gasto de mana: ${custoMana}`;
           custo: custoMana
         });
       }
-      
+
       if (custoVontade > 0) {
         const fvAtual = userData.fv.max - (userData.fv.usado || 0);
         updates["fv/usado"] = (userData.fv.usado || 0) + custoVontade;
@@ -410,23 +462,49 @@ Gasto de mana: ${custoMana}`;
           <SpellDataComponent {...spellDataProps} />
           <ExtraOptionsComponent {...extraOptionDataProps} />
         </div>
-        <div className={styles.notScrollableData}>
-          <ResumoMagia {...resumoMagiaProps} />
-          <div className={styles.spellCalcFooter}>
-            <div className={styles.footerRow}>
-              <button className={styles.button} onClick={resetCalculadora}>
-                Limpar
-              </button>
-             <button className={styles.button} onClick={() => setModalSalvarAberto(true)}>
-                Salvar
-              </button>
-            </div>
-            <button className={styles.button} onClick={goToDice}>
-              Ir para Rolagem
-            </button>
-          </div>
-        </div>
       </div>
+      
+      {createPortal(
+        <div className={`${styles.notScrollableData} ${isDrawerOpen ? styles.drawerOpen : styles.drawerClosed}`}>
+          {/* Puxador da gaveta */}
+          <div className={styles.drawerHandle} onClick={() => setIsDrawerOpen(!isDrawerOpen)}>
+            <div className={styles.drawerHandleBar}></div>
+            {isDrawerOpen && <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginTop: '-2px' }}>▼ Minimizar</span>}
+          </div>
+
+          {/* Sumário rápido visível quando o drawer está encolhido */}
+          {!isDrawerOpen && (
+            <div className={styles.drawerMiniSummary} onClick={() => setIsDrawerOpen(true)}>
+              <span>🎲 Dados: <strong>{paradaDeDados}d</strong></span>
+              <span>✨ Mana: <strong>{custoMana}</strong></span>
+              <span>⚠️ Paradoxo: <strong>{totalDadosParadoxo}d</strong></span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--amarelo)', fontWeight: 'bold' }}>▲ Ver Resumo</span>
+            </div>
+          )}
+
+          {/* Conteúdo completo visível apenas quando o drawer está aberto */}
+          {isDrawerOpen && (
+            <>
+              <ResumoMagia {...resumoMagiaProps} />
+              <div className={styles.spellCalcFooter} style={{ paddingBottom: '10px' }}>
+                <div className={styles.footerRow}>
+                  <button className={styles.button} onClick={resetCalculadora}>
+                    Limpar
+                  </button>
+                  <button className={styles.button} onClick={() => setModalSalvarAberto(true)}>
+                    Salvar
+                  </button>
+                  <button className={styles.button} onClick={goToDice}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-dices-icon lucide-dices"><rect width="12" height="12" x="2" y="10" rx="2" ry="2" /><path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6" /><path d="M6 18h.01" /><path d="M10 14h.01" /><path d="M15 6h.01" /><path d="M18 9h.01" /></svg>
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>,
+        document.body
+      )}
+
       <SalvarMagiaModal
         isOpen={modalSalvarAberto}
         onClose={() => setModalSalvarAberto(false)}

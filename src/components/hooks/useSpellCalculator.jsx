@@ -3,6 +3,7 @@ import * as spellLogic from "../../js/spellLogic";
 import * as spellReducer from "../../js/spellReducer";
 import { ref, set, remove, update } from "firebase/database";
 import { AppContext } from "../../AppContext";
+import { extractYantraCosts } from "../../js/yantraLogic";
 
 export default function useSpellCalculator(userData) {
   const [state, dispatch] = React.useReducer(spellReducer.spellReducer, spellReducer.initialState);
@@ -10,6 +11,8 @@ export default function useSpellCalculator(userData) {
 
   // === WRAPPER SETTERS PARA MANTER A API IGUAL ===
   const setGnose = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'gnose', value: typeof value === 'function' ? value(state.gnose) : value } }), [state.gnose]);
+  const setArcana = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'arcana', value: typeof value === 'function' ? value(state.arcana) : value } }), [state.arcana]);
+  const setArcanasExtras = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'arcanasExtras', value: typeof value === 'function' ? value(state.arcanasExtras) : value } }), [state.arcanasExtras]);
   const setNivelArcana = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'nivelArcana', value: typeof value === 'function' ? value(state.nivelArcana) : value } }), [state.nivelArcana]);
   const setNivelRequerido = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'nivelRequerido', value: typeof value === 'function' ? value(state.nivelRequerido) : value } }), [state.nivelRequerido]);
   const setMagiasAtivas = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'magiasAtivas', value: typeof value === 'function' ? value(state.magiasAtivas) : value } }), [state.magiasAtivas]);
@@ -41,7 +44,7 @@ export default function useSpellCalculator(userData) {
   const setDadosParadoxoExtra = React.useCallback((value) => dispatch({ type: 'SET_VALUE', payload: { key: 'dadosParadoxoExtra', value: typeof value === 'function' ? value(state.dadosParadoxoExtra) : value } }), [state.dadosParadoxoExtra]);
 
   const {
-    gnose, nivelArcana, nivelRequerido, magiasAtivas, spellType, regente,
+    gnose, arcana, nivelArcana, arcanasExtras, nivelRequerido, magiasAtivas, spellType, regente,
     potencia, duracao, escala, alcance, tempoConjuracao, currentFP,
     potenciaElevada, duracaoElevada, escalaElevada, alcanceElevado, tempoConjuracaoElevada,
     extraElevacoes, isCombinado, yantras, usouFV, mitigarDadosParadoxoMana,
@@ -75,21 +78,49 @@ export default function useSpellCalculator(userData) {
     if (Array.isArray(yantras)) {
       yantras.forEach(yantra => {
         if (yantra.efeitosDinamicos && Array.isArray(yantra.efeitosDinamicos)) {
-          yantra.efeitosDinamicos.forEach(ef => {
-            const v = Number(ef.valor) || 0;
-            switch (ef.campo) {
-              case 'potenciaElevada':
-              case 'duracaoElevada':
-              case 'escalaElevada':
-              case 'alcanceElevado':
-              case 'tempoConjuracaoElevada':
-              case 'alcanceToque':
-              case 'alcanceSensorial':
-              case 'alcanceSimpatico':
-                if (v > 0) efeitos[ef.campo] = true;
-                break;
-              default:
-                if (efeitos[ef.campo] !== undefined) efeitos[ef.campo] += v;
+          yantra.efeitosDinamicos.forEach((ef, index) => {
+            let v = 0;
+            let valoresMapeados = null;
+
+            if (ef.tipoVariacao === 'SELECAO_VARIAVEL' && ef.opcoes) {
+              const selectedIndex = yantra.selectedOptions ? (yantra.selectedOptions[index] || 0) : 0;
+              const selectedOption = ef.opcoes[selectedIndex];
+              
+              if (selectedOption?.valores && typeof selectedOption.valores === 'object') {
+                valoresMapeados = selectedOption.valores;
+              } else {
+                v = Number(selectedOption?.valor) || 0;
+              }
+            } else {
+              v = Number(ef.valor) || 0;
+            }
+            
+            if (valoresMapeados) {
+              // Aplica múltiplos efeitos simultaneamente da opção selecionada
+              Object.keys(valoresMapeados).forEach(key => {
+                const val = Number(valoresMapeados[key]) || 0;
+                if (['potenciaElevada', 'duracaoElevada', 'escalaElevada', 'alcanceElevado', 'tempoConjuracaoElevada', 'alcanceToque', 'alcanceSensorial', 'alcanceSimpatico'].includes(key)) {
+                  if (val > 0) efeitos[key] = true;
+                } else if (efeitos[key] !== undefined) {
+                  efeitos[key] += val;
+                }
+              });
+            } else {
+              // Comportamento padrão de único campo
+              switch (ef.campo) {
+                case 'potenciaElevada':
+                case 'duracaoElevada':
+                case 'escalaElevada':
+                case 'alcanceElevado':
+                case 'tempoConjuracaoElevada':
+                case 'alcanceToque':
+                case 'alcanceSensorial':
+                case 'alcanceSimpatico':
+                  if (v > 0) efeitos[ef.campo] = true;
+                  break;
+                default:
+                  if (efeitos[ef.campo] !== undefined) efeitos[ef.campo] += v;
+              }
             }
           });
         } else if (yantra.dadosBonus !== undefined) {
@@ -216,20 +247,25 @@ export default function useSpellCalculator(userData) {
     e_tempoConjuracao, e_tempoConjuracaoElevada, currentFP, calcularDadosPorFator
   ]);
 
+  const yantraCosts = React.useMemo(() => extractYantraCosts(yantras), [yantras]);
+  const yantraManaCost = yantraCosts.MANA || 0;
+  const yantraDanoResistente = yantraCosts.DANO_RESISTENTE || 0;
+
   const calcularGastoMana = React.useCallback(() => {
     const paradoxDice = calcularDadosParadoxo();
     const effectiveParadox = Math.max(0, paradoxDice + e_dadosParadoxoExtra);
     let mitigacaoEfetiva = Math.min(effectiveParadox, mitigarDadosParadoxoMana);
     return spellLogic.calculateManaCost({
-      alcance: e_alcance, regente, duracao, duracaoElevada: e_duracaoElevada, manaOpcional: manaOpcional + efeitosYantra.manaOpcional,
+      alcance: e_alcance, regente, duracao, duracaoElevada: e_duracaoElevada, manaOpcional: manaOpcional + efeitosYantra.manaOpcional + yantraManaCost,
       paradoxDice: effectiveParadox, mitigarTodoParadoxo: mitigarTodoParadoxoMana,
       mitigarDadosParadoxo: mitigacaoEfetiva,
-      spellType
+      spellType,
+      arcanasExtras
     });
   }, [
-    e_alcance, regente, duracao, e_duracaoElevada, manaOpcional, efeitosYantra.manaOpcional,
+    e_alcance, regente, duracao, e_duracaoElevada, manaOpcional, efeitosYantra.manaOpcional, yantraManaCost,
     calcularDadosParadoxo, mitigarTodoParadoxoMana, mitigarDadosParadoxoMana, e_dadosParadoxoExtra,
-    spellType
+    spellType, arcanasExtras
   ]);
 
   const initialMana = (userData?.mana?.max || 0) - (userData?.mana?.usado || 0);
@@ -239,9 +275,10 @@ export default function useSpellCalculator(userData) {
       alcance: e_alcance, regente, duracao, duracaoElevada: e_duracaoElevada, manaOpcional: efeitosYantra.manaOpcional,
       paradoxDice: 0, mitigarTodoParadoxo: false,
       mitigarDadosParadoxo: 0,
-      spellType
+      spellType,
+      arcanasExtras
     });
-  }, [e_alcance, regente, duracao, e_duracaoElevada, spellType, efeitosYantra.manaOpcional]);
+  }, [e_alcance, regente, duracao, e_duracaoElevada, spellType, efeitosYantra.manaOpcional, arcanasExtras]);
 
   const totalDisponivelParaOpcionais = React.useMemo(() => {
     return Math.max(0, initialMana - calcularBaseManaCost());
@@ -309,9 +346,17 @@ export default function useSpellCalculator(userData) {
         savedAt: Date.now()
       };
 
+      const arcanasList = [`${arcana} ${nivelArcana}`];
+      if (Array.isArray(arcanasExtras)) {
+        arcanasExtras.forEach(extra => {
+          arcanasList.push(`${extra.arcana} ${extra.nivelArcana}`);
+        });
+      }
+      const arcanasText = arcanasList.join(", ");
+
       const spellToSave = {
         name: spellName,
-        arcanas: `Arcana Nível ${nivelArcana}`,
+        arcanas: arcanasText,
         description: "",
         calculatorState: calculatorStateSnapshot
       };
@@ -430,11 +475,16 @@ export default function useSpellCalculator(userData) {
     Fatores,
     ModificamElevacao,
     efeitosYantra,
+    yantraDanoResistente,
     // Estados e seus setters
     gnose,
     setGnose,
+    arcana,
+    setArcana,
     nivelArcana,
     setNivelArcana,
+    arcanasExtras,
+    setArcanasExtras,
     nivelRequerido,
     setNivelRequerido,
     magiasAtivas,

@@ -36,24 +36,100 @@
 }
 
 .scrollableData {
-  overflow-y: scroll;
-  padding-bottom: 20px;
+  overflow-y: auto;
+  padding-bottom: 90px;
+  /* Espaço para compensar o drawer minimizado de 65px */
 }
 
 .notScrollableData {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  position: sticky;
-  left: 0vw;
+  position: fixed;
+  left: 0;
+  right: 0;
   bottom: 0;
-  background-color: black;
-  backdrop-filter: blur(4px);
+  background: rgba(10, 10, 10, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   width: 100%;
-  box-shadow: 0 -15px 20px 10px black, 0 -15px 40px 10px black;
-  z-index: 99;
-  gap: 10px;
-  padding-top: 10px;
+  border-top: 2px solid var(--amarelo);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -15px 30px rgba(0, 0, 0, 0.9);
+  z-index: 999;
+  gap: 8px;
+  padding: 8px 15px 15px 15px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drawerOpen {
+  transform: translateY(0);
+}
+
+.drawerClosed {
+  transform: translateY(calc(100% - 80px));
+  /* Encolhe mostrando apenas o puxador e o mini-sumário */
+}
+
+.drawerHandle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 5px 0 8px 0;
+  width: 100%;
+  user-select: none;
+}
+
+.drawerHandleBar {
+  width: 45px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+  margin-bottom: 2px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.drawerHandle:hover .drawerHandleBar {
+  background: var(--amarelo);
+}
+
+.drawerMiniSummary {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 2px 0 10px 0;
+  width: 100%;
+  cursor: pointer;
+  animation: fadeInDrawer 0.3s ease-out;
+  user-select: none;
+}
+
+.drawerMiniSummary span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: white;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+.drawerMiniSummary strong {
+  color: var(--amarelo);
+  font-size: 0.95rem;
+}
+
+@keyframes fadeInDrawer {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .notScrollableData * {
@@ -75,6 +151,7 @@
   display: grid;
   grid-template-columns: 55% 45%;
   gap: 10px;
+  color: white;
 }
 
 .resumoMagia .tooltipParent .tooltip {
@@ -147,6 +224,10 @@ b {
   flex: 1;
 }
 
+.footerRow>button:nth-of-type(3) {
+  width: 50px
+}
+
 .spellCalcFooter button {
   display: flex;
   width: 100%;
@@ -171,7 +252,22 @@ b {
   grid-template-columns: calc(100% - 146px) 136px;
   grid-auto-rows: minmax(20px, auto);
   gap: 10px;
-  padding-bottom: 30px;
+  padding: 0 0 30px 10px;
+}
+
+.yantraAdded {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid var(--separador);
+  width: 100%;
+}
+
+.yantraAdded~div {
+  width: 100%;
 }
 
 .optionalsData,
@@ -392,6 +488,18 @@ input[type="checkbox"].checkboxElevada:active,
   background-repeat: no-repeat;
   background-color: var(--amarelo);
   box-shadow: 0 0 10px 1px var(--amarelo);
+}
+
+.selectArcana {
+  padding: 12px 12px 12px 4px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--separador);
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  max-width: 55vw;
+  min-width: 45vw;
+  transform: translateX(-10px);
 }
 
 @keyframes shinyText {
