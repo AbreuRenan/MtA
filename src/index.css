@@ -2,11 +2,13 @@
   font-family: PentaGramsSalemica;
   src: url("/src/assets/fonts/PentaGramsSalemica.ttf");
 }
+
 @font-face {
   font-family: Trajan;
   /* src: url('/assets/fonts/Trajan.ttf'); */
   src: url("/src/assets/fonts/Trajan.ttf");
 }
+
 @font-face {
   font-family: TrajanBold;
   src: url("/src/assets/fonts/TrajanBold.ttf");
@@ -29,11 +31,9 @@
   --magoFont: "Trajan";
   --magoFontBold: "TrajanBold";
   --magoFontPenta: "PentaGramsSalemica";
-  --grad-dourado-chic: linear-gradient(
-    135deg,
-    rgba(210, 200, 90, 1) 25%,
-    rgba(200, 157, 0, 1) 75%
-  );
+  --grad-dourado-chic: linear-gradient(135deg,
+      rgba(210, 200, 90, 1) 25%,
+      rgba(200, 157, 0, 1) 75%);
 }
 
 * {
@@ -49,9 +49,12 @@
   box-sizing: border-box !important;
   scroll-behavior: smooth;
 }
+
 body {
   background-color: #030600;
+  overflow-x: hidden;
 }
+
 .body {
   width: 100svw;
   height: 100svh;
@@ -63,6 +66,7 @@ body {
   border-radius: 10px;
   backdrop-filter: brightness(1.8);
 }
+
 a,
 :visited {
   color: #f2f3eb;
@@ -77,9 +81,11 @@ button {
 .container {
   padding: 20px;
 }
+
 .h-100 {
-    height: 100svh;
+  height: 100svh;
 }
+
 .active {
   color: var(--amarelo);
   width: 100%;
@@ -88,6 +94,7 @@ button {
   box-shadow: inset 0px 0 20px 0px rgba(255, 255, 0, 0.15);
   padding: 10px;
 }
+
 .btn {
   background: var(--amarelo);
   box-shadow: 0 4px 0 0 var(--amareloSombra);
@@ -102,16 +109,19 @@ button {
   background-size: contain;
   border: 1px transparent;
 }
+
 .bd-dice {
   background: url("assets/bd.png") no-repeat center;
   background-size: contain;
   border: 1px transparent;
 }
+
 .yd-dice {
   background: url("assets/yd.png") no-repeat center;
   background-size: contain;
   border: 1px transparent;
 }
+
 .rd-dice {
   background: url("assets/rd.png") no-repeat center;
   background-size: contain;
@@ -126,7 +136,7 @@ button {
   width: 100%;
   height: 100svh;
   z-index: 10;
-  background-color: rgba(0,0,0,.5);
+  background-color: rgba(0, 0, 0, .5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,6 +145,7 @@ button {
   z-index: 10;
   transition: all ease-out .3s;
 }
+
 .loadingScreen.isLoading {
   opacity: 1;
   visibility: initial;
@@ -153,6 +164,7 @@ div.openGame {
   transition: all .5s ease-in;
   animation: sinal .5s alternate-reverse .5s 6 forwards, final 1s 3s forwards
 }
+
 div.closeGame {
   opacity: 0;
   visibility: hidden;
@@ -163,7 +175,8 @@ div.closeGame {
   font-size: 1.5rem;
   background-color: var(--vermelho);
   box-shadow: 0 4px 0 0 var(--vermelhoSombra);
-  transition: all .5s ease-in;;
+  transition: all .5s ease-in;
+  ;
   animation: sinal .5s alternate-reverse .1s 6 forwards, final 1s 3s forwards
 }
 
@@ -172,12 +185,14 @@ div.closeGame {
     opacity: 1;
     filter: brightness(1.5);
   }
+
   to {
     visibility: initial;
     opacity: 1;
     filter: brightness(1);
   }
 }
+
 @keyframes final {
   to {
     font-size: 1rem;
@@ -195,7 +210,7 @@ div.closeGame {
   padding: 5px;
   border: 1px solid transparent;
   border-radius: 50px;
-  background-color: rgba(255,255,255,0.7);
+  background-color: rgba(255, 255, 255, 0.7);
   background-image: url('assets/skull.png');
   background-size: contain;
   background-repeat: no-repeat;
@@ -214,16 +229,16 @@ div.closeGame {
     border-radius: 0;
     background-image: none;
   }
-  
+
   .container {
     padding: 10px;
   }
-  
+
   .headerNav {
     height: auto;
     position: relative;
   }
-  
+
   .mobileMenuButton {
     top: 5px;
     left: 5px;

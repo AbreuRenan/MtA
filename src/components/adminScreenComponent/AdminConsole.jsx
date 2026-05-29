@@ -5,6 +5,7 @@ import { get, ref, remove, set, update, onValue } from "firebase/database";
 import PlayerDisplayAdmin from "./playerDisplayAdmin";
 import { pushLog } from "../../js/logUtils";
 import AdminYantras from "./AdminYantras";
+import YantraJsonDoc from "./YantraJsonDoc";
 
 import styles from "./adminStyles.module.css";
 import RollHistory from "../diceScreenComponents/RollHistory";
@@ -246,6 +247,20 @@ export default function AdminScreen() {
             </div>
 
             <div className={styles.configCard}>
+              <h3>Modelagem de Yantras</h3>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', marginBottom: '15px' }}>
+                Acesse a documentação oficial interna detalhando como estruturar o JSON de Yantras, regras de requisitos e custos dinâmicos.
+              </p>
+              <button 
+                className={styles.configBtn} 
+                style={{ width: '250px', background: 'var(--amarelo)', color: '#000', fontWeight: 'bold' }} 
+                onClick={() => setActiveTab('yantraDoc')}
+              >
+                Ver Documentação JSON
+              </button>
+            </div>
+
+            <div className={styles.configCard}>
               <h3>Ações Administrativas</h3>
               <div className={styles.actionsGrid}>
                 <button className={`${styles.configBtn} danger`} onClick={handleDeleteHistory}>
@@ -256,6 +271,12 @@ export default function AdminScreen() {
                 </button>
               </div>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'yantraDoc' && (
+          <div style={{ width: '100%', maxWidth: '1000px' }}>
+            <YantraJsonDoc onBack={() => setActiveTab('config')} />
           </div>
         )}
       </div>

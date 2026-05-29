@@ -9,23 +9,44 @@ export const tiposYantra = [
 ];
 
 export function evaluateCondition(condicao, context) {
+  if (!condicao) return false;
   const { origem, chave, operador, valor } = condicao;
-  let contextValue;
+  let contextValue = 0;
 
-  if (origem === "FATOR_MAGIA") {
-    // Normalizamos para string/number dependendo do que vier
-    contextValue = context.fatoresMagia?.[chave] || 0;
-  } else if (origem === "POOL_YANTRAS") {
-    // Para POOL_YANTRAS, a chave é o tipo do Yantra. Queremos saber se está "ATIVO" ou "INATIVO".
-    const isActive = context.poolYantras?.some(y => y.tipo === chave);
+  const normalizedOrigem = String(origem || "").toUpperCase().trim();
+  const normalizedChave = String(chave || "").toLowerCase().trim();
+  const normalizedOperador = String(operador || "").toUpperCase().trim();
+
+  if (normalizedOrigem === "FATOR_MAGIA") {
+    // Procura a chave de forma case-insensitive e sem espaços nos fatores de magia do personagem
+    if (context && context.fatoresMagia) {
+      const actualKey = Object.keys(context.fatoresMagia).find(
+        k => String(k).toLowerCase().trim() === normalizedChave
+      );
+      if (actualKey) {
+        contextValue = context.fatoresMagia[actualKey];
+      }
+    }
+  } else if (normalizedOrigem === "POOL_YANTRAS") {
+    // Para POOL_YANTRAS, a chave é o tipo do Yantra (ex: Mudra, Mantra).
+    const isActive = context.poolYantras?.some(
+      y => String(y.tipo || "").toLowerCase().trim() === normalizedChave
+    );
     contextValue = isActive ? "ATIVO" : "INATIVO";
   }
 
-  switch (operador) {
-    case "EQ": return String(contextValue) === String(valor);
-    case "GE": return Number(contextValue) >= Number(valor);
-    case "LE": return Number(contextValue) <= Number(valor);
-    default: return false; // Operador desconhecido
+  const strVal = String(valor || "").toLowerCase().trim();
+  const strCtx = String(contextValue).toLowerCase().trim();
+
+  switch (normalizedOperador) {
+    case "EQ": 
+      return strCtx === strVal;
+    case "GE": 
+      return Number(contextValue) >= Number(valor);
+    case "LE": 
+      return Number(contextValue) <= Number(valor);
+    default: 
+      return false; // Operador desconhecido
   }
 }
 
@@ -35,24 +56,32 @@ export function evaluateRequisitos(requisitosNode, context) {
   }
 
   const { operadorLogico = "AND", condicoes } = requisitosNode;
+  const op = String(operadorLogico).toUpperCase().trim();
 
-  if (operadorLogico === "AND") {
+  if (op === "AND") {
     return condicoes.every(cond => {
-      if (cond.operadorLogico) {
-        return evaluateRequisitos(cond, context); // É um sub-nó (grupo)
+      // Se cond tem operadorLogico ou condicoes internas, é um subgrupo (recursivo)
+      if (cond.operadorLogico || Array.isArray(cond.condicoes)) {
+        return evaluateRequisitos(cond, context);
       }
-      return evaluateCondition(cond, context); // É uma condição individual
+      return evaluateCondition(cond, context);
     });
-  } else if (operadorLogico === "OR") {
+  } else if (op === "OR") {
     return condicoes.some(cond => {
-      if (cond.operadorLogico) {
+      if (cond.operadorLogico || Array.isArray(cond.condicoes)) {
         return evaluateRequisitos(cond, context);
       }
       return evaluateCondition(cond, context);
     });
   }
 
-  return true;
+  // Fallback seguro caso seja um operador desconhecido
+  return condicoes.every(cond => {
+    if (cond.operadorLogico || Array.isArray(cond.condicoes)) {
+      return evaluateRequisitos(cond, context);
+    }
+    return evaluateCondition(cond, context);
+  });
 }
 
 export function validateYantra(yantraToEvaluate, context) {
