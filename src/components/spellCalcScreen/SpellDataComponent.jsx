@@ -164,6 +164,7 @@ export default function SpellDataComponent(props) {
           type="radio"
           name="fatorPrimario"
           value="tempoConjuracao"
+          checked={currentFP === "tempoConjuracao"}
           className={styles.checkboxElevada}
           onChange={toggleFPradioBtn}
         ></input>
