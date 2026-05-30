@@ -81,7 +81,7 @@ export function calculateDicePool(params) {
   let dadosIniciais = gnose + nivelArcana + yantras + dadosExtras;
   const combinadoPenalty = isCombinado * 2;
   let totalDados = dadosIniciais - factorPenalty - combinadoPenalty;
-  
+
   if (usouFV) totalDados += (3 + fatorFdv);
 
   // Lógica do Tempo de Conjuração
@@ -109,7 +109,7 @@ export function calculateParadoxDice(gnose, freeReach, totalReach) {
  */
 export function calculateManaCost(params) {
   const {
-    alcance, regente, duracao, duracaoElevada, manaOpcional, 
+    alcance, regente, duracao, duracaoElevada, manaOpcional,
     paradoxDice, mitigarTodoParadoxo, mitigarDadosParadoxo,
     spellType = "improvisado", arcanasExtras = []
   } = params;
@@ -125,7 +125,7 @@ export function calculateManaCost(params) {
     }
   }
   if (duracaoElevada && duracao >= 6) totalMana += 1;
-  
+
   totalMana += manaOpcional;
 
   let manaParaParadoxo = mitigarTodoParadoxo ? paradoxDice : Math.max(0, mitigarDadosParadoxo);
@@ -185,28 +185,28 @@ export function formatSpellFactors(params) {
   const textoTamanho = SPELL_CONSTANTS.TEXTO_TAMANHOS[escalaData.tamanhos] || "Fora de Escala";
 
   // Tempo de Conjuração
-  let textoTempo = "AGORA!";
+  let textoTempo = "Instanâneo";
   if (!(tempoConjuracaoElevada || efeitosYantra.tempoConjuracaoElevada)) {
     const gnoseIndex = Math.max(0, Math.ceil(gnose / 2) - 1);
     const fatorMago = SPELL_CONSTANTS.FATORES_TEMPO_POR_GNOSE[gnoseIndex] || 1;
-    
+
     // Yantra: Exceder adiciona níveis ao limite máximo do Tempo de Conjuração
     const maxNivel = currentFP === "tempoConjuracao" ? 100 : (6 + (efeitosYantra.tempoExceder || 0));
-    
+
     const maxTempoSugerido = Math.min(maxNivel, tempoConjuracao);
-    
+
     // Yantra: Acelerar altera a quantidade final de tempo real gasto (horas/minutos)
     let tempoTotal = fatorMago * maxTempoSugerido;
     if (efeitosYantra.tempoAcelerar) {
-        // Acelerar soma ou subtrai níveis da "escada de tempo".
-        // Uma abordagem simples: ajusta o fatorMago ou diretamente os turnos.
-        // Se a instrução do usuário é que aumenta/reduz tempo, podemos mudar a quantidade de minutos calculados:
-        // Como Mago a cada passo do gráfico de tempo multiplica o tempo, a melhor abstração para "acelerar N níveis" é pular os passos do FATORES_TEMPO.
-        const novoGnoseIndex = Math.max(0, gnoseIndex + efeitosYantra.tempoAcelerar);
-        const novoFatorMago = SPELL_CONSTANTS.FATORES_TEMPO_POR_GNOSE[Math.min(novoGnoseIndex, 4)] || 1;
-        tempoTotal = novoFatorMago * maxTempoSugerido;
+      // Acelerar soma ou subtrai níveis da "escada de tempo".
+      // Uma abordagem simples: ajusta o fatorMago ou diretamente os turnos.
+      // Se a instrução do usuário é que aumenta/reduz tempo, podemos mudar a quantidade de minutos calculados:
+      // Como Mago a cada passo do gráfico de tempo multiplica o tempo, a melhor abstração para "acelerar N níveis" é pular os passos do FATORES_TEMPO.
+      const novoGnoseIndex = Math.max(0, gnoseIndex + efeitosYantra.tempoAcelerar);
+      const novoFatorMago = SPELL_CONSTANTS.FATORES_TEMPO_POR_GNOSE[Math.min(novoGnoseIndex, 4)] || 1;
+      tempoTotal = novoFatorMago * maxTempoSugerido;
     }
-    
+
     const horas = Math.floor(tempoTotal / 60);
     const minutos = tempoTotal % 60;
     textoTempo = `${horas > 0 ? horas + 'h' : ''}${minutos > 0 ? minutos + 'min' : ''}`.trim() || "0min";
