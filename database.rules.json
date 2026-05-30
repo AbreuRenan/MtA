@@ -4,8 +4,21 @@
     ".read": true,
     ".write": false,
     "rollsHistory": {
-      ".read": true,  /* Permitir leitura para todos */
-      ".write": "auth != null"  /* Permitir gravação apenas para usuários autenticados */
+      ".write": "auth != null"
+    },
+    "actionLogs": {
+      ".write": "auth != null"
+    },
+    "users": {
+      "$uid": {
+        ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'narrador')"
+      }
+    },
+    "yantras": {
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'narrador'"
+    },
+    "gameStatus": {
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'narrador'"
     }
   }
 }
