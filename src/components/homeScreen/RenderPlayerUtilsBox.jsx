@@ -2,7 +2,7 @@ import React from "react";
 import styles from "../../styles/playerCompanion.module.css";
 import { AppContext } from "../../AppContext";
 
-function RenderPlayerUtilsBox({ boxToRender, type, clickHandler }) {
+function RenderPlayerUtilsBox({ boxToRender, type, clickHandler, disabled }) {
   const { database } = React.useContext(AppContext);
   const [state, setState] = React.useState([0]);
 
@@ -10,7 +10,7 @@ function RenderPlayerUtilsBox({ boxToRender, type, clickHandler }) {
   
 
   return (
-    <div>
+    <div style={{ opacity: disabled ? 0.6 : 1, pointerEvents: disabled ? "none" : "auto", transition: "opacity 0.2s ease" }}>
       <span>{type}</span>
       <div className={styles.boxContainer}>{state?.map((box, index) => {
     const classNames = ["", "contusivo", "letal", "agravado"];

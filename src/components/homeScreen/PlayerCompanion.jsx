@@ -130,7 +130,11 @@ export default function PlayerCompanion() {
     [database, userData]
   );
 
+  const isBlocked = !gameOpen && userData?.role !== "narrador";
+
   function handleBoxClick(e, boxesArrayToChange, setterOfTheBoxArray, maxOfMarks, boxType) {
+    if (isBlocked) return;
+
     const boxIndex = Number(e.target.getAttribute("index"));
     const newBoxToChangeState = boxesArrayToChange.map((box, index) => {
       if (index === boxIndex) {
@@ -176,16 +180,19 @@ export default function PlayerCompanion() {
         clickHandler={(e) =>
           handleBoxClick(e, vitalidadeBoxes, setVitalidadeBoxes, 3, "vitalidade")
         }
+        disabled={isBlocked}
       />
       <RenderPlayerUtilsBox
         boxToRender={fvBoxes}
         type={"Força de Vontade"}
         clickHandler={(e) => handleBoxClick(e, fvBoxes, setFvBoxes, 1, "fv")}
+        disabled={isBlocked}
       />
       <RenderPlayerUtilsBox
         boxToRender={manaBoxes}
         type={"Mana"}
         clickHandler={(e) => handleBoxClick(e, manaBoxes, setManaBoxes, 1, "mana")}
+        disabled={isBlocked}
       />
       <br />
       <hr />

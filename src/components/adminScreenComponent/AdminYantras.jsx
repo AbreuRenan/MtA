@@ -48,6 +48,29 @@ export default function AdminYantras({ playersData }) {
   
   const [efeitosJson, setEfeitosJson] = useState('[\n  {\n    "campo": "dadosBonus",\n    "valor": 1\n  }\n]');
   const [jsonError, setJsonError] = useState('');
+  const [copiedId, setCopiedId] = useState(null);
+
+  const handleCopyId = async (id, e) => {
+    e.stopPropagation();
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(id);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = id;
+        textArea.style.position = "fixed";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 1500);
+    } catch (err) {
+      console.error("Falha ao copiar ID:", err);
+    }
+  };
 
   // Se o contexto ainda está carregando, mostra loading
   if (isLoading) {
@@ -279,24 +302,12 @@ export default function AdminYantras({ playersData }) {
             <tr style={{ borderBottom: '1px solid var(--separador)', color: 'var(--amarelo)' }}>
               <th style={{ padding: '12px', fontWeight: 'normal' }}>Nome</th>
               <th style={{ padding: '12px', fontWeight: 'normal' }}>Tipo / Slots</th>
-              <th style={{ padding: '12px', fontWeight: 'normal' }}>Efeitos Mapeados</th>
+              <th style={{ padding: '12px', fontWeight: 'normal' }}>UID (Firebase)</th>
               <th style={{ padding: '12px', fontWeight: 'normal', textAlign: 'right' }}>Ações</th>
             </tr>
           </thead>
           <tbody>
             {yantrasList && yantrasList.length > 0 ? yantrasList.map(yantra => {
-              // Resumo dos efeitos dinâmicos ou legado
-              let resumo = "Sem efeitos definidos";
-              if (yantra.efeitosDinamicos && yantra.efeitosDinamicos.length > 0) {
-                resumo = yantra.efeitosDinamicos.map(ef => {
-                  const campoDef = CAMPOS_YANTRA.find(c => c.value === ef.campo);
-                  const valorSinal = ef.valor > 0 ? `+${ef.valor}` : ef.valor;
-                  return `${campoDef ? campoDef.label : ef.campo} (${valorSinal})`;
-                }).join(', ');
-              } else if (yantra.dadosBonus !== undefined) {
-                resumo = `Bônus de Dado (+${yantra.dadosBonus})`;
-              }
-
               return (
                 <tr key={yantra.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.2s', ':hover': { background: 'rgba(255,255,255,0.05)' } }}>
                   <td style={{ padding: '12px' }}>
@@ -309,8 +320,25 @@ export default function AdminYantras({ playersData }) {
                     {yantra.tipo || 'Desconhecido'} <br/>
                     <span style={{ fontSize: '0.8rem', color: 'var(--amarelo)' }}>Custo: {yantra.custoSlots !== undefined ? yantra.custoSlots : 1} Slot(s)</span>
                   </td>
-                  <td style={{ padding: '12px', color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem' }}>
-                    {resumo}
+                  <td
+                    onClick={(e) => handleCopyId(yantra.id, e)}
+                    style={{
+                      padding: '12px',
+                      color: copiedId === yantra.id ? 'var(--verde)' : 'rgba(255,255,255,0.7)',
+                      fontSize: '0.8rem',
+                      fontFamily: 'monospace',
+                      cursor: 'pointer',
+                      userSelect: 'all',
+                      transition: 'color 0.2s'
+                    }}
+                    title="Clique para copiar o UID"
+                  >
+                    <span style={{ borderBottom: '1px dotted rgba(255,255,255,0.3)', verticalAlign: 'middle' }}>{yantra.id}</span>
+                    {copiedId === yantra.id && (
+                      <span style={{ marginLeft: '8px', color: 'var(--verde)', fontSize: '0.75rem', fontWeight: 'bold', verticalAlign: 'middle' }}>
+                        ✓ Copiado!
+                      </span>
+                    )}
                   </td>
                   <td style={{ padding: '12px', textAlign: 'right', display: 'flex', flexDirection: 'column', alignContent: 'center', rowGap: '4px' }}>
                     <button onClick={() => handleEdit(yantra)} style={{ padding: '6px 12px', background: 'transparent', border: '1px solid var(--separador)', color: 'white', borderRadius: '4px', cursor: 'pointer' }}>
@@ -324,7 +352,7 @@ export default function AdminYantras({ playersData }) {
               );
             }) : (
               <tr>
-                <td colSpan="3" style={{ padding: '20px', textAlign: 'center', color: 'rgba(255,255,255,0.5)' }}>
+                <td colSpan="4" style={{ padding: '20px', textAlign: 'center', color: 'rgba(255,255,255,0.5)' }}>
                   Nenhum Yantra cadastrado.
                 </td>
               </tr>

@@ -1,13 +1,14 @@
 import React from 'react';
 
 const ORIGEM_OPTIONS = [
-  { value: "FATOR_MAGIA", label: "Fator da Magia (ex: Gnosis, Arkanum)" },
+  { value: "FATOR_MAGIA", label: "Fator da Magia (ex: Gnosis, Arcana)" },
   { value: "POOL_YANTRAS", label: "Pool de Yantras Atuais" }
 ];
 
 const OPERADOR_LOGICO_OPTIONS = [
   { value: "AND", label: "E (Todas as condições)" },
-  { value: "OR", label: "OU (Pelo menos uma)" }
+  { value: "OR", label: "OU (Pelo menos uma)" },
+  { value: "NOT", label: "NÃO (Nenhuma das condições)" }
 ];
 
 const OPERADOR_CONDICAO_OPTIONS = [
@@ -50,7 +51,7 @@ export default function ConditionBuilder({ node, onChange, onDelete, isRoot = fa
     return (
       <div style={{ border: '1px solid var(--separador)', padding: '15px', margin: '10px 0', borderRadius: '4px', background: 'rgba(255,255,255,0.02)' }}>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '15px', flexWrap: 'wrap' }}>
-          <select 
+          <select
             value={node.operadorLogico}
             onChange={(e) => onChange({ ...node, operadorLogico: e.target.value })}
             style={{ padding: '8px', background: 'rgba(0,0,0,0.5)', color: 'var(--amarelo)', border: '1px solid var(--separador)', borderRadius: '4px', fontWeight: 'bold' }}
@@ -63,13 +64,13 @@ export default function ConditionBuilder({ node, onChange, onDelete, isRoot = fa
             <button type="button" onClick={onDelete} style={{ background: 'rgba(255,0,0,0.1)', color: 'var(--vermelho)', border: '1px solid rgba(255,0,0,0.3)', padding: '6px 12px', borderRadius: '4px', marginLeft: 'auto', cursor: 'pointer' }}>Remover Grupo</button>
           )}
         </div>
-        
+
         <div style={{ paddingLeft: '20px', borderLeft: '2px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {node.condicoes && node.condicoes.map((child, index) => (
-            <ConditionBuilder 
-              key={index} 
-              node={child} 
-              onChange={(newChild) => handleConditionChange(index, newChild)} 
+            <ConditionBuilder
+              key={index}
+              node={child}
+              onChange={(newChild) => handleConditionChange(index, newChild)}
               onDelete={() => handleConditionDelete(index)}
             />
           ))}
@@ -84,7 +85,7 @@ export default function ConditionBuilder({ node, onChange, onDelete, isRoot = fa
   // É um nó folha (Condição simples)
   return (
     <div style={{ display: 'flex', gap: '10px', alignItems: 'center', background: 'rgba(0,0,0,0.3)', padding: '10px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.05)', flexWrap: 'wrap' }}>
-      <select 
+      <select
         value={node.origem || "FATOR_MAGIA"}
         onChange={(e) => onChange({ ...node, origem: e.target.value, chave: e.target.value === 'POOL_YANTRAS' ? '' : node.chave })}
         style={{ padding: '8px', background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid var(--separador)', borderRadius: '4px' }}
@@ -92,15 +93,15 @@ export default function ConditionBuilder({ node, onChange, onDelete, isRoot = fa
         {ORIGEM_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
       </select>
 
-      <input 
-        type="text" 
+      <input
+        type="text"
         placeholder={node.origem === "POOL_YANTRAS" ? "Ex: Mudra" : "Ex: Gnosis"}
         value={node.chave || ""}
         onChange={(e) => onChange({ ...node, chave: e.target.value })}
         style={{ padding: '8px', background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid var(--separador)', borderRadius: '4px', width: '150px' }}
       />
 
-      <select 
+      <select
         value={node.operador || "EQ"}
         onChange={(e) => onChange({ ...node, operador: e.target.value })}
         style={{ padding: '8px', background: 'rgba(255,255,255,0.1)', color: 'var(--amarelo)', border: '1px solid var(--separador)', borderRadius: '4px' }}
@@ -108,8 +109,8 @@ export default function ConditionBuilder({ node, onChange, onDelete, isRoot = fa
         {OPERADOR_CONDICAO_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
       </select>
 
-      <input 
-        type="text" 
+      <input
+        type="text"
         placeholder={node.origem === "POOL_YANTRAS" ? "ATIVO/INATIVO" : "Ex: 2"}
         value={node.valor || ""}
         onChange={(e) => onChange({ ...node, valor: e.target.value })}

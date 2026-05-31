@@ -420,7 +420,9 @@ Gasto de mana: ${custoMana}`;
       console.error('Falha ao copiar:', err);
     }
 
-    if (userData && database) {
+    const isBlocked = !gameOpen && userData?.role !== "narrador";
+
+    if (userData && database && !isBlocked) {
       const userRefInDB = ref(database, `users/${userData.id}`);
       const updates = {};
 

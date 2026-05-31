@@ -1,11 +1,12 @@
 export const tiposYantra = [
-  "Ferramenta Dedicada", 
-  "Ferramenta", 
-  "Mudra", 
-  "Mantra", 
-  "Sacramento", 
-  "Runa", 
-  "Concentração"
+  "Ferramenta Dedicada",
+  "Ferramenta",
+  "Mudra",
+  "Mantra",
+  "Sacramento",
+  "Runa",
+  "Concentração",
+  "Persona"
 ];
 
 export function evaluateCondition(condicao, context) {
@@ -16,6 +17,8 @@ export function evaluateCondition(condicao, context) {
   const normalizedOrigem = String(origem || "").toUpperCase().trim();
   const normalizedChave = String(chave || "").toLowerCase().trim();
   const normalizedOperador = String(operador || "").toUpperCase().trim();
+
+  let normalizedValor = valor;
 
   if (normalizedOrigem === "FATOR_MAGIA") {
     // Procura a chave de forma case-insensitive e sem espaços nos fatores de magia do personagem
@@ -28,24 +31,33 @@ export function evaluateCondition(condicao, context) {
       }
     }
   } else if (normalizedOrigem === "POOL_YANTRAS") {
-    // Para POOL_YANTRAS, a chave é o tipo do Yantra (ex: Mudra, Mantra).
-    const isActive = context.poolYantras?.some(
-      y => String(y.tipo || "").toLowerCase().trim() === normalizedChave
+    // Para POOL_YANTRAS, a chave é o tipo do Yantra (ex: Mudra, Mantra) ou o ID do Yantra (ex: -NtY...).
+    const isActive = !!context.poolYantras?.some(
+      y => String(y.tipo || "").toLowerCase().trim() === normalizedChave ||
+           String(y.id || "").toLowerCase().trim() === normalizedChave
     );
-    contextValue = isActive ? "ATIVO" : "INATIVO";
+
+    const toBool = (v) => {
+      if (typeof v === "boolean") return v;
+      const s = String(v ?? "").toLowerCase().trim();
+      return s === "true" || s === "ativo";
+    };
+
+    contextValue = isActive;
+    normalizedValor = toBool(valor);
   }
 
-  const strVal = String(valor || "").toLowerCase().trim();
+  const strVal = String(normalizedValor || "").toLowerCase().trim();
   const strCtx = String(contextValue).toLowerCase().trim();
 
   switch (normalizedOperador) {
-    case "EQ": 
+    case "EQ":
       return strCtx === strVal;
-    case "GE": 
+    case "GE":
       return Number(contextValue) >= Number(valor);
-    case "LE": 
+    case "LE":
       return Number(contextValue) <= Number(valor);
-    default: 
+    default:
       return false; // Operador desconhecido
   }
 }
@@ -68,6 +80,14 @@ export function evaluateRequisitos(requisitosNode, context) {
     });
   } else if (op === "OR") {
     return condicoes.some(cond => {
+      if (cond.operadorLogico || Array.isArray(cond.condicoes)) {
+        return evaluateRequisitos(cond, context);
+      }
+      return evaluateCondition(cond, context);
+    });
+  } else if (op === "NOT") {
+    // Retorna verdadeiro apenas se NENHUMA das condições internas for verdadeira
+    return !condicoes.some(cond => {
       if (cond.operadorLogico || Array.isArray(cond.condicoes)) {
         return evaluateRequisitos(cond, context);
       }
@@ -111,7 +131,7 @@ export function validateYantra(yantraToEvaluate, context) {
 
 export function extractYantraCosts(poolYantras) {
   if (!Array.isArray(poolYantras)) return {};
-  
+
   const totalCosts = {
     SLOT_YANTRA: 0,
     MANA: 0,
@@ -121,7 +141,7 @@ export function extractYantraCosts(poolYantras) {
   poolYantras.forEach(yantraData => {
     // O pool de yantras agora pode ter a propriedade selectedOptions embutida
     const { custoSlots, efeitosDinamicos, selectedOptions } = yantraData;
-    
+
     let baseSlotCost = Number(custoSlots) || 0;
     let appliedCostsFromOptions = [];
     let hasVariableCosts = false;
