@@ -1,13 +1,4 @@
-export const tiposYantra = [
-  "Ferramenta Dedicada",
-  "Ferramenta",
-  "Mudra",
-  "Mantra",
-  "Sacramento",
-  "Runa",
-  "Concentração",
-  "Persona"
-];
+export { tiposYantra } from "./yantraModel";
 
 export function evaluateCondition(condicao, context) {
   if (!condicao) return false;
@@ -47,8 +38,8 @@ export function evaluateCondition(condicao, context) {
     normalizedValor = toBool(valor);
   }
 
-  const strVal = String(normalizedValor || "").toLowerCase().trim();
-  const strCtx = String(contextValue).toLowerCase().trim();
+  const strVal = String(normalizedValor ?? "").toLowerCase().trim();
+  const strCtx = String(contextValue ?? "").toLowerCase().trim();
 
   switch (normalizedOperador) {
     case "EQ":
@@ -133,43 +124,11 @@ export function extractYantraCosts(poolYantras) {
   if (!Array.isArray(poolYantras)) return {};
 
   const totalCosts = {
-    SLOT_YANTRA: 0,
-    MANA: 0,
-    DANO_RESISTENTE: 0
+    SLOT_YANTRA: 0
   };
 
   poolYantras.forEach(yantraData => {
-    // O pool de yantras agora pode ter a propriedade selectedOptions embutida
-    const { custoSlots, efeitosDinamicos, selectedOptions } = yantraData;
-
-    let baseSlotCost = Number(custoSlots) || 0;
-    let appliedCostsFromOptions = [];
-    let hasVariableCosts = false;
-
-    if (efeitosDinamicos && Array.isArray(efeitosDinamicos)) {
-      efeitosDinamicos.forEach((ef, index) => {
-        if (ef.tipoVariacao === 'SELECAO_VARIAVEL' && ef.opcoes) {
-          const selectedIndex = selectedOptions ? (selectedOptions[index] || 0) : 0;
-          const selectedOption = ef.opcoes[selectedIndex];
-          if (selectedOption && selectedOption.custosAplicados) {
-            hasVariableCosts = true;
-            appliedCostsFromOptions.push(...selectedOption.custosAplicados);
-          }
-        }
-      });
-    }
-
-    if (hasVariableCosts) {
-      appliedCostsFromOptions.forEach(cost => {
-        const type = cost.tipoCusto;
-        const value = Number(cost.valor) || 0;
-        if (totalCosts[type] === undefined) totalCosts[type] = 0;
-        totalCosts[type] += value;
-      });
-    } else {
-      // Fallback para Yantras antigos/simples
-      totalCosts.SLOT_YANTRA += baseSlotCost;
-    }
+    totalCosts.SLOT_YANTRA += Number(yantraData.custoSlots) || 0;
   });
 
   return totalCosts;

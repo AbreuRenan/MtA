@@ -46,7 +46,7 @@ export default function AdminYantras({ playersData }) {
   const [descricaoEfeito, setDescricaoEfeito] = useState('');
   const [conhecidoPor, setConhecidoPor] = useState([]);
   
-  const [efeitosJson, setEfeitosJson] = useState('[\n  {\n    "campo": "dadosBonus",\n    "valor": 1\n  }\n]');
+  const [efeitosJson, setEfeitosJson] = useState('[\n  {\n    "rotulo": "Efeito Padrão",\n    "valores": {\n      "modDados": 1\n    }\n  }\n]');
   const [jsonError, setJsonError] = useState('');
   const [copiedId, setCopiedId] = useState(null);
 
@@ -89,7 +89,7 @@ export default function AdminYantras({ playersData }) {
     setRequisitos({ operadorLogico: 'AND', condicoes: [] });
     setDescricaoEfeito('');
     setConhecidoPor([]);
-    setEfeitosJson('[\n  {\n    "campo": "dadosBonus",\n    "valor": 1\n  }\n]');
+    setEfeitosJson('[\n  {\n    "rotulo": "Efeito Padrão",\n    "valores": {\n      "modDados": 1\n    }\n  }\n]');
     setJsonError('');
     setView('list');
   };
@@ -105,12 +105,10 @@ export default function AdminYantras({ playersData }) {
     
     // Configurar o JSON dos Efeitos
     let initialEfeitos = [];
-    if (yantra.efeitosDinamicos && yantra.efeitosDinamicos.length > 0) {
-      initialEfeitos = yantra.efeitosDinamicos;
-    } else if (yantra.dadosBonus !== undefined) {
-      initialEfeitos = [{ campo: 'dadosBonus', valor: Number(yantra.dadosBonus) }];
+    if (yantra.efeitos && yantra.efeitos.length > 0) {
+      initialEfeitos = yantra.efeitos;
     } else {
-      initialEfeitos = [{ campo: 'dadosBonus', valor: 1 }];
+      initialEfeitos = [{ rotulo: 'Efeito Padrão', valores: { modDados: 1 } }];
     }
     setEfeitosJson(JSON.stringify(initialEfeitos, null, 2));
     setJsonError('');
@@ -126,8 +124,8 @@ export default function AdminYantras({ playersData }) {
     let parsedEfeitos = [];
     try {
       const parsed = JSON.parse(efeitosJson);
-      if (parsed && !Array.isArray(parsed) && typeof parsed === 'object' && parsed.efeitosDinamicos) {
-        parsedEfeitos = Array.isArray(parsed.efeitosDinamicos) ? parsed.efeitosDinamicos : [];
+      if (parsed && !Array.isArray(parsed) && typeof parsed === 'object' && parsed.efeitos) {
+        parsedEfeitos = Array.isArray(parsed.efeitos) ? parsed.efeitos : [];
       } else {
         parsedEfeitos = Array.isArray(parsed) ? parsed : [];
       }
@@ -142,7 +140,7 @@ export default function AdminYantras({ playersData }) {
       requisitos,
       descricaoEfeito,
       conhecidoPor,
-      efeitosDinamicos: parsedEfeitos
+      efeitos: parsedEfeitos
     };
 
     try {
@@ -227,9 +225,9 @@ export default function AdminYantras({ playersData }) {
           </div>
 
           <div style={{ marginTop: '10px', borderTop: '1px solid var(--separador)', paddingTop: '15px' }}>
-            <h3 style={{ color: 'var(--amarelo)', marginBottom: '10px' }}>Efeitos Dinâmicos (JSON)</h3>
+            <h3 style={{ color: 'var(--amarelo)', marginBottom: '10px' }}>Efeitos e Variações (JSON)</h3>
             <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', marginBottom: '10px' }}>
-              Cole ou edite a estrutura JSON dos efeitos dinâmicos, incluindo campos de SELECAO_VARIAVEL, opcoes e custosAplicados.
+              Cole ou edite a estrutura JSON do array de efeitos. Utilize "rotulo" e o objeto "valores" contendo os modificadores.
             </p>
             <div style={{ display: 'flex', gap: '20px' }}>
               <div style={{ flex: 2 }}>

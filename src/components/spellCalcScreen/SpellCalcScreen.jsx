@@ -267,12 +267,12 @@ export default function SpellCalcScreen() {
 
     const getYantraBonusValue = (yantra) => {
       if (!yantra) return 0;
-      if (typeof yantra.dadosBonus !== 'undefined') {
-        return Number(yantra.dadosBonus) || 0;
-      }
-      if (Array.isArray(yantra.efeitosDinamicos)) {
-        const dadosBonusEffect = yantra.efeitosDinamicos.find(ef => ef.campo === 'dadosBonus');
-        return Number(dadosBonusEffect?.valor) || 0;
+      if (Array.isArray(yantra.efeitos)) {
+        const index = typeof yantra.selectedOptionIndex === 'number' ? yantra.selectedOptionIndex : 0;
+        const effect = yantra.efeitos[index];
+        if (effect && effect.valores) {
+          return Number(effect.valores.modDados) || 0;
+        }
       }
       return 0;
     };
@@ -420,9 +420,7 @@ Gasto de mana: ${custoMana}`;
       console.error('Falha ao copiar:', err);
     }
 
-    const isBlocked = !gameOpen && userData?.role !== "narrador";
-
-    if (userData && database && !isBlocked) {
+    if (userData && database) {
       const userRefInDB = ref(database, `users/${userData.id}`);
       const updates = {};
 

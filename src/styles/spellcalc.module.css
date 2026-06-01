@@ -64,6 +64,7 @@
 
 .drawerOpen {
   transform: translateY(0);
+  color: white;
 }
 
 .drawerClosed {

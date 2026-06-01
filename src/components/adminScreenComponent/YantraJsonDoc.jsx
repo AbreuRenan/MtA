@@ -48,11 +48,12 @@ export default function YantraJsonDoc({ onBack }) {
   "tipo": "Concentração",
   "custoSlots": 1,
   "descricaoEfeito": "+1 Dado em magias de Mente",
-  "efeitosDinamicos": [
+  "efeitos": [
     {
-      "tipoVariacao": "FIXO",
-      "campo": "dadosBonus",
-      "valor": 1
+      "rotulo": "Efeito Fixo",
+      "valores": {
+        "modDados": 1
+      }
     }
   ]
 }`,
@@ -78,11 +79,12 @@ export default function YantraJsonDoc({ onBack }) {
       }
     ]
   },
-  "efeitosDinamicos": [
+  "efeitos": [
     {
-      "tipoVariacao": "FIXO",
-      "campo": "dadosBonus",
-      "valor": 2
+      "rotulo": "Bônus",
+      "valores": {
+        "modDados": 2
+      }
     }
   ]
 }`,
@@ -91,33 +93,27 @@ export default function YantraJsonDoc({ onBack }) {
   "tipo": "Ferramenta",
   "custoSlots": 1,
   "descricaoEfeito": "Duração estendida de acordo com a seleção de mana",
-  "efeitosDinamicos": [
+  "efeitos": [
     {
-      "tipoVariacao": "SELECAO_VARIAVEL",
-      "campo": "multiplo",
-      "opcoes": [
-        {
-          "rotulo": "+1 Duração (+2 dados)",
-          "valores": {
-            "dadosBonus": 2,
-            "fatorDuracao": 1
-          }
-        },
-        {
-          "rotulo": "+2 Duração (+4 dados)",
-          "valores": {
-            "dadosBonus": 4,
-            "fatorDuracao": 2
-          }
-        },
-        {
-          "rotulo": "+3 Duração (+6 dados)",
-          "valores": {
-            "dadosBonus": 6,
-            "fatorDuracao": 3
-          }
-        }
-      ]
+      "rotulo": "+1 Duração (+2 dados)",
+      "valores": {
+        "modDados": 2,
+        "fatorDuracao": 1
+      }
+    },
+    {
+      "rotulo": "+2 Duração (+4 dados)",
+      "valores": {
+        "modDados": 4,
+        "fatorDuracao": 2
+      }
+    },
+    {
+      "rotulo": "+3 Duração (+6 dados)",
+      "valores": {
+        "modDados": 6,
+        "fatorDuracao": 3
+      }
     }
   ]
 }`,
@@ -125,43 +121,30 @@ export default function YantraJsonDoc({ onBack }) {
   "nome": "Gema Mística Oscilante",
   "tipo": "Ferramenta Dedicada",
   "custoSlots": 1,
-  "descricaoEfeito": "Garante bônus de dados e elevações, mas com custos variáveis",
-  "efeitosDinamicos": [
+  "descricaoEfeito": "Garante bônus de dados, mas com custos em Mana e Paradoxo",
+  "efeitos": [
     {
-      "tipoVariacao": "SELECAO_VARIAVEL",
-      "campo": "multiplo",
-      "opcoes": [
-        {
-          "rotulo": "Básico (+1 Dados)",
-          "valores": {
-            "dadosBonus": 1
-          },
-          "custosAplicados": [
-            { "tipoCusto": "SLOT_YANTRA", "valor": 1 }
-          ]
-        },
-        {
-          "rotulo": "Médio (+3 Dados | +1 Duração | Cost: 2 Slots)",
-          "valores": {
-            "dadosBonus": 3,
-            "fatorDuracao": 1
-          },
-          "custosAplicados": [
-            { "tipoCusto": "SLOT_YANTRA", "valor": 2 }
-          ]
-        },
-        {
-          "rotulo": "Místico (+5 Dados | +2 Duração | Cost: 3 Slots + 1 Mana)",
-          "valores": {
-            "dadosBonus": 5,
-            "fatorDuracao": 2
-          },
-          "custosAplicados": [
-            { "tipoCusto": "SLOT_YANTRA", "valor": 3 },
-            { "tipoCusto": "MANA", "valor": 1 }
-          ]
-        }
-      ]
+      "rotulo": "Básico (+1 Dado)",
+      "valores": {
+        "modDados": 1
+      }
+    },
+    {
+      "rotulo": "Médio (+3 Dados | +1 Duração | Custo: 1 Mana)",
+      "valores": {
+        "modDados": 3,
+        "fatorDuracao": 1,
+        "modMana": -1
+      }
+    },
+    {
+      "rotulo": "Místico (+5 Dados | +2 Duração | Custo: 2 Mana + 1 Paradoxo)",
+      "valores": {
+        "modDados": 5,
+        "fatorDuracao": 2,
+        "modMana": -2,
+        "modParadoxo": 1
+      }
     }
   ]
 }`
@@ -364,30 +347,25 @@ export default function YantraJsonDoc({ onBack }) {
 
         {activeSubTab === 'costs' && (
           <div>
-            <h3 style={{ color: 'var(--amarelo)', marginBottom: '15px' }}>4. Controle de Custos Variáveis (Mana e Slots)</h3>
+            <h3 style={{ color: 'var(--amarelo)', marginBottom: '15px' }}>4. Controle de Custos e Penalidades Lógicas</h3>
             <p style={{ lineHeight: '1.6', marginBottom: '15px' }}>
-              Muitos Yantras potentes cobram custos de Mana ou ocupam múltiplos slots na calculadora de acordo com a opção selecionada pelo jogador.
+              Para simplificar a modelagem de Yantras e evitar complexidade redundante, custos e penalidades mecânicas são configurados de forma extremamente direta e elegante como modificadores adicionais no dicionário <code>valores</code> de cada opção!
             </p>
             <p style={{ lineHeight: '1.6', marginBottom: '15px' }}>
-              Para isso, incluímos no array <code>opcoes</code> a propriedade <code>custosAplicados</code>.
+              Não há mais necessidade de utilizar um array separado de <code>custosAplicados</code>. As variáveis integradas calculam custos automaticamente na calculadora de magias:
             </p>
 
-            <div style={{ background: 'rgba(255,0,0,0.15)', borderLeft: '4px solid var(--vermelho)', padding: '12px', borderRadius: '4px', marginBottom: '20px' }}>
-              <strong style={{ color: 'var(--vermelho)', display: 'block', marginBottom: '5px' }}>Regra Crítica de Sobrescrita:</strong>
-              <p style={{ margin: 0, fontSize: '0.9rem', lineHeight: '1.5' }}>
-                Se qualquer opção selecionada de um Yantra possuir o array <code>custosAplicados</code>, o custo base definido no campo <code>custoSlots</code> do Yantra será <strong>ignorado por completo</strong>. Os custos do Yantra serão integralmente determinados pelos elementos contidos na lista de custos aplicados.
-              </p>
+            <div style={{ background: 'rgba(255,159,10,0.15)', borderLeft: '4px solid var(--amarelo)', padding: '12px', borderRadius: '4px', marginBottom: '20px' }}>
+              <strong style={{ color: 'var(--amarelo)', display: 'block', marginBottom: '5px' }}>Como configurar Custos e Penalidades:</strong>
+              <ul style={{ paddingLeft: '20px', lineHeight: '1.8', margin: 0, fontSize: '0.9rem' }}>
+                <li><strong>Custo de Mana</strong>: Adicione <code>"manaOpcional": X</code> (onde X é o custo de mana cobrado). Isso aumentará o gasto de mana da magia e travará o mínimo no valor configurado.</li>
+                <li><strong>Penalidade de Paradoxo</strong>: Adicione <code>"dadosParadoxoExtra": X</code> (onde X é o número de dados extras de paradoxo gerados pelo Yantra).</li>
+                <li><strong>Redutor de Dados (Penalidade)</strong>: Adicione um valor negativo em <code>"dadosBonus"</code> (ex: <code>"dadosBonus": -2</code> para subtrair 2 dados na parada final do feitiço).</li>
+              </ul>
             </div>
 
-            <h4 style={{ color: 'white', marginBottom: '10px' }}>Formatos de custosAplicados:</h4>
-            <ul style={{ paddingLeft: '20px', lineHeight: '1.8', marginBottom: '20px' }}>
-              <li><code>"tipoCusto": "SLOT_YANTRA"</code> : Altera os slots de Yantras ocupados (ex: valor: 2).</li>
-              <li><code>"tipoCusto": "MANA"</code> : Cobra Mana adicional para a conjuração (ex: valor: 1).</li>
-              <li><code>"tipoCusto": "DANO_RESISTENTE"</code> : Aplica dano resistente ao conjurador (ex: valor: 1).</li>
-            </ul>
-
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px', marginBottom: '10px' }}>
-              <span style={{ fontWeight: 'bold', color: 'rgba(255,255,255,0.8)' }}>Exemplo com Variações de Efeitos + Custos de Slots e Mana:</span>
+              <span style={{ fontWeight: 'bold', color: 'rgba(255,255,255,0.8)' }}>Exemplo com Variações de Efeitos + Custos Lógicos de Mana e Paradoxo:</span>
               <button
                 onClick={() => copyToClipboard(examples.variableCosts)}
                 style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}
