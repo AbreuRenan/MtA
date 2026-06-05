@@ -180,12 +180,22 @@ export default function GrimorioScreen() {
     if (Array.isArray(y)) {
       return y.reduce((acc, item) => {
         if (!item) return acc;
-        if (typeof item.dadosBonus !== 'undefined') return acc + (Number(item.dadosBonus) || 0);
-        if (Array.isArray(item.efeitosDinamicos)) {
-          const ef = item.efeitosDinamicos.find(e => e.campo === 'dadosBonus');
-          return acc + (Number(ef?.valor) || 0);
+        
+        let bonusFromEfeitos = 0;
+        if (item.efeitos && Array.isArray(item.efeitos)) {
+          const selectedIndex = typeof item.selectedOptionIndex === 'number' ? item.selectedOptionIndex : 0;
+          const selectedEffect = item.efeitos[selectedIndex];
+          if (selectedEffect?.valores && selectedEffect.valores.modDados) {
+            bonusFromEfeitos = Number(selectedEffect.valores.modDados) || 0;
+          }
         }
-        return acc;
+        
+        // Mantemos fallback para item.modDados se existir na raiz (caso salvo sem efeitos estruturados)
+        if (bonusFromEfeitos === 0 && typeof item.modDados !== 'undefined') {
+          bonusFromEfeitos = Number(item.modDados) || 0;
+        }
+
+        return acc + bonusFromEfeitos;
       }, 0);
     }
     if (typeof y === 'number') return Number(y) || 0;

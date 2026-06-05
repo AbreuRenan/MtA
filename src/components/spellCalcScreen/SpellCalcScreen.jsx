@@ -263,7 +263,7 @@ export default function SpellCalcScreen() {
     const e_escala = escala + (efeitosYantra.fatorEscala || 0);
     const e_gnose = Math.max(1, gnose + (efeitosYantra.gnose || 0));
     const e_nivelArcana = Math.max(1, nivelArcana + (efeitosYantra.nivelArcana || 0));
-    const yantraBonus = efeitosYantra.dadosBonus || 0;
+    const yantraBonus = efeitosYantra.modDados || 0;
 
     const getYantraBonusValue = (yantra) => {
       if (!yantra) return 0;

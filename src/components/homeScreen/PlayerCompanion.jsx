@@ -4,6 +4,7 @@ import { AppContext } from "../../AppContext";
 import RenderPlayerUtilsBox from "./RenderPlayerUtilsBox";
 import { ref, set, update } from "firebase/database";
 import { pushLog } from "../../js/logUtils";
+import { updateUserDbAttribute } from "../../js/playerDbUpdates";
 
 export default function PlayerCompanion() {
   const { userData, gameOpen, database } =
@@ -71,61 +72,41 @@ export default function PlayerCompanion() {
 
   const updateVitalidadeOnDB = React.useCallback(
     async (newDamageState) => {
-      const userRefInDB = ref(database, `users/${userData.id}`);
-      const updates = {
-        "vitalidade/dano": newDamageState,
-      };
-
-      try {
-        await update(userRefInDB, updates);
-        pushLog(database, userData, "Vitalidade", {
+      await updateUserDbAttribute(database, userData, "vitalidade/dano", newDamageState, {
+        action: "Vitalidade",
+        details: {
           antes: JSON.stringify(userData.vitalidade.dano),
           depois: JSON.stringify(newDamageState)
-        });
-      } catch (e) {
-        console.error("Erro ao atualizar vitalidade no DB:", e);
-      }
+        }
+      });
     },
     [database, userData]
   );
 
   const updateFvOnDB = React.useCallback(
     async (newFvUsado) => {
-      const userRefInDB = ref(database, `users/${userData.id}`);
-      const updates = {
-        "fv/usado": newFvUsado,
-        // 'fv/max': userData.fv.max, // Inclua se precisar atualizar também o max aqui, mas AdminConsole já faz isso
-      };
-      try {
-        await update(userRefInDB, updates);
-        const fvMax = userData.fv.max;
-        pushLog(database, userData, "Vontade", {
+      const fvMax = userData.fv.max;
+      await updateUserDbAttribute(database, userData, "fv/usado", newFvUsado, {
+        action: "Vontade",
+        details: {
           antes: fvMax - (userData.fv.usado || 0),
           depois: fvMax - newFvUsado
-        });
-      } catch (e) {
-        console.error("Erro ao atualizar FdV no DB:", e);
-      }
+        }
+      });
     },
     [database, userData]
   );
 
   const updateManaOnDB = React.useCallback(
     async (newManaUsado) => {
-      const userRefInDB = ref(database, `users/${userData?.id}`);
-      const updates = {
-        "mana/usado": newManaUsado,
-      };
-      try {
-        await update(userRefInDB, updates);
-        const manaMax = userData.mana.max;
-        pushLog(database, userData, "Mana", {
+      const manaMax = userData.mana.max;
+      await updateUserDbAttribute(database, userData, "mana/usado", newManaUsado, {
+        action: "Mana",
+        details: {
           antes: manaMax - (userData.mana.usado || 0),
           depois: manaMax - newManaUsado
-        });
-      } catch (e) {
-        console.error("Erro ao atualizar Mana no DB:", e);
-      }
+        }
+      });
     },
     [database, userData]
   );

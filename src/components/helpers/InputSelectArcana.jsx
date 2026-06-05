@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "../../styles/spellcalc.module.css";
+import { clampValue } from "../../js/utils";
 
 export default function InputSelectArcana({
   label,
@@ -28,9 +29,7 @@ export default function InputSelectArcana({
   const handleBtnAddOrRemove = (e) => {
     const btnValue = parseInt(e.currentTarget.value, 10);
     let newValue = estateValue + btnValue;
-    if (newValue > max) return setValue(max);
-    if (newValue < min) return setValue(min);
-    setValue(newValue);
+    setValue(clampValue(newValue, min, max));
   };
 
   function handleInputChange(e) {
@@ -38,9 +37,7 @@ export default function InputSelectArcana({
     if (e.target.value === "") return setValue("");
 
     if (isNaN(inputValue)) return setValue(min);
-    if (inputValue > max) return setValue(max);
-    if (inputValue < min) return setValue(min);
-    setValue(inputValue);
+    setValue(clampValue(inputValue, min, max));
   }
 
   function handleBlur(e) {
