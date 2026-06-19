@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "../../styles/spellcalc.module.css";
+import { clampValue } from "../../js/utils";
 
 export default function InputGroup({label,value: estateValue,setValue,min = 0,max = 10,childInputContainer = false, 
   childContainerClass, children, ...props})  {
@@ -7,9 +8,7 @@ export default function InputGroup({label,value: estateValue,setValue,min = 0,ma
   const handleBtnAddOrRemove = (e) => {
     const btnValue = parseInt(e.currentTarget.value, 10);
     let newValue = estateValue + btnValue;
-    if (newValue > max) return setValue(max);
-    if (newValue < min) return setValue(min);
-    setValue(newValue);
+    setValue(clampValue(newValue, min, max));
   };
 
   function handleInputChange(e) {
@@ -18,9 +17,7 @@ export default function InputGroup({label,value: estateValue,setValue,min = 0,ma
     if (e.target.value === "") return setValue("");
 
     if (isNaN(inputValue)) return setValue(min);
-    if (inputValue > max) return setValue(max);
-    if (inputValue < min) return setValue(min);
-    setValue(inputValue);
+    setValue(clampValue(inputValue, min, max));
   }
 
   function handleBlur(e) {
@@ -104,8 +101,10 @@ export default function InputGroup({label,value: estateValue,setValue,min = 0,ma
 
 
   React.useEffect(() =>{
-    if (estateValue < min) { setValue(min) }
-    if (estateValue > max) { setValue(max)} 
+    const clamped = clampValue(estateValue, min, max);
+    if (estateValue !== clamped) {
+      setValue(clamped);
+    }
   }, [estateValue, min, max, setValue])
 
   return <>{inputContent}</>;

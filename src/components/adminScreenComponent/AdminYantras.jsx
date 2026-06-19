@@ -7,17 +7,13 @@ import styles from "./adminStyles.module.css";
 import ConditionBuilder from './ConditionBuilder';
 
 const CAMPOS_YANTRA = [
-  { value: 'dadosBonus', label: 'Bônus de Dado' },
-  { value: 'manaOpcional', label: 'Mana (Custo Extra/Desconto)' },
+  { value: 'modDados', label: 'Modificador de Dados' },
+  { value: 'modMana', label: 'Modificador de Mana' },
+  { value: 'modParadoxo', label: 'Modificador de Paradoxo' },
+  { value: 'modElevacao', label: 'Modificador de Elevação' },
   { value: 'gnose', label: 'Gnose' },
   { value: 'nivelArcana', label: 'Nível da Arcana' },
   { value: 'extraElevacoes', label: 'Elevações Extra' },
-  { value: 'dadosParadoxoExtra', label: 'Dado Extra Paradoxo' },
-  { value: 'potenciaElevada', label: 'Elevar Potência' },
-  { value: 'duracaoElevada', label: 'Elevar Duração' },
-  { value: 'escalaElevada', label: 'Elevar Escala' },
-  { value: 'alcanceElevado', label: 'Elevar Alcance' },
-  { value: 'tempoConjuracaoElevada', label: 'Elevar Tempo de Conj.' },
   { value: 'fatorPotencia', label: 'Potência' },
   { value: 'fatorDuracao', label: 'Duração' },
   { value: 'fatorEscala', label: 'Escala' },
@@ -119,7 +115,7 @@ export default function AdminYantras({ playersData }) {
   const handleSave = async (e) => {
     e.preventDefault();
     if (!nome) return alert("O nome do Yantra é obrigatório!");
-    if (jsonError) return alert("O JSON de Efeitos Dinâmicos contém erros de sintaxe!");
+    if (jsonError) return alert("O JSON de Efeitos contém erros de sintaxe!");
 
     let parsedEfeitos = [];
     try {
@@ -225,7 +221,7 @@ export default function AdminYantras({ playersData }) {
           </div>
 
           <div style={{ marginTop: '10px', borderTop: '1px solid var(--separador)', paddingTop: '15px' }}>
-            <h3 style={{ color: 'var(--amarelo)', marginBottom: '10px' }}>Efeitos e Variações (JSON)</h3>
+            <h3 style={{ color: 'var(--amarelo)', marginBottom: '10px' }}>Efeitos (JSON)</h3>
             <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', marginBottom: '10px' }}>
               Cole ou edite a estrutura JSON do array de efeitos. Utilize "rotulo" e o objeto "valores" contendo os modificadores.
             </p>

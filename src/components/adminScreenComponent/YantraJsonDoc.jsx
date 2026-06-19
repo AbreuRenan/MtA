@@ -256,7 +256,7 @@ export default function YantraJsonDoc({ onBack }) {
               <li><strong style={{ color: 'var(--amarelo)' }}>tipo</strong>: Um dos tipos pré-configurados do sistema (ex: <em>Ferramenta Dedicada, Ferramenta, Mudra, Mantra, Sacramento, Runa, Concentração</em>).</li>
               <li><strong style={{ color: 'var(--amarelo)' }}>custoSlots</strong>: Inteiro representando o custo base de slots ocupados pelo Yantra (padrão: 1).</li>
               <li><strong style={{ color: 'var(--amarelo)' }}>descricaoEfeito</strong>: Descrição cosmética legível do efeito gerado.</li>
-              <li><strong style={{ color: 'var(--amarelo)' }}>efeitosDinamicos</strong>: Array de objetos detalhando modificadores automáticos que a calculadora aplicará.</li>
+              <li><strong style={{ color: 'var(--amarelo)' }}>efeitos</strong>: Array de objetos detalhando as opções de efeito ou variações (cada um contendo `rotulo` e `valores`).</li>
             </ul>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px', marginBottom: '10px' }}>
@@ -314,24 +314,23 @@ export default function YantraJsonDoc({ onBack }) {
 
         {activeSubTab === 'complex' && (
           <div>
-            <h3 style={{ color: 'var(--amarelo)', marginBottom: '15px' }}>3. Efeitos Dinâmicos Complexos</h3>
+            <h3 style={{ color: 'var(--amarelo)', marginBottom: '15px' }}>3. Efeitos Variáveis e Múltiplos</h3>
             <p style={{ lineHeight: '1.6', marginBottom: '15px' }}>
-              Para Yantras flexíveis que oferecem opções variáveis de potência com bônus e penalidades que se ajustam simultaneamente, utilizamos o formato de <code>SELECAO_VARIAVEL</code>.
+              Para Yantras flexíveis que oferecem opções variáveis de potência com bônus e penalidades que se ajustam simultaneamente, basta adicionar múltiplos objetos no array <code>efeitos</code>.
             </p>
             <p style={{ lineHeight: '1.6', marginBottom: '15px' }}>
-              Ao definir o <code>campo</code> como <code>"multiplo"</code>, liberamos o suporte ao dicionário <code>valores</code>. Isso possibilita que uma única opção selecionada pelo jogador altere dois ou mais fatores ao mesmo tempo na calculadora!
+              Isso possibilita que o jogador escolha na interface qual variação ele deseja ativar, e cada opção altera dois ou mais fatores ao mesmo tempo na calculadora!
             </p>
 
-            <h4 style={{ color: 'white', marginBottom: '10px' }}>Estrutura de Variação de Campo Múltiplo:</h4>
+            <h4 style={{ color: 'white', marginBottom: '10px' }}>Estrutura de Múltiplos Efeitos:</h4>
             <ul style={{ paddingLeft: '20px', lineHeight: '1.8', marginBottom: '20px' }}>
-              <li>Defina <code>tipoVariacao</code> como <code>"SELECAO_VARIAVEL"</code>.</li>
-              <li>Defina <code>campo</code> como <code>"multiplo"</code>.</li>
-              <li>Insira as opções dentro da lista de <code>opcoes</code>.</li>
-              <li>Dentro de cada opção, substitua o atributo chave simples <code>valor</code> pelo dicionário <code>valores</code> contendo chaves como <code>dadosBonus</code>, <code>fatorDuracao</code>, <code>fatorPotencia</code>, etc.</li>
+              <li>Adicione quantos objetos quiser na lista de <code>efeitos</code>.</li>
+              <li>Defina o <code>rotulo</code> para que o jogador saiba o que a opção faz.</li>
+              <li>Dentro de cada opção, use a estrutura com <code>rotulo</code> e <code>valores</code> contendo chaves como <code>modDados</code>, <code>fatorDuracao</code>, <code>fatorPotencia</code>, etc.</li>
             </ul>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px', marginBottom: '10px' }}>
-              <span style={{ fontWeight: 'bold', color: 'rgba(255,255,255,0.8)' }}>Exemplo de Múltiplos Bônus Variáveis (dadosBonus + fatorDuracao):</span>
+              <span style={{ fontWeight: 'bold', color: 'rgba(255,255,255,0.8)' }}>Exemplo de Múltiplos Bônus Variáveis (modDados + fatorDuracao):</span>
               <button
                 onClick={() => copyToClipboard(examples.complexEffects)}
                 style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}
@@ -358,9 +357,9 @@ export default function YantraJsonDoc({ onBack }) {
             <div style={{ background: 'rgba(255,159,10,0.15)', borderLeft: '4px solid var(--amarelo)', padding: '12px', borderRadius: '4px', marginBottom: '20px' }}>
               <strong style={{ color: 'var(--amarelo)', display: 'block', marginBottom: '5px' }}>Como configurar Custos e Penalidades:</strong>
               <ul style={{ paddingLeft: '20px', lineHeight: '1.8', margin: 0, fontSize: '0.9rem' }}>
-                <li><strong>Custo de Mana</strong>: Adicione <code>"manaOpcional": X</code> (onde X é o custo de mana cobrado). Isso aumentará o gasto de mana da magia e travará o mínimo no valor configurado.</li>
-                <li><strong>Penalidade de Paradoxo</strong>: Adicione <code>"dadosParadoxoExtra": X</code> (onde X é o número de dados extras de paradoxo gerados pelo Yantra).</li>
-                <li><strong>Redutor de Dados (Penalidade)</strong>: Adicione um valor negativo em <code>"dadosBonus"</code> (ex: <code>"dadosBonus": -2</code> para subtrair 2 dados na parada final do feitiço).</li>
+                <li><strong>Custo de Mana</strong>: Adicione <code>"modMana": -X</code> (onde X é o custo de mana cobrado). Exemplo: <code>"modMana": -1</code> custa 1 mana.</li>
+                <li><strong>Penalidade de Paradoxo</strong>: Adicione <code>"modParadoxo": X</code> (onde X é o número de dados extras de paradoxo gerados pelo Yantra).</li>
+                <li><strong>Redutor de Dados (Penalidade)</strong>: Adicione um valor negativo em <code>"modDados"</code> (ex: <code>"modDados": -2</code> para subtrair 2 dados na parada final do feitiço).</li>
               </ul>
             </div>
 

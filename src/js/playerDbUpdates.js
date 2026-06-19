@@ -1,81 +1,29 @@
-// src/js/playerDbUpdates.js
 import { ref, update } from "firebase/database";
+import { pushLog } from "./logUtils";
 
-export async function updateVitalidadeOnDB(
-  database,
-  userData,
-  newDamageState,
-  gameOpen
+export async function updateUserDbAttribute(
+  database, 
+  userData, 
+  attributePath, 
+  newValue, 
+  logConfig = null
 ) {
   if (!database || !userData?.id) {
-    console.error("Database ou userData.id não disponível para atualizar vitalidade.");
+    console.error(`Database ou userData.id não disponível para atualizar ${attributePath}.`);
     return false;
   }
+  
   const userRefInDB = ref(database, `users/${userData.id}`);
-  const updates = {
-    "vitalidade/dano": newDamageState,
-  };
+  const updates = { [attributePath]: newValue };
 
-  if (gameOpen || userData.role === "narrador") {
-    try {
-      await update(userRefInDB, updates);
-      return true;
-    } catch (e) {
-      console.error("Erro ao atualizar vitalidade no DB:", e);
-      return false;
+  try {
+    await update(userRefInDB, updates);
+    if (logConfig) {
+      pushLog(database, userData, logConfig.action, logConfig.details);
     }
-  }
-  return false;
-}
-
-export async function updateFvOnDB(
-  database,
-  userData,
-  newFvUsado,
-  gameOpen
-) {
-  if (!database || !userData?.id) {
-    console.error("Database ou userData.id não disponível para atualizar Fv.");
+    return true;
+  } catch (e) {
+    console.error(`Erro ao atualizar ${attributePath} no DB:`, e);
     return false;
   }
-  const userRefInDB = ref(database, `users/${userData.id}`);
-  const updates = {
-    "fv/usado": newFvUsado,
-  };
-  if (gameOpen || userData.role === "narrador") {
-    try {
-      await update(userRefInDB, updates);
-      return true;
-    } catch (e) {
-      console.error("Erro ao atualizar FdV no DB:", e);
-      return false;
-    }
-  }
-  return false;
-}
-
-export async function updateManaOnDB(
-  database,
-  userData,
-  newManaUsado,
-  gameOpen
-) {
-  if (!database || !userData?.id) {
-    console.error("Database ou userData.id não disponível para atualizar Mana.");
-    return false;
-  }
-  const userRefInDB = ref(database, `users/${userData?.id}`);
-  const updates = {
-    "mana/usado": newManaUsado,
-  };
-  if (gameOpen || userData?.role === "narrador") {
-    try {
-      await update(userRefInDB, updates);
-      return true;
-    } catch (e) {
-      console.error("Erro ao atualizar Mana no DB:", e);
-      return false;
-    }
-  }
-  return false;
 }
