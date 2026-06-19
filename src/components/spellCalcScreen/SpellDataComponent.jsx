@@ -30,6 +30,7 @@ export default function SpellDataComponent(props) {
     setTempoConjuracaoElevada,
     extraElevacoes,
     setExtraElevacoes,
+    efeitosYantra = {},
   } = props;
 
   const setValue = React.useMemo(
@@ -119,7 +120,7 @@ export default function SpellDataComponent(props) {
           className={styles.checkboxElevada}
           onChange={toggleFPradioBtn}
         />
-        <InputGroup label="Potência"
+        <InputGroup label={`Potência${efeitosYantra.fatorPotencia ? ` (+${efeitosYantra.fatorPotencia})` : ""}`}
           id="potencia"
           value={potencia}
           setValue={setPotencia}
@@ -143,7 +144,7 @@ export default function SpellDataComponent(props) {
           className={styles.checkboxElevada}
           onChange={toggleFPradioBtn}
         ></input>
-        <InputGroup label="Duração"
+        <InputGroup label={`Duração${efeitosYantra.fatorDuracao ? ` (+${efeitosYantra.fatorDuracao})` : ""}`}
           id="duracao"
           value={duracao}
           setValue={setDuracao}
@@ -168,7 +169,7 @@ export default function SpellDataComponent(props) {
           className={styles.checkboxElevada}
           onChange={toggleFPradioBtn}
         ></input>
-        <InputGroup label="Tempo de Conjuração"
+        <InputGroup label={`Tempo de Conjuração${(efeitosYantra.tempoAcelerar || efeitosYantra.tempoExceder) ? " (*)" : ""}`}
           id="tempoConjuracao"
           value={tempoConjuracao}
           setValue={setTempoConjuracao}
@@ -192,7 +193,7 @@ export default function SpellDataComponent(props) {
           className={styles.checkboxElevada}
           onChange={toggleFPradioBtn}
         ></input>
-        <InputGroup label="Escala"
+        <InputGroup label={`Escala${efeitosYantra.fatorEscala ? ` (+${efeitosYantra.fatorEscala})` : ""}`}
           id="escala"
           value={escala}
           setValue={setEscala}

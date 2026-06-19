@@ -13,26 +13,6 @@ export default function PlayerCompanion() {
   const [manaBoxes, setManaBoxes] = React.useState([0]);
   const [fvBoxes, setFvBoxes] = React.useState([0]);
 
-  // const firebasePlayerDataScheema = {
-  //   nome: userData.nome,
-  //   vitalidade: {
-  //     max: userData?.vitalidade?.max,
-  //     dano: {
-  //       contusivo: userData?.vitalidade.dano.contusivo,
-  //       letal: userData?.vitalidade.dano.letal,
-  //       agravado: userData?.vitalidade.dano.agravado,
-  //     },
-  //   },
-  //   mana: {
-  //     max: userData?.mana?.max,
-  //     usado: userData?.mana?.usado,
-  //   },
-  //   fv: {
-  //     max: userData?.fv?.max,
-  //     usado: userData?.fv?.usado,
-  //   },
-  // };
-
   const renderVitalityBoxes = React.useCallback(
     (vitalidadeData, maxVitalidade) => {
       let currentDano = { ...vitalidadeData.dano };
@@ -124,14 +104,14 @@ export default function PlayerCompanion() {
       }
       return box;
     });
-    
+
     setterOfTheBoxArray(newBoxToChangeState);
 
     if (boxType === "vitalidade") {
       const newDanoObj = {
         contusivo: newBoxToChangeState.filter((item) => item === 1).length,
-        letal: newBoxToChangeState    .filter((item) => item === 2).length,
-        agravado: newBoxToChangeState .filter((item) => item === 3).length,
+        letal: newBoxToChangeState.filter((item) => item === 2).length,
+        agravado: newBoxToChangeState.filter((item) => item === 3).length,
       };
       updateVitalidadeOnDB(newDanoObj);
 
@@ -149,12 +129,12 @@ export default function PlayerCompanion() {
 
   return (
     <div>
-       <h2 className={styles.playerTitle}>Olá {userData.nome}</h2>
-       <div className={styles.playerStats}>
+      <h2 className={styles.playerTitle}>Olá {userData.nome}</h2>
+      <div className={styles.playerStats}>
         <p>Vitalidade: {userData.vitalidade.max}</p>
         <p>Vontade: {userData.fv.max - userData.fv.usado}/{userData.fv.max}</p>
         <p>Mana: {userData.mana.max - userData.mana.usado}/{userData.mana.max}</p>
-       </div>
+      </div>
       <RenderPlayerUtilsBox
         boxToRender={vitalidadeBoxes}
         type={"Vitalidade"}

@@ -200,6 +200,7 @@ export default function SpellCalcScreen() {
     setTempoConjuracaoElevada,
     extraElevacoes,
     setExtraElevacoes,
+    efeitosYantra,
   };
   const yantraDataProps = {
     gnose,
