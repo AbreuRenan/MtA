@@ -122,9 +122,10 @@ export default function SpellDataComponent(props) {
         />
         <InputGroup label={`Potência${efeitosYantra.fatorPotencia ? ` (+${efeitosYantra.fatorPotencia})` : ""}`}
           id="potencia"
-          value={potencia}
-          setValue={setPotencia}
-          max={100}
+          value={potencia + (efeitosYantra.fatorPotencia || 0)}
+          setValue={(val) => setPotencia(Math.max(1, val - (efeitosYantra.fatorPotencia || 0)))}
+          min={1 + (efeitosYantra.fatorPotencia || 0)}
+          max={100 + (efeitosYantra.fatorPotencia || 0)}
         >
           <input
             type="checkbox"
@@ -146,9 +147,10 @@ export default function SpellDataComponent(props) {
         ></input>
         <InputGroup label={`Duração${efeitosYantra.fatorDuracao ? ` (+${efeitosYantra.fatorDuracao})` : ""}`}
           id="duracao"
-          value={duracao}
-          setValue={setDuracao}
-          max={duracaoElevada ? 6 : 100}
+          value={duracao + (efeitosYantra.fatorDuracao || 0)}
+          setValue={(val) => setDuracao(Math.max(1, val - (efeitosYantra.fatorDuracao || 0)))}
+          min={1 + (efeitosYantra.fatorDuracao || 0)}
+          max={(duracaoElevada ? 6 : 100) + (efeitosYantra.fatorDuracao || 0)}
         >
           <input
             type="checkbox"
@@ -195,9 +197,10 @@ export default function SpellDataComponent(props) {
         ></input>
         <InputGroup label={`Escala${efeitosYantra.fatorEscala ? ` (+${efeitosYantra.fatorEscala})` : ""}`}
           id="escala"
-          value={escala}
-          setValue={setEscala}
-          max={escalaElevada ? 100 : 5}
+          value={escala + (efeitosYantra.fatorEscala || 0)}
+          setValue={(val) => setEscala(Math.max(1, val - (efeitosYantra.fatorEscala || 0)))}
+          min={1 + (efeitosYantra.fatorEscala || 0)}
+          max={(escalaElevada ? 100 : 5) + (efeitosYantra.fatorEscala || 0)}
         >
           <input
             type="checkbox"
